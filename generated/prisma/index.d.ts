@@ -8361,11 +8361,13 @@ export namespace Prisma {
   export type CategoriesAvgAggregateOutputType = {
     id: number | null
     pageId: number | null
+    parentTagId: number | null
   }
 
   export type CategoriesSumAggregateOutputType = {
     id: number | null
     pageId: number | null
+    parentTagId: number | null
   }
 
   export type CategoriesMinAggregateOutputType = {
@@ -8374,6 +8376,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     pageId: number | null
+    parentTagId: number | null
   }
 
   export type CategoriesMaxAggregateOutputType = {
@@ -8382,6 +8385,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     pageId: number | null
+    parentTagId: number | null
   }
 
   export type CategoriesCountAggregateOutputType = {
@@ -8390,6 +8394,7 @@ export namespace Prisma {
     createdAt: number
     updatedAt: number
     pageId: number
+    parentTagId: number
     _all: number
   }
 
@@ -8397,11 +8402,13 @@ export namespace Prisma {
   export type CategoriesAvgAggregateInputType = {
     id?: true
     pageId?: true
+    parentTagId?: true
   }
 
   export type CategoriesSumAggregateInputType = {
     id?: true
     pageId?: true
+    parentTagId?: true
   }
 
   export type CategoriesMinAggregateInputType = {
@@ -8410,6 +8417,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     pageId?: true
+    parentTagId?: true
   }
 
   export type CategoriesMaxAggregateInputType = {
@@ -8418,6 +8426,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     pageId?: true
+    parentTagId?: true
   }
 
   export type CategoriesCountAggregateInputType = {
@@ -8426,6 +8435,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     pageId?: true
+    parentTagId?: true
     _all?: true
   }
 
@@ -8521,6 +8531,7 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     pageId: number | null
+    parentTagId: number | null
     _count: CategoriesCountAggregateOutputType | null
     _avg: CategoriesAvgAggregateOutputType | null
     _sum: CategoriesSumAggregateOutputType | null
@@ -8548,6 +8559,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     pageId?: boolean
+    parentTagId?: boolean
     page?: boolean | Categories$pageArgs<ExtArgs>
     daughterTag?: boolean | Categories$daughterTagArgs<ExtArgs>
     parentTag?: boolean | Categories$parentTagArgs<ExtArgs>
@@ -8561,6 +8573,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     pageId?: boolean
+    parentTagId?: boolean
     page?: boolean | Categories$pageArgs<ExtArgs>
     parentTag?: boolean | Categories$parentTagArgs<ExtArgs>
   }, ExtArgs["result"]["categories"]>
@@ -8571,6 +8584,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     pageId?: boolean
+    parentTagId?: boolean
     page?: boolean | Categories$pageArgs<ExtArgs>
     parentTag?: boolean | Categories$parentTagArgs<ExtArgs>
   }, ExtArgs["result"]["categories"]>
@@ -8581,9 +8595,10 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     pageId?: boolean
+    parentTagId?: boolean
   }
 
-  export type CategoriesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt" | "pageId", ExtArgs["result"]["categories"]>
+  export type CategoriesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt" | "pageId" | "parentTagId", ExtArgs["result"]["categories"]>
   export type CategoriesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     page?: boolean | Categories$pageArgs<ExtArgs>
     daughterTag?: boolean | Categories$daughterTagArgs<ExtArgs>
@@ -8614,6 +8629,7 @@ export namespace Prisma {
       createdAt: Date
       updatedAt: Date
       pageId: number | null
+      parentTagId: number | null
     }, ExtArgs["result"]["categories"]>
     composites: {}
   }
@@ -9046,6 +9062,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"Categories", 'DateTime'>
     readonly updatedAt: FieldRef<"Categories", 'DateTime'>
     readonly pageId: FieldRef<"Categories", 'Int'>
+    readonly parentTagId: FieldRef<"Categories", 'Int'>
   }
     
 
@@ -45708,7 +45725,8 @@ export namespace Prisma {
     name: 'name',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    pageId: 'pageId'
+    pageId: 'pageId',
+    parentTagId: 'parentTagId'
   };
 
   export type CategoriesScalarFieldEnum = (typeof CategoriesScalarFieldEnum)[keyof typeof CategoriesScalarFieldEnum]
@@ -46478,6 +46496,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Categories"> | Date | string
     updatedAt?: DateTimeFilter<"Categories"> | Date | string
     pageId?: IntNullableFilter<"Categories"> | number | null
+    parentTagId?: IntNullableFilter<"Categories"> | number | null
     page?: XOR<PageNullableScalarRelationFilter, PageWhereInput> | null
     daughterTag?: CategoriesListRelationFilter
     parentTag?: XOR<CategoriesNullableScalarRelationFilter, CategoriesWhereInput> | null
@@ -46490,6 +46509,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     pageId?: SortOrderInput | SortOrder
+    parentTagId?: SortOrderInput | SortOrder
     page?: PageOrderByWithRelationInput
     daughterTag?: CategoriesOrderByRelationAggregateInput
     parentTag?: CategoriesOrderByWithRelationInput
@@ -46505,6 +46525,7 @@ export namespace Prisma {
     NOT?: CategoriesWhereInput | CategoriesWhereInput[]
     createdAt?: DateTimeFilter<"Categories"> | Date | string
     updatedAt?: DateTimeFilter<"Categories"> | Date | string
+    parentTagId?: IntNullableFilter<"Categories"> | number | null
     page?: XOR<PageNullableScalarRelationFilter, PageWhereInput> | null
     daughterTag?: CategoriesListRelationFilter
     parentTag?: XOR<CategoriesNullableScalarRelationFilter, CategoriesWhereInput> | null
@@ -46517,6 +46538,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     pageId?: SortOrderInput | SortOrder
+    parentTagId?: SortOrderInput | SortOrder
     _count?: CategoriesCountOrderByAggregateInput
     _avg?: CategoriesAvgOrderByAggregateInput
     _max?: CategoriesMaxOrderByAggregateInput
@@ -46533,6 +46555,7 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Categories"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Categories"> | Date | string
     pageId?: IntNullableWithAggregatesFilter<"Categories"> | number | null
+    parentTagId?: IntNullableWithAggregatesFilter<"Categories"> | number | null
   }
 
   export type QuestionBankWhereInput = {
@@ -48971,6 +48994,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     pageId?: number | null
+    parentTagId?: number | null
     daughterTag?: CategoriesUncheckedCreateNestedManyWithoutParentTagInput
     questions?: QuestionBankUncheckedCreateNestedManyWithoutCategoriesInput
   }
@@ -48991,6 +49015,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pageId?: NullableIntFieldUpdateOperationsInput | number | null
+    parentTagId?: NullableIntFieldUpdateOperationsInput | number | null
     daughterTag?: CategoriesUncheckedUpdateManyWithoutParentTagNestedInput
     questions?: QuestionBankUncheckedUpdateManyWithoutCategoriesNestedInput
   }
@@ -49001,6 +49026,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     pageId?: number | null
+    parentTagId?: number | null
   }
 
   export type CategoriesUpdateManyMutationInput = {
@@ -49015,6 +49041,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pageId?: NullableIntFieldUpdateOperationsInput | number | null
+    parentTagId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type QuestionBankCreateInput = {
@@ -51610,11 +51637,13 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     pageId?: SortOrder
+    parentTagId?: SortOrder
   }
 
   export type CategoriesAvgOrderByAggregateInput = {
     id?: SortOrder
     pageId?: SortOrder
+    parentTagId?: SortOrder
   }
 
   export type CategoriesMaxOrderByAggregateInput = {
@@ -51623,6 +51652,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     pageId?: SortOrder
+    parentTagId?: SortOrder
   }
 
   export type CategoriesMinOrderByAggregateInput = {
@@ -51631,11 +51661,13 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     pageId?: SortOrder
+    parentTagId?: SortOrder
   }
 
   export type CategoriesSumOrderByAggregateInput = {
     id?: SortOrder
     pageId?: SortOrder
+    parentTagId?: SortOrder
   }
 
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -56335,6 +56367,7 @@ export namespace Prisma {
   }
 
   export type CategoriesUncheckedCreateWithoutParentTagInput = {
+    id?: number
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -56368,6 +56401,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     pageId?: number | null
+    parentTagId?: number | null
     questions?: QuestionBankUncheckedCreateNestedManyWithoutCategoriesInput
   }
 
@@ -56481,6 +56515,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Categories"> | Date | string
     updatedAt?: DateTimeFilter<"Categories"> | Date | string
     pageId?: IntNullableFilter<"Categories"> | number | null
+    parentTagId?: IntNullableFilter<"Categories"> | number | null
   }
 
   export type CategoriesUpsertWithoutDaughterTagInput = {
@@ -56509,6 +56544,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pageId?: NullableIntFieldUpdateOperationsInput | number | null
+    parentTagId?: NullableIntFieldUpdateOperationsInput | number | null
     questions?: QuestionBankUncheckedUpdateManyWithoutCategoriesNestedInput
   }
 
@@ -56555,6 +56591,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     pageId?: number | null
+    parentTagId?: number | null
     daughterTag?: CategoriesUncheckedCreateNestedManyWithoutParentTagInput
   }
 
@@ -56589,6 +56626,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pageId?: NullableIntFieldUpdateOperationsInput | number | null
+    parentTagId?: NullableIntFieldUpdateOperationsInput | number | null
     daughterTag?: CategoriesUncheckedUpdateManyWithoutParentTagNestedInput
   }
 
@@ -56670,6 +56708,7 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentTagId?: number | null
     daughterTag?: CategoriesUncheckedCreateNestedManyWithoutParentTagInput
     questions?: QuestionBankUncheckedCreateNestedManyWithoutCategoriesInput
   }
@@ -56900,6 +56939,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentTagId?: NullableIntFieldUpdateOperationsInput | number | null
     daughterTag?: CategoriesUncheckedUpdateManyWithoutParentTagNestedInput
     questions?: QuestionBankUncheckedUpdateManyWithoutCategoriesNestedInput
   }
@@ -60373,6 +60413,7 @@ export namespace Prisma {
   }
 
   export type CategoriesCreateManyParentTagInput = {
+    id?: number
     name: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -60397,6 +60438,7 @@ export namespace Prisma {
   }
 
   export type CategoriesUncheckedUpdateWithoutParentTagInput = {
+    id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -60406,6 +60448,7 @@ export namespace Prisma {
   }
 
   export type CategoriesUncheckedUpdateManyWithoutParentTagInput = {
+    id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

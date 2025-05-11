@@ -74,8 +74,9 @@ model Categories {
 
   // One - Many relation (Tree type structure)
   daughterTag Categories[] @relation("TagToTag")
-  parentTag   Categories?  @relation("TagToTag", fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
+  parentTag   Categories?  @relation("TagToTag", fields: [parentTagId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  parentTagId Int?
+  
   // One - Many relation (Categories to Questions)
   questions  QuestionBank[] @relation("TagToQuestionBank")
 

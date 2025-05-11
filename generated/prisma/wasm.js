@@ -154,7 +154,8 @@ exports.Prisma.CategoriesScalarFieldEnum = {
   name: 'name',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  pageId: 'pageId'
+  pageId: 'pageId',
+  parentTagId: 'parentTagId'
 };
 
 exports.Prisma.QuestionBankScalarFieldEnum = {
