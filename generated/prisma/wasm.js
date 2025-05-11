@@ -157,6 +157,15 @@ exports.Prisma.CategoriesScalarFieldEnum = {
   pageId: 'pageId'
 };
 
+exports.Prisma.QuestionBankScalarFieldEnum = {
+  id: 'id',
+  question: 'question',
+  answer: 'answer',
+  options: 'options',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.TagsScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -493,6 +502,7 @@ exports.Prisma.ModelName = {
   UserData: 'UserData',
   Template: 'Template',
   Categories: 'Categories',
+  QuestionBank: 'QuestionBank',
   Tags: 'Tags',
   Page: 'Page',
   Comment: 'Comment',

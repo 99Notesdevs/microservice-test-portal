@@ -76,7 +76,22 @@ model Categories {
   daughterTag Categories[] @relation("TagToTag")
   parentTag   Categories?  @relation("TagToTag", fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
+  // One - Many relation (Categories to Questions)
+  questions  QuestionBank[] @relation("TagToQuestionBank")
+
   @@index([name])
+}
+
+model QuestionBank {
+  id        Int      @id @default(autoincrement())
+  question  String
+  answer    String
+  options   String[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // One - Many relation (Categories to Questions)
+  categories Categories @relation("TagToQuestionBank", fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Tags {

@@ -34,6 +34,11 @@ export type Template = $Result.DefaultSelection<Prisma.$TemplatePayload>
  */
 export type Categories = $Result.DefaultSelection<Prisma.$CategoriesPayload>
 /**
+ * Model QuestionBank
+ * 
+ */
+export type QuestionBank = $Result.DefaultSelection<Prisma.$QuestionBankPayload>
+/**
  * Model Tags
  * 
  */
@@ -399,6 +404,16 @@ export class PrismaClient<
     * ```
     */
   get categories(): Prisma.CategoriesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.questionBank`: Exposes CRUD operations for the **QuestionBank** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more QuestionBanks
+    * const questionBanks = await prisma.questionBank.findMany()
+    * ```
+    */
+  get questionBank(): Prisma.QuestionBankDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.tags`: Exposes CRUD operations for the **Tags** model.
@@ -1153,6 +1168,7 @@ export namespace Prisma {
     UserData: 'UserData',
     Template: 'Template',
     Categories: 'Categories',
+    QuestionBank: 'QuestionBank',
     Tags: 'Tags',
     Page: 'Page',
     Comment: 'Comment',
@@ -1202,7 +1218,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "userData" | "template" | "categories" | "tags" | "page" | "comment" | "currentAffairArticle" | "currentAffair" | "authToken" | "about99Notes" | "resetPassToken" | "admin" | "adminOps" | "editor" | "author" | "formData" | "blogs" | "category" | "product" | "order" | "orderItem" | "cart" | "cartItem" | "inventory" | "shipping" | "address" | "wishList" | "payment" | "chatRoom" | "chatMessage" | "chatParticipant" | "practice" | "solvedPractice" | "wrongPractice"
+      modelProps: "user" | "userData" | "template" | "categories" | "questionBank" | "tags" | "page" | "comment" | "currentAffairArticle" | "currentAffair" | "authToken" | "about99Notes" | "resetPassToken" | "admin" | "adminOps" | "editor" | "author" | "formData" | "blogs" | "category" | "product" | "order" | "orderItem" | "cart" | "cartItem" | "inventory" | "shipping" | "address" | "wishList" | "payment" | "chatRoom" | "chatMessage" | "chatParticipant" | "practice" | "solvedPractice" | "wrongPractice"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1499,6 +1515,80 @@ export namespace Prisma {
           count: {
             args: Prisma.CategoriesCountArgs<ExtArgs>
             result: $Utils.Optional<CategoriesCountAggregateOutputType> | number
+          }
+        }
+      }
+      QuestionBank: {
+        payload: Prisma.$QuestionBankPayload<ExtArgs>
+        fields: Prisma.QuestionBankFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.QuestionBankFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionBankPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.QuestionBankFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionBankPayload>
+          }
+          findFirst: {
+            args: Prisma.QuestionBankFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionBankPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.QuestionBankFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionBankPayload>
+          }
+          findMany: {
+            args: Prisma.QuestionBankFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionBankPayload>[]
+          }
+          create: {
+            args: Prisma.QuestionBankCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionBankPayload>
+          }
+          createMany: {
+            args: Prisma.QuestionBankCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.QuestionBankCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionBankPayload>[]
+          }
+          delete: {
+            args: Prisma.QuestionBankDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionBankPayload>
+          }
+          update: {
+            args: Prisma.QuestionBankUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionBankPayload>
+          }
+          deleteMany: {
+            args: Prisma.QuestionBankDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.QuestionBankUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.QuestionBankUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionBankPayload>[]
+          }
+          upsert: {
+            args: Prisma.QuestionBankUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionBankPayload>
+          }
+          aggregate: {
+            args: Prisma.QuestionBankAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateQuestionBank>
+          }
+          groupBy: {
+            args: Prisma.QuestionBankGroupByArgs<ExtArgs>
+            result: $Utils.Optional<QuestionBankGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.QuestionBankCountArgs<ExtArgs>
+            result: $Utils.Optional<QuestionBankCountAggregateOutputType> | number
           }
         }
       }
@@ -3884,6 +3974,7 @@ export namespace Prisma {
     userData?: UserDataOmit
     template?: TemplateOmit
     categories?: CategoriesOmit
+    questionBank?: QuestionBankOmit
     tags?: TagsOmit
     page?: PageOmit
     comment?: CommentOmit
@@ -4157,10 +4248,12 @@ export namespace Prisma {
 
   export type CategoriesCountOutputType = {
     daughterTag: number
+    questions: number
   }
 
   export type CategoriesCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     daughterTag?: boolean | CategoriesCountOutputTypeCountDaughterTagArgs
+    questions?: boolean | CategoriesCountOutputTypeCountQuestionsArgs
   }
 
   // Custom InputTypes
@@ -4179,6 +4272,13 @@ export namespace Prisma {
    */
   export type CategoriesCountOutputTypeCountDaughterTagArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CategoriesWhereInput
+  }
+
+  /**
+   * CategoriesCountOutputType without action
+   */
+  export type CategoriesCountOutputTypeCountQuestionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: QuestionBankWhereInput
   }
 
 
@@ -8451,6 +8551,7 @@ export namespace Prisma {
     page?: boolean | Categories$pageArgs<ExtArgs>
     daughterTag?: boolean | Categories$daughterTagArgs<ExtArgs>
     parentTag?: boolean | Categories$parentTagArgs<ExtArgs>
+    questions?: boolean | Categories$questionsArgs<ExtArgs>
     _count?: boolean | CategoriesCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["categories"]>
 
@@ -8487,6 +8588,7 @@ export namespace Prisma {
     page?: boolean | Categories$pageArgs<ExtArgs>
     daughterTag?: boolean | Categories$daughterTagArgs<ExtArgs>
     parentTag?: boolean | Categories$parentTagArgs<ExtArgs>
+    questions?: boolean | Categories$questionsArgs<ExtArgs>
     _count?: boolean | CategoriesCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CategoriesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8504,6 +8606,7 @@ export namespace Prisma {
       page: Prisma.$PagePayload<ExtArgs> | null
       daughterTag: Prisma.$CategoriesPayload<ExtArgs>[]
       parentTag: Prisma.$CategoriesPayload<ExtArgs> | null
+      questions: Prisma.$QuestionBankPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -8908,6 +9011,7 @@ export namespace Prisma {
     page<T extends Categories$pageArgs<ExtArgs> = {}>(args?: Subset<T, Categories$pageArgs<ExtArgs>>): Prisma__PageClient<$Result.GetResult<Prisma.$PagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     daughterTag<T extends Categories$daughterTagArgs<ExtArgs> = {}>(args?: Subset<T, Categories$daughterTagArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CategoriesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     parentTag<T extends Categories$parentTagArgs<ExtArgs> = {}>(args?: Subset<T, Categories$parentTagArgs<ExtArgs>>): Prisma__CategoriesClient<$Result.GetResult<Prisma.$CategoriesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    questions<T extends Categories$questionsArgs<ExtArgs> = {}>(args?: Subset<T, Categories$questionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionBankPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9400,6 +9504,30 @@ export namespace Prisma {
   }
 
   /**
+   * Categories.questions
+   */
+  export type Categories$questionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionBank
+     */
+    select?: QuestionBankSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionBank
+     */
+    omit?: QuestionBankOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionBankInclude<ExtArgs> | null
+    where?: QuestionBankWhereInput
+    orderBy?: QuestionBankOrderByWithRelationInput | QuestionBankOrderByWithRelationInput[]
+    cursor?: QuestionBankWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: QuestionBankScalarFieldEnum | QuestionBankScalarFieldEnum[]
+  }
+
+  /**
    * Categories without action
    */
   export type CategoriesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9415,6 +9543,1107 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: CategoriesInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model QuestionBank
+   */
+
+  export type AggregateQuestionBank = {
+    _count: QuestionBankCountAggregateOutputType | null
+    _avg: QuestionBankAvgAggregateOutputType | null
+    _sum: QuestionBankSumAggregateOutputType | null
+    _min: QuestionBankMinAggregateOutputType | null
+    _max: QuestionBankMaxAggregateOutputType | null
+  }
+
+  export type QuestionBankAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type QuestionBankSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type QuestionBankMinAggregateOutputType = {
+    id: number | null
+    question: string | null
+    answer: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type QuestionBankMaxAggregateOutputType = {
+    id: number | null
+    question: string | null
+    answer: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type QuestionBankCountAggregateOutputType = {
+    id: number
+    question: number
+    answer: number
+    options: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type QuestionBankAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type QuestionBankSumAggregateInputType = {
+    id?: true
+  }
+
+  export type QuestionBankMinAggregateInputType = {
+    id?: true
+    question?: true
+    answer?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type QuestionBankMaxAggregateInputType = {
+    id?: true
+    question?: true
+    answer?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type QuestionBankCountAggregateInputType = {
+    id?: true
+    question?: true
+    answer?: true
+    options?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type QuestionBankAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which QuestionBank to aggregate.
+     */
+    where?: QuestionBankWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of QuestionBanks to fetch.
+     */
+    orderBy?: QuestionBankOrderByWithRelationInput | QuestionBankOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: QuestionBankWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` QuestionBanks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` QuestionBanks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned QuestionBanks
+    **/
+    _count?: true | QuestionBankCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: QuestionBankAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: QuestionBankSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: QuestionBankMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: QuestionBankMaxAggregateInputType
+  }
+
+  export type GetQuestionBankAggregateType<T extends QuestionBankAggregateArgs> = {
+        [P in keyof T & keyof AggregateQuestionBank]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateQuestionBank[P]>
+      : GetScalarType<T[P], AggregateQuestionBank[P]>
+  }
+
+
+
+
+  export type QuestionBankGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: QuestionBankWhereInput
+    orderBy?: QuestionBankOrderByWithAggregationInput | QuestionBankOrderByWithAggregationInput[]
+    by: QuestionBankScalarFieldEnum[] | QuestionBankScalarFieldEnum
+    having?: QuestionBankScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: QuestionBankCountAggregateInputType | true
+    _avg?: QuestionBankAvgAggregateInputType
+    _sum?: QuestionBankSumAggregateInputType
+    _min?: QuestionBankMinAggregateInputType
+    _max?: QuestionBankMaxAggregateInputType
+  }
+
+  export type QuestionBankGroupByOutputType = {
+    id: number
+    question: string
+    answer: string
+    options: string[]
+    createdAt: Date
+    updatedAt: Date
+    _count: QuestionBankCountAggregateOutputType | null
+    _avg: QuestionBankAvgAggregateOutputType | null
+    _sum: QuestionBankSumAggregateOutputType | null
+    _min: QuestionBankMinAggregateOutputType | null
+    _max: QuestionBankMaxAggregateOutputType | null
+  }
+
+  type GetQuestionBankGroupByPayload<T extends QuestionBankGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<QuestionBankGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof QuestionBankGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], QuestionBankGroupByOutputType[P]>
+            : GetScalarType<T[P], QuestionBankGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type QuestionBankSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    question?: boolean
+    answer?: boolean
+    options?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    categories?: boolean | CategoriesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["questionBank"]>
+
+  export type QuestionBankSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    question?: boolean
+    answer?: boolean
+    options?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    categories?: boolean | CategoriesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["questionBank"]>
+
+  export type QuestionBankSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    question?: boolean
+    answer?: boolean
+    options?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    categories?: boolean | CategoriesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["questionBank"]>
+
+  export type QuestionBankSelectScalar = {
+    id?: boolean
+    question?: boolean
+    answer?: boolean
+    options?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type QuestionBankOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "question" | "answer" | "options" | "createdAt" | "updatedAt", ExtArgs["result"]["questionBank"]>
+  export type QuestionBankInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    categories?: boolean | CategoriesDefaultArgs<ExtArgs>
+  }
+  export type QuestionBankIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    categories?: boolean | CategoriesDefaultArgs<ExtArgs>
+  }
+  export type QuestionBankIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    categories?: boolean | CategoriesDefaultArgs<ExtArgs>
+  }
+
+  export type $QuestionBankPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "QuestionBank"
+    objects: {
+      categories: Prisma.$CategoriesPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      question: string
+      answer: string
+      options: string[]
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["questionBank"]>
+    composites: {}
+  }
+
+  type QuestionBankGetPayload<S extends boolean | null | undefined | QuestionBankDefaultArgs> = $Result.GetResult<Prisma.$QuestionBankPayload, S>
+
+  type QuestionBankCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<QuestionBankFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: QuestionBankCountAggregateInputType | true
+    }
+
+  export interface QuestionBankDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['QuestionBank'], meta: { name: 'QuestionBank' } }
+    /**
+     * Find zero or one QuestionBank that matches the filter.
+     * @param {QuestionBankFindUniqueArgs} args - Arguments to find a QuestionBank
+     * @example
+     * // Get one QuestionBank
+     * const questionBank = await prisma.questionBank.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends QuestionBankFindUniqueArgs>(args: SelectSubset<T, QuestionBankFindUniqueArgs<ExtArgs>>): Prisma__QuestionBankClient<$Result.GetResult<Prisma.$QuestionBankPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one QuestionBank that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {QuestionBankFindUniqueOrThrowArgs} args - Arguments to find a QuestionBank
+     * @example
+     * // Get one QuestionBank
+     * const questionBank = await prisma.questionBank.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends QuestionBankFindUniqueOrThrowArgs>(args: SelectSubset<T, QuestionBankFindUniqueOrThrowArgs<ExtArgs>>): Prisma__QuestionBankClient<$Result.GetResult<Prisma.$QuestionBankPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first QuestionBank that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionBankFindFirstArgs} args - Arguments to find a QuestionBank
+     * @example
+     * // Get one QuestionBank
+     * const questionBank = await prisma.questionBank.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends QuestionBankFindFirstArgs>(args?: SelectSubset<T, QuestionBankFindFirstArgs<ExtArgs>>): Prisma__QuestionBankClient<$Result.GetResult<Prisma.$QuestionBankPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first QuestionBank that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionBankFindFirstOrThrowArgs} args - Arguments to find a QuestionBank
+     * @example
+     * // Get one QuestionBank
+     * const questionBank = await prisma.questionBank.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends QuestionBankFindFirstOrThrowArgs>(args?: SelectSubset<T, QuestionBankFindFirstOrThrowArgs<ExtArgs>>): Prisma__QuestionBankClient<$Result.GetResult<Prisma.$QuestionBankPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more QuestionBanks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionBankFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all QuestionBanks
+     * const questionBanks = await prisma.questionBank.findMany()
+     * 
+     * // Get first 10 QuestionBanks
+     * const questionBanks = await prisma.questionBank.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const questionBankWithIdOnly = await prisma.questionBank.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends QuestionBankFindManyArgs>(args?: SelectSubset<T, QuestionBankFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionBankPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a QuestionBank.
+     * @param {QuestionBankCreateArgs} args - Arguments to create a QuestionBank.
+     * @example
+     * // Create one QuestionBank
+     * const QuestionBank = await prisma.questionBank.create({
+     *   data: {
+     *     // ... data to create a QuestionBank
+     *   }
+     * })
+     * 
+     */
+    create<T extends QuestionBankCreateArgs>(args: SelectSubset<T, QuestionBankCreateArgs<ExtArgs>>): Prisma__QuestionBankClient<$Result.GetResult<Prisma.$QuestionBankPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many QuestionBanks.
+     * @param {QuestionBankCreateManyArgs} args - Arguments to create many QuestionBanks.
+     * @example
+     * // Create many QuestionBanks
+     * const questionBank = await prisma.questionBank.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends QuestionBankCreateManyArgs>(args?: SelectSubset<T, QuestionBankCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many QuestionBanks and returns the data saved in the database.
+     * @param {QuestionBankCreateManyAndReturnArgs} args - Arguments to create many QuestionBanks.
+     * @example
+     * // Create many QuestionBanks
+     * const questionBank = await prisma.questionBank.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many QuestionBanks and only return the `id`
+     * const questionBankWithIdOnly = await prisma.questionBank.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends QuestionBankCreateManyAndReturnArgs>(args?: SelectSubset<T, QuestionBankCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionBankPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a QuestionBank.
+     * @param {QuestionBankDeleteArgs} args - Arguments to delete one QuestionBank.
+     * @example
+     * // Delete one QuestionBank
+     * const QuestionBank = await prisma.questionBank.delete({
+     *   where: {
+     *     // ... filter to delete one QuestionBank
+     *   }
+     * })
+     * 
+     */
+    delete<T extends QuestionBankDeleteArgs>(args: SelectSubset<T, QuestionBankDeleteArgs<ExtArgs>>): Prisma__QuestionBankClient<$Result.GetResult<Prisma.$QuestionBankPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one QuestionBank.
+     * @param {QuestionBankUpdateArgs} args - Arguments to update one QuestionBank.
+     * @example
+     * // Update one QuestionBank
+     * const questionBank = await prisma.questionBank.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends QuestionBankUpdateArgs>(args: SelectSubset<T, QuestionBankUpdateArgs<ExtArgs>>): Prisma__QuestionBankClient<$Result.GetResult<Prisma.$QuestionBankPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more QuestionBanks.
+     * @param {QuestionBankDeleteManyArgs} args - Arguments to filter QuestionBanks to delete.
+     * @example
+     * // Delete a few QuestionBanks
+     * const { count } = await prisma.questionBank.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends QuestionBankDeleteManyArgs>(args?: SelectSubset<T, QuestionBankDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more QuestionBanks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionBankUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many QuestionBanks
+     * const questionBank = await prisma.questionBank.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends QuestionBankUpdateManyArgs>(args: SelectSubset<T, QuestionBankUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more QuestionBanks and returns the data updated in the database.
+     * @param {QuestionBankUpdateManyAndReturnArgs} args - Arguments to update many QuestionBanks.
+     * @example
+     * // Update many QuestionBanks
+     * const questionBank = await prisma.questionBank.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more QuestionBanks and only return the `id`
+     * const questionBankWithIdOnly = await prisma.questionBank.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends QuestionBankUpdateManyAndReturnArgs>(args: SelectSubset<T, QuestionBankUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionBankPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one QuestionBank.
+     * @param {QuestionBankUpsertArgs} args - Arguments to update or create a QuestionBank.
+     * @example
+     * // Update or create a QuestionBank
+     * const questionBank = await prisma.questionBank.upsert({
+     *   create: {
+     *     // ... data to create a QuestionBank
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the QuestionBank we want to update
+     *   }
+     * })
+     */
+    upsert<T extends QuestionBankUpsertArgs>(args: SelectSubset<T, QuestionBankUpsertArgs<ExtArgs>>): Prisma__QuestionBankClient<$Result.GetResult<Prisma.$QuestionBankPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of QuestionBanks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionBankCountArgs} args - Arguments to filter QuestionBanks to count.
+     * @example
+     * // Count the number of QuestionBanks
+     * const count = await prisma.questionBank.count({
+     *   where: {
+     *     // ... the filter for the QuestionBanks we want to count
+     *   }
+     * })
+    **/
+    count<T extends QuestionBankCountArgs>(
+      args?: Subset<T, QuestionBankCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], QuestionBankCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a QuestionBank.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionBankAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends QuestionBankAggregateArgs>(args: Subset<T, QuestionBankAggregateArgs>): Prisma.PrismaPromise<GetQuestionBankAggregateType<T>>
+
+    /**
+     * Group by QuestionBank.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionBankGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends QuestionBankGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: QuestionBankGroupByArgs['orderBy'] }
+        : { orderBy?: QuestionBankGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, QuestionBankGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetQuestionBankGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the QuestionBank model
+   */
+  readonly fields: QuestionBankFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for QuestionBank.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__QuestionBankClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    categories<T extends CategoriesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CategoriesDefaultArgs<ExtArgs>>): Prisma__CategoriesClient<$Result.GetResult<Prisma.$CategoriesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the QuestionBank model
+   */
+  interface QuestionBankFieldRefs {
+    readonly id: FieldRef<"QuestionBank", 'Int'>
+    readonly question: FieldRef<"QuestionBank", 'String'>
+    readonly answer: FieldRef<"QuestionBank", 'String'>
+    readonly options: FieldRef<"QuestionBank", 'String[]'>
+    readonly createdAt: FieldRef<"QuestionBank", 'DateTime'>
+    readonly updatedAt: FieldRef<"QuestionBank", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * QuestionBank findUnique
+   */
+  export type QuestionBankFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionBank
+     */
+    select?: QuestionBankSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionBank
+     */
+    omit?: QuestionBankOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionBankInclude<ExtArgs> | null
+    /**
+     * Filter, which QuestionBank to fetch.
+     */
+    where: QuestionBankWhereUniqueInput
+  }
+
+  /**
+   * QuestionBank findUniqueOrThrow
+   */
+  export type QuestionBankFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionBank
+     */
+    select?: QuestionBankSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionBank
+     */
+    omit?: QuestionBankOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionBankInclude<ExtArgs> | null
+    /**
+     * Filter, which QuestionBank to fetch.
+     */
+    where: QuestionBankWhereUniqueInput
+  }
+
+  /**
+   * QuestionBank findFirst
+   */
+  export type QuestionBankFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionBank
+     */
+    select?: QuestionBankSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionBank
+     */
+    omit?: QuestionBankOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionBankInclude<ExtArgs> | null
+    /**
+     * Filter, which QuestionBank to fetch.
+     */
+    where?: QuestionBankWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of QuestionBanks to fetch.
+     */
+    orderBy?: QuestionBankOrderByWithRelationInput | QuestionBankOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for QuestionBanks.
+     */
+    cursor?: QuestionBankWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` QuestionBanks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` QuestionBanks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of QuestionBanks.
+     */
+    distinct?: QuestionBankScalarFieldEnum | QuestionBankScalarFieldEnum[]
+  }
+
+  /**
+   * QuestionBank findFirstOrThrow
+   */
+  export type QuestionBankFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionBank
+     */
+    select?: QuestionBankSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionBank
+     */
+    omit?: QuestionBankOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionBankInclude<ExtArgs> | null
+    /**
+     * Filter, which QuestionBank to fetch.
+     */
+    where?: QuestionBankWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of QuestionBanks to fetch.
+     */
+    orderBy?: QuestionBankOrderByWithRelationInput | QuestionBankOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for QuestionBanks.
+     */
+    cursor?: QuestionBankWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` QuestionBanks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` QuestionBanks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of QuestionBanks.
+     */
+    distinct?: QuestionBankScalarFieldEnum | QuestionBankScalarFieldEnum[]
+  }
+
+  /**
+   * QuestionBank findMany
+   */
+  export type QuestionBankFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionBank
+     */
+    select?: QuestionBankSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionBank
+     */
+    omit?: QuestionBankOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionBankInclude<ExtArgs> | null
+    /**
+     * Filter, which QuestionBanks to fetch.
+     */
+    where?: QuestionBankWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of QuestionBanks to fetch.
+     */
+    orderBy?: QuestionBankOrderByWithRelationInput | QuestionBankOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing QuestionBanks.
+     */
+    cursor?: QuestionBankWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` QuestionBanks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` QuestionBanks.
+     */
+    skip?: number
+    distinct?: QuestionBankScalarFieldEnum | QuestionBankScalarFieldEnum[]
+  }
+
+  /**
+   * QuestionBank create
+   */
+  export type QuestionBankCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionBank
+     */
+    select?: QuestionBankSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionBank
+     */
+    omit?: QuestionBankOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionBankInclude<ExtArgs> | null
+    /**
+     * The data needed to create a QuestionBank.
+     */
+    data: XOR<QuestionBankCreateInput, QuestionBankUncheckedCreateInput>
+  }
+
+  /**
+   * QuestionBank createMany
+   */
+  export type QuestionBankCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many QuestionBanks.
+     */
+    data: QuestionBankCreateManyInput | QuestionBankCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * QuestionBank createManyAndReturn
+   */
+  export type QuestionBankCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionBank
+     */
+    select?: QuestionBankSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionBank
+     */
+    omit?: QuestionBankOmit<ExtArgs> | null
+    /**
+     * The data used to create many QuestionBanks.
+     */
+    data: QuestionBankCreateManyInput | QuestionBankCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionBankIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * QuestionBank update
+   */
+  export type QuestionBankUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionBank
+     */
+    select?: QuestionBankSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionBank
+     */
+    omit?: QuestionBankOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionBankInclude<ExtArgs> | null
+    /**
+     * The data needed to update a QuestionBank.
+     */
+    data: XOR<QuestionBankUpdateInput, QuestionBankUncheckedUpdateInput>
+    /**
+     * Choose, which QuestionBank to update.
+     */
+    where: QuestionBankWhereUniqueInput
+  }
+
+  /**
+   * QuestionBank updateMany
+   */
+  export type QuestionBankUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update QuestionBanks.
+     */
+    data: XOR<QuestionBankUpdateManyMutationInput, QuestionBankUncheckedUpdateManyInput>
+    /**
+     * Filter which QuestionBanks to update
+     */
+    where?: QuestionBankWhereInput
+    /**
+     * Limit how many QuestionBanks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * QuestionBank updateManyAndReturn
+   */
+  export type QuestionBankUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionBank
+     */
+    select?: QuestionBankSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionBank
+     */
+    omit?: QuestionBankOmit<ExtArgs> | null
+    /**
+     * The data used to update QuestionBanks.
+     */
+    data: XOR<QuestionBankUpdateManyMutationInput, QuestionBankUncheckedUpdateManyInput>
+    /**
+     * Filter which QuestionBanks to update
+     */
+    where?: QuestionBankWhereInput
+    /**
+     * Limit how many QuestionBanks to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionBankIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * QuestionBank upsert
+   */
+  export type QuestionBankUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionBank
+     */
+    select?: QuestionBankSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionBank
+     */
+    omit?: QuestionBankOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionBankInclude<ExtArgs> | null
+    /**
+     * The filter to search for the QuestionBank to update in case it exists.
+     */
+    where: QuestionBankWhereUniqueInput
+    /**
+     * In case the QuestionBank found by the `where` argument doesn't exist, create a new QuestionBank with this data.
+     */
+    create: XOR<QuestionBankCreateInput, QuestionBankUncheckedCreateInput>
+    /**
+     * In case the QuestionBank was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<QuestionBankUpdateInput, QuestionBankUncheckedUpdateInput>
+  }
+
+  /**
+   * QuestionBank delete
+   */
+  export type QuestionBankDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionBank
+     */
+    select?: QuestionBankSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionBank
+     */
+    omit?: QuestionBankOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionBankInclude<ExtArgs> | null
+    /**
+     * Filter which QuestionBank to delete.
+     */
+    where: QuestionBankWhereUniqueInput
+  }
+
+  /**
+   * QuestionBank deleteMany
+   */
+  export type QuestionBankDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which QuestionBanks to delete
+     */
+    where?: QuestionBankWhereInput
+    /**
+     * Limit how many QuestionBanks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * QuestionBank without action
+   */
+  export type QuestionBankDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionBank
+     */
+    select?: QuestionBankSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionBank
+     */
+    omit?: QuestionBankOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionBankInclude<ExtArgs> | null
   }
 
 
@@ -44485,6 +45714,18 @@ export namespace Prisma {
   export type CategoriesScalarFieldEnum = (typeof CategoriesScalarFieldEnum)[keyof typeof CategoriesScalarFieldEnum]
 
 
+  export const QuestionBankScalarFieldEnum: {
+    id: 'id',
+    question: 'question',
+    answer: 'answer',
+    options: 'options',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type QuestionBankScalarFieldEnum = (typeof QuestionBankScalarFieldEnum)[keyof typeof QuestionBankScalarFieldEnum]
+
+
   export const TagsScalarFieldEnum: {
     id: 'id',
     name: 'name',
@@ -45240,6 +46481,7 @@ export namespace Prisma {
     page?: XOR<PageNullableScalarRelationFilter, PageWhereInput> | null
     daughterTag?: CategoriesListRelationFilter
     parentTag?: XOR<CategoriesNullableScalarRelationFilter, CategoriesWhereInput> | null
+    questions?: QuestionBankListRelationFilter
   }
 
   export type CategoriesOrderByWithRelationInput = {
@@ -45251,6 +46493,7 @@ export namespace Prisma {
     page?: PageOrderByWithRelationInput
     daughterTag?: CategoriesOrderByRelationAggregateInput
     parentTag?: CategoriesOrderByWithRelationInput
+    questions?: QuestionBankOrderByRelationAggregateInput
   }
 
   export type CategoriesWhereUniqueInput = Prisma.AtLeast<{
@@ -45265,6 +46508,7 @@ export namespace Prisma {
     page?: XOR<PageNullableScalarRelationFilter, PageWhereInput> | null
     daughterTag?: CategoriesListRelationFilter
     parentTag?: XOR<CategoriesNullableScalarRelationFilter, CategoriesWhereInput> | null
+    questions?: QuestionBankListRelationFilter
   }, "id" | "name" | "pageId">
 
   export type CategoriesOrderByWithAggregationInput = {
@@ -45289,6 +46533,68 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Categories"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Categories"> | Date | string
     pageId?: IntNullableWithAggregatesFilter<"Categories"> | number | null
+  }
+
+  export type QuestionBankWhereInput = {
+    AND?: QuestionBankWhereInput | QuestionBankWhereInput[]
+    OR?: QuestionBankWhereInput[]
+    NOT?: QuestionBankWhereInput | QuestionBankWhereInput[]
+    id?: IntFilter<"QuestionBank"> | number
+    question?: StringFilter<"QuestionBank"> | string
+    answer?: StringFilter<"QuestionBank"> | string
+    options?: StringNullableListFilter<"QuestionBank">
+    createdAt?: DateTimeFilter<"QuestionBank"> | Date | string
+    updatedAt?: DateTimeFilter<"QuestionBank"> | Date | string
+    categories?: XOR<CategoriesScalarRelationFilter, CategoriesWhereInput>
+  }
+
+  export type QuestionBankOrderByWithRelationInput = {
+    id?: SortOrder
+    question?: SortOrder
+    answer?: SortOrder
+    options?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    categories?: CategoriesOrderByWithRelationInput
+  }
+
+  export type QuestionBankWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: QuestionBankWhereInput | QuestionBankWhereInput[]
+    OR?: QuestionBankWhereInput[]
+    NOT?: QuestionBankWhereInput | QuestionBankWhereInput[]
+    question?: StringFilter<"QuestionBank"> | string
+    answer?: StringFilter<"QuestionBank"> | string
+    options?: StringNullableListFilter<"QuestionBank">
+    createdAt?: DateTimeFilter<"QuestionBank"> | Date | string
+    updatedAt?: DateTimeFilter<"QuestionBank"> | Date | string
+    categories?: XOR<CategoriesScalarRelationFilter, CategoriesWhereInput>
+  }, "id">
+
+  export type QuestionBankOrderByWithAggregationInput = {
+    id?: SortOrder
+    question?: SortOrder
+    answer?: SortOrder
+    options?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: QuestionBankCountOrderByAggregateInput
+    _avg?: QuestionBankAvgOrderByAggregateInput
+    _max?: QuestionBankMaxOrderByAggregateInput
+    _min?: QuestionBankMinOrderByAggregateInput
+    _sum?: QuestionBankSumOrderByAggregateInput
+  }
+
+  export type QuestionBankScalarWhereWithAggregatesInput = {
+    AND?: QuestionBankScalarWhereWithAggregatesInput | QuestionBankScalarWhereWithAggregatesInput[]
+    OR?: QuestionBankScalarWhereWithAggregatesInput[]
+    NOT?: QuestionBankScalarWhereWithAggregatesInput | QuestionBankScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"QuestionBank"> | number
+    question?: StringWithAggregatesFilter<"QuestionBank"> | string
+    answer?: StringWithAggregatesFilter<"QuestionBank"> | string
+    options?: StringNullableListFilter<"QuestionBank">
+    createdAt?: DateTimeWithAggregatesFilter<"QuestionBank"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"QuestionBank"> | Date | string
   }
 
   export type TagsWhereInput = {
@@ -47656,6 +48962,7 @@ export namespace Prisma {
     page?: PageCreateNestedOneWithoutCategoriesInput
     daughterTag?: CategoriesCreateNestedManyWithoutParentTagInput
     parentTag?: CategoriesCreateNestedOneWithoutDaughterTagInput
+    questions?: QuestionBankCreateNestedManyWithoutCategoriesInput
   }
 
   export type CategoriesUncheckedCreateInput = {
@@ -47665,6 +48972,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     pageId?: number | null
     daughterTag?: CategoriesUncheckedCreateNestedManyWithoutParentTagInput
+    questions?: QuestionBankUncheckedCreateNestedManyWithoutCategoriesInput
   }
 
   export type CategoriesUpdateInput = {
@@ -47674,6 +48982,7 @@ export namespace Prisma {
     page?: PageUpdateOneWithoutCategoriesNestedInput
     daughterTag?: CategoriesUpdateManyWithoutParentTagNestedInput
     parentTag?: CategoriesUpdateOneWithoutDaughterTagNestedInput
+    questions?: QuestionBankUpdateManyWithoutCategoriesNestedInput
   }
 
   export type CategoriesUncheckedUpdateInput = {
@@ -47683,6 +48992,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pageId?: NullableIntFieldUpdateOperationsInput | number | null
     daughterTag?: CategoriesUncheckedUpdateManyWithoutParentTagNestedInput
+    questions?: QuestionBankUncheckedUpdateManyWithoutCategoriesNestedInput
   }
 
   export type CategoriesCreateManyInput = {
@@ -47705,6 +49015,68 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pageId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type QuestionBankCreateInput = {
+    question: string
+    answer: string
+    options?: QuestionBankCreateoptionsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    categories?: CategoriesCreateNestedOneWithoutQuestionsInput
+  }
+
+  export type QuestionBankUncheckedCreateInput = {
+    id?: number
+    question: string
+    answer: string
+    options?: QuestionBankCreateoptionsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type QuestionBankUpdateInput = {
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
+    options?: QuestionBankUpdateoptionsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    categories?: CategoriesUpdateOneRequiredWithoutQuestionsNestedInput
+  }
+
+  export type QuestionBankUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
+    options?: QuestionBankUpdateoptionsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QuestionBankCreateManyInput = {
+    id?: number
+    question: string
+    answer: string
+    options?: QuestionBankCreateoptionsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type QuestionBankUpdateManyMutationInput = {
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
+    options?: QuestionBankUpdateoptionsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QuestionBankUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
+    options?: QuestionBankUpdateoptionsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TagsCreateInput = {
@@ -50218,7 +51590,17 @@ export namespace Prisma {
     isNot?: CategoriesWhereInput | null
   }
 
+  export type QuestionBankListRelationFilter = {
+    every?: QuestionBankWhereInput
+    some?: QuestionBankWhereInput
+    none?: QuestionBankWhereInput
+  }
+
   export type CategoriesOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type QuestionBankOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -50270,6 +51652,44 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type CategoriesScalarRelationFilter = {
+    is?: CategoriesWhereInput
+    isNot?: CategoriesWhereInput
+  }
+
+  export type QuestionBankCountOrderByAggregateInput = {
+    id?: SortOrder
+    question?: SortOrder
+    answer?: SortOrder
+    options?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type QuestionBankAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type QuestionBankMaxOrderByAggregateInput = {
+    id?: SortOrder
+    question?: SortOrder
+    answer?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type QuestionBankMinOrderByAggregateInput = {
+    id?: SortOrder
+    question?: SortOrder
+    answer?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type QuestionBankSumOrderByAggregateInput = {
+    id?: SortOrder
   }
 
   export type TagsCountOrderByAggregateInput = {
@@ -52276,11 +53696,25 @@ export namespace Prisma {
     connect?: CategoriesWhereUniqueInput
   }
 
+  export type QuestionBankCreateNestedManyWithoutCategoriesInput = {
+    create?: XOR<QuestionBankCreateWithoutCategoriesInput, QuestionBankUncheckedCreateWithoutCategoriesInput> | QuestionBankCreateWithoutCategoriesInput[] | QuestionBankUncheckedCreateWithoutCategoriesInput[]
+    connectOrCreate?: QuestionBankCreateOrConnectWithoutCategoriesInput | QuestionBankCreateOrConnectWithoutCategoriesInput[]
+    createMany?: QuestionBankCreateManyCategoriesInputEnvelope
+    connect?: QuestionBankWhereUniqueInput | QuestionBankWhereUniqueInput[]
+  }
+
   export type CategoriesUncheckedCreateNestedManyWithoutParentTagInput = {
     create?: XOR<CategoriesCreateWithoutParentTagInput, CategoriesUncheckedCreateWithoutParentTagInput> | CategoriesCreateWithoutParentTagInput[] | CategoriesUncheckedCreateWithoutParentTagInput[]
     connectOrCreate?: CategoriesCreateOrConnectWithoutParentTagInput | CategoriesCreateOrConnectWithoutParentTagInput[]
     createMany?: CategoriesCreateManyParentTagInputEnvelope
     connect?: CategoriesWhereUniqueInput | CategoriesWhereUniqueInput[]
+  }
+
+  export type QuestionBankUncheckedCreateNestedManyWithoutCategoriesInput = {
+    create?: XOR<QuestionBankCreateWithoutCategoriesInput, QuestionBankUncheckedCreateWithoutCategoriesInput> | QuestionBankCreateWithoutCategoriesInput[] | QuestionBankUncheckedCreateWithoutCategoriesInput[]
+    connectOrCreate?: QuestionBankCreateOrConnectWithoutCategoriesInput | QuestionBankCreateOrConnectWithoutCategoriesInput[]
+    createMany?: QuestionBankCreateManyCategoriesInputEnvelope
+    connect?: QuestionBankWhereUniqueInput | QuestionBankWhereUniqueInput[]
   }
 
   export type PageUpdateOneWithoutCategoriesNestedInput = {
@@ -52317,6 +53751,20 @@ export namespace Prisma {
     update?: XOR<XOR<CategoriesUpdateToOneWithWhereWithoutDaughterTagInput, CategoriesUpdateWithoutDaughterTagInput>, CategoriesUncheckedUpdateWithoutDaughterTagInput>
   }
 
+  export type QuestionBankUpdateManyWithoutCategoriesNestedInput = {
+    create?: XOR<QuestionBankCreateWithoutCategoriesInput, QuestionBankUncheckedCreateWithoutCategoriesInput> | QuestionBankCreateWithoutCategoriesInput[] | QuestionBankUncheckedCreateWithoutCategoriesInput[]
+    connectOrCreate?: QuestionBankCreateOrConnectWithoutCategoriesInput | QuestionBankCreateOrConnectWithoutCategoriesInput[]
+    upsert?: QuestionBankUpsertWithWhereUniqueWithoutCategoriesInput | QuestionBankUpsertWithWhereUniqueWithoutCategoriesInput[]
+    createMany?: QuestionBankCreateManyCategoriesInputEnvelope
+    set?: QuestionBankWhereUniqueInput | QuestionBankWhereUniqueInput[]
+    disconnect?: QuestionBankWhereUniqueInput | QuestionBankWhereUniqueInput[]
+    delete?: QuestionBankWhereUniqueInput | QuestionBankWhereUniqueInput[]
+    connect?: QuestionBankWhereUniqueInput | QuestionBankWhereUniqueInput[]
+    update?: QuestionBankUpdateWithWhereUniqueWithoutCategoriesInput | QuestionBankUpdateWithWhereUniqueWithoutCategoriesInput[]
+    updateMany?: QuestionBankUpdateManyWithWhereWithoutCategoriesInput | QuestionBankUpdateManyWithWhereWithoutCategoriesInput[]
+    deleteMany?: QuestionBankScalarWhereInput | QuestionBankScalarWhereInput[]
+  }
+
   export type NullableIntFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
@@ -52337,6 +53785,43 @@ export namespace Prisma {
     update?: CategoriesUpdateWithWhereUniqueWithoutParentTagInput | CategoriesUpdateWithWhereUniqueWithoutParentTagInput[]
     updateMany?: CategoriesUpdateManyWithWhereWithoutParentTagInput | CategoriesUpdateManyWithWhereWithoutParentTagInput[]
     deleteMany?: CategoriesScalarWhereInput | CategoriesScalarWhereInput[]
+  }
+
+  export type QuestionBankUncheckedUpdateManyWithoutCategoriesNestedInput = {
+    create?: XOR<QuestionBankCreateWithoutCategoriesInput, QuestionBankUncheckedCreateWithoutCategoriesInput> | QuestionBankCreateWithoutCategoriesInput[] | QuestionBankUncheckedCreateWithoutCategoriesInput[]
+    connectOrCreate?: QuestionBankCreateOrConnectWithoutCategoriesInput | QuestionBankCreateOrConnectWithoutCategoriesInput[]
+    upsert?: QuestionBankUpsertWithWhereUniqueWithoutCategoriesInput | QuestionBankUpsertWithWhereUniqueWithoutCategoriesInput[]
+    createMany?: QuestionBankCreateManyCategoriesInputEnvelope
+    set?: QuestionBankWhereUniqueInput | QuestionBankWhereUniqueInput[]
+    disconnect?: QuestionBankWhereUniqueInput | QuestionBankWhereUniqueInput[]
+    delete?: QuestionBankWhereUniqueInput | QuestionBankWhereUniqueInput[]
+    connect?: QuestionBankWhereUniqueInput | QuestionBankWhereUniqueInput[]
+    update?: QuestionBankUpdateWithWhereUniqueWithoutCategoriesInput | QuestionBankUpdateWithWhereUniqueWithoutCategoriesInput[]
+    updateMany?: QuestionBankUpdateManyWithWhereWithoutCategoriesInput | QuestionBankUpdateManyWithWhereWithoutCategoriesInput[]
+    deleteMany?: QuestionBankScalarWhereInput | QuestionBankScalarWhereInput[]
+  }
+
+  export type QuestionBankCreateoptionsInput = {
+    set: string[]
+  }
+
+  export type CategoriesCreateNestedOneWithoutQuestionsInput = {
+    create?: XOR<CategoriesCreateWithoutQuestionsInput, CategoriesUncheckedCreateWithoutQuestionsInput>
+    connectOrCreate?: CategoriesCreateOrConnectWithoutQuestionsInput
+    connect?: CategoriesWhereUniqueInput
+  }
+
+  export type QuestionBankUpdateoptionsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type CategoriesUpdateOneRequiredWithoutQuestionsNestedInput = {
+    create?: XOR<CategoriesCreateWithoutQuestionsInput, CategoriesUncheckedCreateWithoutQuestionsInput>
+    connectOrCreate?: CategoriesCreateOrConnectWithoutQuestionsInput
+    upsert?: CategoriesUpsertWithoutQuestionsInput
+    connect?: CategoriesWhereUniqueInput
+    update?: XOR<XOR<CategoriesUpdateToOneWithWhereWithoutQuestionsInput, CategoriesUpdateWithoutQuestionsInput>, CategoriesUncheckedUpdateWithoutQuestionsInput>
   }
 
   export type PageCreateNestedManyWithoutTagsInput = {
@@ -54846,6 +56331,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     page?: PageCreateNestedOneWithoutCategoriesInput
     daughterTag?: CategoriesCreateNestedManyWithoutParentTagInput
+    questions?: QuestionBankCreateNestedManyWithoutCategoriesInput
   }
 
   export type CategoriesUncheckedCreateWithoutParentTagInput = {
@@ -54854,6 +56340,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     pageId?: number | null
     daughterTag?: CategoriesUncheckedCreateNestedManyWithoutParentTagInput
+    questions?: QuestionBankUncheckedCreateNestedManyWithoutCategoriesInput
   }
 
   export type CategoriesCreateOrConnectWithoutParentTagInput = {
@@ -54872,6 +56359,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     page?: PageCreateNestedOneWithoutCategoriesInput
     parentTag?: CategoriesCreateNestedOneWithoutDaughterTagInput
+    questions?: QuestionBankCreateNestedManyWithoutCategoriesInput
   }
 
   export type CategoriesUncheckedCreateWithoutDaughterTagInput = {
@@ -54880,11 +56368,38 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     pageId?: number | null
+    questions?: QuestionBankUncheckedCreateNestedManyWithoutCategoriesInput
   }
 
   export type CategoriesCreateOrConnectWithoutDaughterTagInput = {
     where: CategoriesWhereUniqueInput
     create: XOR<CategoriesCreateWithoutDaughterTagInput, CategoriesUncheckedCreateWithoutDaughterTagInput>
+  }
+
+  export type QuestionBankCreateWithoutCategoriesInput = {
+    question: string
+    answer: string
+    options?: QuestionBankCreateoptionsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type QuestionBankUncheckedCreateWithoutCategoriesInput = {
+    question: string
+    answer: string
+    options?: QuestionBankCreateoptionsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type QuestionBankCreateOrConnectWithoutCategoriesInput = {
+    where: QuestionBankWhereUniqueInput
+    create: XOR<QuestionBankCreateWithoutCategoriesInput, QuestionBankUncheckedCreateWithoutCategoriesInput>
+  }
+
+  export type QuestionBankCreateManyCategoriesInputEnvelope = {
+    data: QuestionBankCreateManyCategoriesInput | QuestionBankCreateManyCategoriesInput[]
+    skipDuplicates?: boolean
   }
 
   export type PageUpsertWithoutCategoriesInput = {
@@ -54985,6 +56500,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     page?: PageUpdateOneWithoutCategoriesNestedInput
     parentTag?: CategoriesUpdateOneWithoutDaughterTagNestedInput
+    questions?: QuestionBankUpdateManyWithoutCategoriesNestedInput
   }
 
   export type CategoriesUncheckedUpdateWithoutDaughterTagInput = {
@@ -54993,6 +56509,87 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pageId?: NullableIntFieldUpdateOperationsInput | number | null
+    questions?: QuestionBankUncheckedUpdateManyWithoutCategoriesNestedInput
+  }
+
+  export type QuestionBankUpsertWithWhereUniqueWithoutCategoriesInput = {
+    where: QuestionBankWhereUniqueInput
+    update: XOR<QuestionBankUpdateWithoutCategoriesInput, QuestionBankUncheckedUpdateWithoutCategoriesInput>
+    create: XOR<QuestionBankCreateWithoutCategoriesInput, QuestionBankUncheckedCreateWithoutCategoriesInput>
+  }
+
+  export type QuestionBankUpdateWithWhereUniqueWithoutCategoriesInput = {
+    where: QuestionBankWhereUniqueInput
+    data: XOR<QuestionBankUpdateWithoutCategoriesInput, QuestionBankUncheckedUpdateWithoutCategoriesInput>
+  }
+
+  export type QuestionBankUpdateManyWithWhereWithoutCategoriesInput = {
+    where: QuestionBankScalarWhereInput
+    data: XOR<QuestionBankUpdateManyMutationInput, QuestionBankUncheckedUpdateManyWithoutCategoriesInput>
+  }
+
+  export type QuestionBankScalarWhereInput = {
+    AND?: QuestionBankScalarWhereInput | QuestionBankScalarWhereInput[]
+    OR?: QuestionBankScalarWhereInput[]
+    NOT?: QuestionBankScalarWhereInput | QuestionBankScalarWhereInput[]
+    id?: IntFilter<"QuestionBank"> | number
+    question?: StringFilter<"QuestionBank"> | string
+    answer?: StringFilter<"QuestionBank"> | string
+    options?: StringNullableListFilter<"QuestionBank">
+    createdAt?: DateTimeFilter<"QuestionBank"> | Date | string
+    updatedAt?: DateTimeFilter<"QuestionBank"> | Date | string
+  }
+
+  export type CategoriesCreateWithoutQuestionsInput = {
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    page?: PageCreateNestedOneWithoutCategoriesInput
+    daughterTag?: CategoriesCreateNestedManyWithoutParentTagInput
+    parentTag?: CategoriesCreateNestedOneWithoutDaughterTagInput
+  }
+
+  export type CategoriesUncheckedCreateWithoutQuestionsInput = {
+    id?: number
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    pageId?: number | null
+    daughterTag?: CategoriesUncheckedCreateNestedManyWithoutParentTagInput
+  }
+
+  export type CategoriesCreateOrConnectWithoutQuestionsInput = {
+    where: CategoriesWhereUniqueInput
+    create: XOR<CategoriesCreateWithoutQuestionsInput, CategoriesUncheckedCreateWithoutQuestionsInput>
+  }
+
+  export type CategoriesUpsertWithoutQuestionsInput = {
+    update: XOR<CategoriesUpdateWithoutQuestionsInput, CategoriesUncheckedUpdateWithoutQuestionsInput>
+    create: XOR<CategoriesCreateWithoutQuestionsInput, CategoriesUncheckedCreateWithoutQuestionsInput>
+    where?: CategoriesWhereInput
+  }
+
+  export type CategoriesUpdateToOneWithWhereWithoutQuestionsInput = {
+    where?: CategoriesWhereInput
+    data: XOR<CategoriesUpdateWithoutQuestionsInput, CategoriesUncheckedUpdateWithoutQuestionsInput>
+  }
+
+  export type CategoriesUpdateWithoutQuestionsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    page?: PageUpdateOneWithoutCategoriesNestedInput
+    daughterTag?: CategoriesUpdateManyWithoutParentTagNestedInput
+    parentTag?: CategoriesUpdateOneWithoutDaughterTagNestedInput
+  }
+
+  export type CategoriesUncheckedUpdateWithoutQuestionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pageId?: NullableIntFieldUpdateOperationsInput | number | null
+    daughterTag?: CategoriesUncheckedUpdateManyWithoutParentTagNestedInput
   }
 
   export type PageCreateWithoutTagsInput = {
@@ -55065,6 +56662,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     daughterTag?: CategoriesCreateNestedManyWithoutParentTagInput
     parentTag?: CategoriesCreateNestedOneWithoutDaughterTagInput
+    questions?: QuestionBankCreateNestedManyWithoutCategoriesInput
   }
 
   export type CategoriesUncheckedCreateWithoutPageInput = {
@@ -55073,6 +56671,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     daughterTag?: CategoriesUncheckedCreateNestedManyWithoutParentTagInput
+    questions?: QuestionBankUncheckedCreateNestedManyWithoutCategoriesInput
   }
 
   export type CategoriesCreateOrConnectWithoutPageInput = {
@@ -55293,6 +56892,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     daughterTag?: CategoriesUpdateManyWithoutParentTagNestedInput
     parentTag?: CategoriesUpdateOneWithoutDaughterTagNestedInput
+    questions?: QuestionBankUpdateManyWithoutCategoriesNestedInput
   }
 
   export type CategoriesUncheckedUpdateWithoutPageInput = {
@@ -55301,6 +56901,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     daughterTag?: CategoriesUncheckedUpdateManyWithoutParentTagNestedInput
+    questions?: QuestionBankUncheckedUpdateManyWithoutCategoriesNestedInput
   }
 
   export type TagsUpsertWithWhereUniqueWithoutPagesInput = {
@@ -58778,12 +60379,21 @@ export namespace Prisma {
     pageId?: number | null
   }
 
+  export type QuestionBankCreateManyCategoriesInput = {
+    question: string
+    answer: string
+    options?: QuestionBankCreateoptionsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type CategoriesUpdateWithoutParentTagInput = {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     page?: PageUpdateOneWithoutCategoriesNestedInput
     daughterTag?: CategoriesUpdateManyWithoutParentTagNestedInput
+    questions?: QuestionBankUpdateManyWithoutCategoriesNestedInput
   }
 
   export type CategoriesUncheckedUpdateWithoutParentTagInput = {
@@ -58792,6 +60402,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pageId?: NullableIntFieldUpdateOperationsInput | number | null
     daughterTag?: CategoriesUncheckedUpdateManyWithoutParentTagNestedInput
+    questions?: QuestionBankUncheckedUpdateManyWithoutCategoriesNestedInput
   }
 
   export type CategoriesUncheckedUpdateManyWithoutParentTagInput = {
@@ -58799,6 +60410,30 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     pageId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type QuestionBankUpdateWithoutCategoriesInput = {
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
+    options?: QuestionBankUpdateoptionsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QuestionBankUncheckedUpdateWithoutCategoriesInput = {
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
+    options?: QuestionBankUpdateoptionsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QuestionBankUncheckedUpdateManyWithoutCategoriesInput = {
+    question?: StringFieldUpdateOperationsInput | string
+    answer?: StringFieldUpdateOperationsInput | string
+    options?: QuestionBankUpdateoptionsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PageUpdateWithoutTagsInput = {
