@@ -5,18 +5,19 @@ export class QuestionBankService {
 
     static async getPracticeQuestions(categoryIds: number[], limit: number) {
         // Refine category ids -- returns an array of numbers
-        const categories = await CategoryService.getCategoriesByIds(categoryIds);
-        
+        const categories = await CategoryService.getCategoriesByIds(categoryIds) as {id: number, name: string}[];
         // Make the limits per category
         const limitPerCategory = limit > categories.length ? Math.floor(limit / categories.length) : 1;
         
         // Get questions for each category
         const questions = await Promise.all(
-            categories.map(async (category: number) => {
-                const questions = await QuestionBankRepository.getQuestionsByCategoryId(category, limitPerCategory);
+            categories.map(async (category) => {
+                const questions = await QuestionBankRepository.getQuestionsByCategoryId(category.id, limitPerCategory);
                 return questions;
             })
         );
+        console.log("Questions: ", questions);
+        return questions.flat();
     }
 
     static async getQuestionsByCategoryId(categoryId: number, limit: number) {

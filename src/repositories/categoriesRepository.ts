@@ -4,17 +4,14 @@ export class CategoryRepository {
     static async getAllUniqueCategories(categoryIds: number[]) {
         const categories = await prisma.$queryRawUnsafe(`
             WITH RECURSIVE category_tree AS (
-                -- Base case: Start with the given category IDs
-                SELECT id, name, "parentTagId"
+                SELECT id, name, "parentTagId"      
                 FROM "Categories"
-                WHERE id = ANY($1)
+                WHERE id = ANY($1::int[])
                 UNION ALL
-                -- Recursive case: Find all children of the current categories
                 SELECT c.id, c.name, c."parentTagId"
                 FROM "Categories" c
                 INNER JOIN category_tree ct ON c."parentTagId" = ct.id
             )
-            -- Select all unique categories from the tree
             SELECT DISTINCT id, name
             FROM category_tree;
         `, categoryIds);
@@ -23,11 +20,7 @@ export class CategoryRepository {
     }
     
     static async getAllCategories() {
-        const categories = await prisma.categories.findMany({
-            include: {
-                questionBank: true, // Include related question bank data
-            },
-        });
+        const categories = await prisma.categories.findMany({});
         return categories;
     }
 
@@ -35,10 +28,7 @@ export class CategoryRepository {
         const category = await prisma.categories.findUnique({
             where: {
                 id: categoryId,
-            },
-            include: {
-                questionBank: true, // Include related question bank data
-            },
+            }
         });
         return category;
     }

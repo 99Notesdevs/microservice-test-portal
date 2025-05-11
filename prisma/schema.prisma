@@ -5,8 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
@@ -92,7 +92,8 @@ model QuestionBank {
   updatedAt DateTime @updatedAt
 
   // One - Many relation (Categories to Questions)
-  categories Categories @relation("TagToQuestionBank", fields: [id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  categories Categories @relation("TagToQuestionBank", fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  categoryId Int
 }
 
 model Tags {

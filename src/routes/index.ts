@@ -1,4 +1,5 @@
 import { Router } from "express";
+import questionRouter from "./questions";
 
 const router = Router();
 
@@ -9,5 +10,7 @@ router.get("/healthCheck", (req, res) => {
         status: 200,
     });
 });
+
+router.use('/questions', questionRouter);
 
 export default router;

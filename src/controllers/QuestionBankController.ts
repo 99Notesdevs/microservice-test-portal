@@ -1,18 +1,72 @@
 import { Request, Response } from 'express';
 import { QuestionBankService } from '../services/questionBankService';
+import { parse } from 'path';
 
 export default class QuestionBankController {
     static async getPracticeQuestions(req: Request, res: Response) {
         try {
-            const { limit } = req.query || 10;
-            const { categoryIds } = req.body;
+            const { limit, categoryIds } = req.query || 10;
             if (!categoryIds) {
                 throw new Error('Category IDs are required');
             }
-            const questions = await QuestionBankService.getPracticeQuestions(categoryIds, Number(limit));
-            res.status(200).json(questions);
+            const parsedCategoryIds = categoryIds.toString().split(',').map((id) => Number(id));        
+            const questions = await QuestionBankService.getPracticeQuestions(parsedCategoryIds, Number(limit));
+            res.status(200).json({ success: true, data: questions });
         } catch (error: unknown) {
             res.status(404).json({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' });
+        }
+    }
+
+    static async getQuestionById(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            if (!id) {
+                throw new Error('Question ID is required');
+            }
+            const question = await QuestionBankService.getQuestionById(Number(id));
+            res.status(200).json({ success: true, data: question });
+        } catch (error: unknown) {
+            res.status(404).json({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' });
+        }
+    }
+
+    static async createQuestion(req: Request, res: Response) {
+        try {
+            const { question, answer, options, categoryId } = req.body;
+            if (!question || !answer || !options || !categoryId) {
+                throw new Error('All fields (question, answer, options, categoryId) are required');
+            }
+            const newQuestion = await QuestionBankService.createQuestion({ question, answer, options, categoryId });
+            res.status(201).json({ success: true, data: newQuestion });
+        } catch (error: unknown) {
+            res.status(400).json({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' });
+        }
+    }
+
+    static async updateQuestion(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            const data = req.body;
+            if (!id) {
+                throw new Error('Question ID is required');
+            }
+            const updatedQuestion = await QuestionBankService.updateQuestion(Number(id), data);
+            res.status(200).json({ success: true, data: updatedQuestion });
+        } catch (error: unknown) {
+            res.status(400).json({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' });
+        }
+    }
+
+    static async deleteQuestion(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            if (!id) {
+                throw new Error('Question ID is required');
+            }
+            await QuestionBankService.deleteQuestion(Number(id));
+            res.status(200).json({ success: true, message: 'Question deleted successfully' });
+        } catch (error: unknown) {
+            res.status(400).json({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' });
         }
     }
 }

@@ -2,20 +2,13 @@ import { prisma } from "../config/prisma";
 
 export class QuestionBankRepository {
     static async getQuestionsByCategoryId(categoryId: number, limit: number) {
-        const questions = await prisma.questionBank.findMany({
-            where: {
-                categories: {
-                    id: categoryId, // Match the category ID
-                },
-            },
-            include: {
-                categories: true, // Include related category data
-            },
-            orderBy: {
-                random: true, // Randomize the order of questions
-            },
-            take: limit
-        });
+        const questions = await prisma.$queryRawUnsafe(
+            `
+                SELECT * FROM "QuestionBank"
+                WHERE "categoryId" = ($1)
+                ORDER BY random()
+                LIMIT ($2)
+            `, categoryId, limit);
         return questions;
     }
 
