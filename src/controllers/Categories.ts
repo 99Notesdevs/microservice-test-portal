@@ -39,11 +39,11 @@ export default class CategoriesController {
 
     static async createCategory(req: Request, res: Response) {
         try {
-            const { name } = req.body;
+            const { name, pageId, parentTagId } = req.body;
             if (!name) {
                 throw new Error('Category name is required');
             }
-            const category = await CategoryService.createCategory(name);
+            const category = await CategoryService.createCategory(name, pageId, parentTagId);
             res.status(201).json({ success: true, data: category });
         } catch (error: unknown) {
             res.status(400).json({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' });

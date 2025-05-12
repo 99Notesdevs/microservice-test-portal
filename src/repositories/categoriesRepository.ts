@@ -20,7 +20,7 @@ export class CategoryRepository {
     }
     
     static async getAllCategories() {
-        const categories = await prisma.categories.findMany({});
+        const categories = await prisma.categories.findMany();
         return categories;
     }
 
@@ -33,10 +33,11 @@ export class CategoryRepository {
         return category;
     }
 
-    static async createCategory(name: string) {
+    static async createCategory(name: string, pageId: number, parentTagId: number) {
         const category = await prisma.categories.create({
             data: {
                 name,
+                parentTagId
             },
         });
         return category;

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import questionRouter from "./questions";
+import categoryRouter from "./categories";
 
 const router = Router();
 
@@ -12,5 +13,6 @@ router.get("/healthCheck", (req, res) => {
 });
 
 router.use('/questions', questionRouter);
+router.use('/categories', categoryRouter);
 
 export default router;

@@ -16,7 +16,6 @@ export class QuestionBankService {
                 return questions;
             })
         );
-        console.log("Questions: ", questions);
         return questions.flat();
     }
 

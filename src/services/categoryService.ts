@@ -19,8 +19,8 @@ export default class CategoryService {
         return category;
     }
 
-    static async createCategory(name: string) {
-        const category = await CategoryRepository.createCategory(name);
+    static async createCategory(name: string, pageId: number, parentTagId: number) {
+        const category = await CategoryRepository.createCategory(name, pageId, parentTagId);
         return category;
     }
 
