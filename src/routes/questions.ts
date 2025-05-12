@@ -3,7 +3,7 @@ import QuestionBankController from '../controllers/QuestionBankController';
 
 const questionRouter = Router();
 
-// Query: /practice?limit=x&categoryIds=y
+// Query: /practice?limit=x&categoryIds=y,z,v
 questionRouter.get('/practice', QuestionBankController.getPracticeQuestions);
 
 // Params: /:id

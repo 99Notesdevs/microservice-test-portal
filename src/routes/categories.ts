@@ -8,7 +8,7 @@ categoryRouter.get('/', CategoriesController.getAllCategories);
 // Params: /:id
 categoryRouter.get('/:id', CategoriesController.getCategoryById);
 
-// Body: { name: string }
+// Body: { name: string, parentTagId: number }
 categoryRouter.post('/', CategoriesController.createCategory);
 
 // Params: /:id
