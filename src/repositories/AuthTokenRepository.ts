@@ -18,7 +18,7 @@ export class AuthTokenRepository {
       where: { token },
       select: { token: true, type: true },
     });
-    logger.info("Exiting getAuthToken repository method", { token });
+    logger.info(`Exiting getAuthToken repository method ${token}`, { token });
     return result;
   }
 

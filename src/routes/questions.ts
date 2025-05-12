@@ -5,22 +5,20 @@ import { authorizeRoles } from '../middlewares/authorizeRoles';
 
 const questionRouter = Router();
 
-questionRouter.use(authenticate);
-
 // Query: /practice?limit=x&categoryIds=y,z,v
-questionRouter.get('/practice', authorizeRoles(["Admin", "User"]), QuestionBankController.getPracticeQuestions);
+questionRouter.get('/practice', authenticate, authorizeRoles(["Admin", "User"]), QuestionBankController.getPracticeQuestions);
 
 // Params: /:id
-questionRouter.get('/:id', authorizeRoles(["Admin", "User"]), QuestionBankController.getQuestionById);
+questionRouter.get('/:id', authenticate, authorizeRoles(["Admin", "User"]), QuestionBankController.getQuestionById);
 
 // Body: { question: string, answer: string, options: string[], categoryId: number }
-questionRouter.post('/', authorizeRoles(["Admin"]), QuestionBankController.createQuestion);
+questionRouter.post('/', authenticate, authorizeRoles(["Admin"]), QuestionBankController.createQuestion);
 
 // Params: /:id
 // Body: Partial<{ question: string, answer: string, options: string[], categoryId: number }>
-questionRouter.put('/:id', authorizeRoles(["Admin"]), QuestionBankController.updateQuestion);
+questionRouter.put('/:id', authenticate, authorizeRoles(["Admin"]), QuestionBankController.updateQuestion);
 
 // Params: /:id
-questionRouter.delete('/:id', authorizeRoles(["Admin"]), QuestionBankController.deleteQuestion);
+questionRouter.delete('/:id', authenticate, authorizeRoles(["Admin"]), QuestionBankController.deleteQuestion);
 
 export default questionRouter;
