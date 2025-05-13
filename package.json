@@ -29,6 +29,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
+    "kafkajs": "^2.2.4",
     "pino": "^9.6.0",
     "pino-loki": "^2.5.0",
     "prisma": "^6.7.0",

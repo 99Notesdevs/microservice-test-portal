@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { QuestionBankService } from '../services/questionBankService';
-import { parse } from 'path';
+import { sendMessage } from '../utils/Kafka/producer';
+import logger from '../utils/logger';
 
 export default class QuestionBankController {
     static async getPracticeQuestions(req: Request, res: Response) {
@@ -9,9 +10,15 @@ export default class QuestionBankController {
             if (!categoryIds) {
                 throw new Error('Category IDs are required');
             }
-            const parsedCategoryIds = categoryIds.toString().split(',').map((id) => Number(id));        
-            const questions = await QuestionBankService.getPracticeQuestions(parsedCategoryIds, Number(limit));
-            res.status(200).json({ success: true, data: questions });
+            logger.info(`Fetching questions for categories: ${categoryIds}`);
+            await sendMessage('question-fetch', {
+                categoryIds: categoryIds.toString(),
+                limit: Number(limit),
+                userId: req.body.authUser
+            });
+            // const parsedCategoryIds = categoryIds.toString().split(',').map((id) => Number(id));        
+            // const questions = await QuestionBankService.getPracticeQuestions(parsedCategoryIds, Number(limit));
+            res.status(202).json({ success: true, msg: "Request Queued..." });
         } catch (error: unknown) {
             res.status(404).json({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' });
         }
