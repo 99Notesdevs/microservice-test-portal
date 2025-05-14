@@ -5,7 +5,8 @@ import logger from './utils/logger';
 import { setupSocketIO } from './config/socket';
 import { createClient } from 'redis';
 import { createAdapter } from '@socket.io/redis-adapter';
-import { createConsumer } from './utils/Kafka/Workers/fetch-worker';
+import { createFetchConsumer } from './utils/Kafka/Workers/fetch-worker';
+import { createSubmitConsumer } from './utils/Kafka/Workers/submit-worker';
 
 dotenv.config();
 
@@ -18,7 +19,8 @@ const server = http.createServer(app);
 const io = setupSocketIO(server);
 
 // Start kafka consumer
-createConsumer();
+createFetchConsumer();
+createSubmitConsumer();
 
 // Configure Redis adapter for Socket.IO if Redis is available
 if (process.env.REDIS_URL) {

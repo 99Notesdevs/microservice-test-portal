@@ -8,7 +8,7 @@ export const kafka = new Kafka({
   brokers: ['kafka:9092'],
 })
 
-export const createConsumer = async () => {
+export const createFetchConsumer = async () => {
   const consumer = kafka.consumer({ groupId: 'fetch-group' })
 
   await consumer.connect()
