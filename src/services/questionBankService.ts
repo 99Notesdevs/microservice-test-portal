@@ -39,6 +39,8 @@ export class QuestionBankService {
         answer: string;
         options: string[];
         categoryId: number;
+        creatorName: string;
+        explaination: string;
     }) {
         const question = await QuestionBankRepository.createQuestion(data);
         return question;
@@ -49,6 +51,8 @@ export class QuestionBankService {
         answer: string;
         options: string[];
         categoryId: number;
+        creatorName: string;
+        explaination: string;
     }>) {
         const question = await QuestionBankRepository.updateQuestion(questionId, data);
         return question;

@@ -70,11 +70,11 @@ export default class QuestionBankController {
 
     static async createQuestion(req: Request, res: Response) {
         try {
-            const { question, answer, options, categoryId } = req.body;
-            if (!question || !answer || !options || !categoryId) {
-                throw new Error('All fields (question, answer, options, categoryId) are required');
+            const { question, answer, options, categoryId, creatorName, explaination } = req.body;
+            if (!question || !answer || !options || !categoryId || !creatorName || !explaination) {
+                throw new Error('All fields (question, answer, options, categoryId, creatorName, explaination) are required');
             }
-            const newQuestion = await QuestionBankService.createQuestion({ question, answer, options, categoryId });
+            const newQuestion = await QuestionBankService.createQuestion({ question, answer, options, categoryId, creatorName, explaination });
             res.status(201).json({ success: true, data: newQuestion });
         } catch (error: unknown) {
             res.status(400).json({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' });
