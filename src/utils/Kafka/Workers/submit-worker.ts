@@ -22,14 +22,14 @@ export const createSubmitConsumer = async () => {
       
       const { submissions, userId } = JSON.parse(message.value?.toString() || '{}');
 
-      const result: Record<string, boolean> = {};
+      const result: Record<string, object> = {};
 
       for (const sub of submissions) {
         const { questionId, selectedOption } = sub;
         const question = await QuestionBankService.getQuestionById(Number(questionId));
         if (question) {
           const isCorrect = question.answer === selectedOption;
-          result[questionId] = isCorrect;
+          result[questionId] = {...question, isCorrect};
         }
       }
 
