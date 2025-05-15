@@ -25,7 +25,7 @@ export const createFetchConsumer = async () => {
       const { categoryIds, limit, userId } = JSON.parse(message.value?.toString() || '{}');
       
       const parsedCategoryIds = categoryIds.toString().split(',').map((id: string) => Number(id));        
-      const questions = await QuestionBankService.getPracticeQuestions(parsedCategoryIds, Number(limit));
+      const questions = await QuestionBankService.getTestQuestions(parsedCategoryIds, Number(limit));
 
       // Emit socket event to a userId
       // logger.info(`Questinos: ${JSON.stringify(questions)}`);

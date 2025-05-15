@@ -12,6 +12,21 @@ export class QuestionBankRepository {
         return questions;
     }
 
+    static async getPracticeQuestionsByCategoryId(categoryId: number, limit: number) {
+        const questions = await prisma.questionBank.findMany({
+            where: {
+                categories: {
+                    id: categoryId,
+                },
+            },
+            orderBy: {
+                createdAt: 'desc',
+            },
+            take: limit,
+        });
+        return questions;
+    }
+
     static async getQuestionById(questionId: number) {
         const question = await prisma.questionBank.findUnique({
             where: {
