@@ -4,7 +4,7 @@ import { sendMessage } from '../utils/Kafka/producer';
 import logger from '../utils/logger';
 
 export default class QuestionBankController {
-    static async getPracticeQuestions(req: Request, res: Response) {
+    static async getTestQuestions(req: Request, res: Response) {
         try {
             const { limit, categoryIds } = req.query || 10;
             if (!categoryIds) {
@@ -19,6 +19,20 @@ export default class QuestionBankController {
             // const parsedCategoryIds = categoryIds.toString().split(',').map((id) => Number(id));        
             // const questions = await QuestionBankService.getPracticeQuestions(parsedCategoryIds, Number(limit));
             res.status(202).json({ success: true, msg: "Request Queued..." });
+        } catch (error: unknown) {
+            res.status(404).json({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' });
+        }
+    }
+
+    static async getPracticeQuestions(req: Request, res: Response) {
+        try {
+            const { categoryId, limit } = req.query;
+            if(!categoryId) throw new Error('Category ID is required');
+            const parsedCategoryId = Number(categoryId);
+            if (isNaN(parsedCategoryId)) throw new Error('Invalid Category ID');
+            logger.info(`Fetching practice questions for category: ${parsedCategoryId}`);
+            const questions = await QuestionBankService.getPracticeQuestions(parsedCategoryId, Number(limit));
+            res.status(200).json({ success: true, data: questions });
         } catch (error: unknown) {
             res.status(404).json({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' });
         }

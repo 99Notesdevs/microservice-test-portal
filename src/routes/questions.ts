@@ -5,8 +5,11 @@ import { authorizeRoles } from '../middlewares/authorizeRoles';
 
 const questionRouter = Router();
 
-// Query: /practice?limit=x&categoryIds=y,z,v
-questionRouter.get('/practice', authenticate, authorizeRoles(["Admin", "User"]), QuestionBankController.getPracticeQuestions);
+// Query: /test?limit=x&categoryIds=y,z,v
+questionRouter.get('/test', authenticate, authorizeRoles(["Admin", "User"]), QuestionBankController.getTestQuestions);
+
+// Query: /practice?categoryId=x
+questionRouter.get('/practice', QuestionBankController.getPracticeQuestions);
 
 // Params: /:id
 questionRouter.get('/:id', authenticate, authorizeRoles(["Admin", "User"]), QuestionBankController.getQuestionById);

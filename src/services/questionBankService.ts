@@ -3,7 +3,7 @@ import CategoryService from "./categoryService";
 
 export class QuestionBankService {
 
-    static async getPracticeQuestions(categoryIds: number[], limit: number) {
+    static async getTestQuestions(categoryIds: number[], limit: number) {
         // Refine category ids -- returns an array of numbers
         const categories = await CategoryService.getCategoriesByIds(categoryIds) as {id: number, name: string}[];
         // Make the limits per category
@@ -17,6 +17,11 @@ export class QuestionBankService {
             })
         );
         return questions.flat();
+    }
+
+    static async getPracticeQuestions(categoryId: number, limit: number) {
+        const questions = await QuestionBankRepository.getPracticeQuestionsByCategoryId(categoryId, limit);
+        return questions;
     }
 
     static async getQuestionsByCategoryId(categoryId: number, limit: number) {
