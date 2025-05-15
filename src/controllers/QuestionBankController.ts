@@ -24,6 +24,23 @@ export default class QuestionBankController {
         }
     }
 
+    static async submitQuestions(req: Request, res: Response) {
+        try {
+            const { submissions } = req.body;
+            if (!submissions || !Array.isArray(submissions)) {
+                throw new Error('Submissions are required');
+            }
+            logger.info(`Submitting questions for user: ${req.body.authUser}`);
+            await sendMessage('question-submit', {
+                submissions,
+                userId: req.body.authUser
+            });
+            res.status(202).json({ success: true, msg: "Request Queued..." });
+        } catch (error: unknown) {
+            res.status(404).json({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' });
+        }
+    }
+
     static async getQuestionById(req: Request, res: Response) {
         try {
             const { id } = req.params;

@@ -14,6 +14,9 @@ questionRouter.get('/:id', authenticate, authorizeRoles(["Admin", "User"]), Ques
 // Body: { question: string, answer: string, options: string[], categoryId: number }
 questionRouter.post('/', authenticate, authorizeRoles(["Admin"]), QuestionBankController.createQuestion);
 
+// Body: { submissions: Array<{ questionId: number, selectedOption: string }> }
+questionRouter.post('/submit', authenticate, authorizeRoles(["Admin", "User"]), QuestionBankController.submitQuestions);
+
 // Params: /:id
 // Body: Partial<{ question: string, answer: string, options: string[], categoryId: number }>
 questionRouter.put('/:id', authenticate, authorizeRoles(["Admin"]), QuestionBankController.updateQuestion);
