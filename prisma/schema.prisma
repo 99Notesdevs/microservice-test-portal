@@ -76,22 +76,70 @@ model Categories {
   daughterTag Categories[] @relation("TagToTag")
   parentTag   Categories?  @relation("TagToTag", fields: [parentTagId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   parentTagId Int?
-  
+
   // One - Many relation (Categories to Questions)
-  questions  QuestionBank[] @relation("TagToQuestionBank")
+  questions QuestionBank[] @relation("TagToQuestionBank")
+
+  @@index([name])
+}
+
+// Pre configured tests for the users
+model Tests {
+  id                    Int      @id @default(autoincrement())
+  name                  String
+  correctAttempted      Int
+  wrongAttempted        Int
+  notAttempted          Int
+  partialAttempted      Int?
+  partialNotAttempted   Int?
+  partialWrongAttempted Int?
+  timeTaken             Int
+  questionsSingle       Int
+  questionsMultiple     Int?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@index([name])
+}
+
+model TestSeries {
+  id                    Int      @id @default(autoincrement())
+  name                  String   @unique
+  correctAttempted      Int
+  wrongAttempted        Int
+  notAttempted          Int
+  partialAttempted      Int?
+  partialNotAttempted   Int?
+  partialWrongAttempted Int?
+  timeTaken             Int
+  questionsSingle       Int
+  questionsMultiple     Int?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  questionIds Int[]
+  questions   QuestionBank[] @relation("TestSeriesToQuestionBank")
 
   @@index([name])
 }
 
 model QuestionBank {
-  id        Int      @id @default(autoincrement())
-  question  String
-  answer    String
-  options   String[]
-  explaination String @default("")
-  creatorName String @default("")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                  Int      @id @default(autoincrement())
+  question            String
+  answer              String
+  options             String[]
+  explaination        String   @default("")
+  creatorName         String   @default("")
+  pyq                 Boolean  @default(false)
+  multipleCorrectType Boolean  @default(false)
+  year                Int?
+  acceptance          Int?
+  rating              Decimal?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  // Test series to question bank relation
+  testSeries TestSeries[] @relation("TestSeriesToQuestionBank")
 
   // One - Many relation (Categories to Questions)
   categories Categories @relation("TagToQuestionBank", fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -105,7 +153,7 @@ model Tags {
   updatedAt DateTime @updatedAt
 
   // Many - Many relation between Tags and Pages
-  pages Page[] @relation("TagToPage")
+  pages Page[]  @relation("TagToPage")
   blogs Blogs[] @relation("TagToBlog")
 
   @@index([name])
@@ -281,7 +329,7 @@ model Blogs {
   content   String
   metadata  String?
   imageUrl  String?
-  tags Tags[] @relation("TagToBlog")
+  tags      Tags[]   @relation("TagToBlog")
   order     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
