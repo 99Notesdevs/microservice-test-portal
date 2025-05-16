@@ -1,6 +1,8 @@
 import { Router } from "express";
 import questionRouter from "./questions";
 import categoryRouter from "./categories";
+import testSeriesRouter from "./testSeries";
+import testRouter from "./test";
 
 const router = Router();
 
@@ -14,5 +16,7 @@ router.get("/healthCheck", (req, res) => {
 
 router.use('/questions', questionRouter);
 router.use('/categories', categoryRouter);
+router.use('/testSeries', testSeriesRouter);
+router.use('/test', testRouter);
 
 export default router;
