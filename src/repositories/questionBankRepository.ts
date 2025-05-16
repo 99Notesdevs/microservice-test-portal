@@ -46,6 +46,7 @@ export class QuestionBankRepository {
         categoryId: number;
         creatorName: string;
         explaination: string;
+        multipleCorrectType: boolean;
     }) {
         const question = await prisma.questionBank.create({
             data: {
@@ -57,6 +58,7 @@ export class QuestionBankRepository {
                 },
                 creatorName: data.creatorName,
                 explaination: data.explaination,
+                multipleCorrectType: data.multipleCorrectType,
             },
         });
         return question;
@@ -69,6 +71,7 @@ export class QuestionBankRepository {
         categoryId: number;
         creatorName: string;
         explaination: string;
+        multipleCorrectType: boolean;
     }>) {
         const question = await prisma.questionBank.update({
             where: {
@@ -85,6 +88,7 @@ export class QuestionBankRepository {
                 }),
                 creatorName: data.creatorName,
                 explaination: data.explaination,
+                multipleCorrectType: data.multipleCorrectType,
             },
         });
         return question;
