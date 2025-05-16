@@ -168,11 +168,16 @@ model Page {
   metadata String?
   status   String  @default("draft")
   imageUrl String?
-  author   String?
 
   categories Categories? @relation()
 
   tags Tags[] @relation("TagToPage")
+
+  authorId Int?
+  author   Author? @relation("AuthorToPage", fields: [authorId], references: [id])
+
+  adminId Int?
+  admin   Admin? @relation("AdminToPage", fields: [adminId], references: [id])
 
   templateId String
   template   Template @relation(fields: [templateId], references: [id])
@@ -282,11 +287,15 @@ model ResetPassToken {
 
 model Admin {
   id        Int      @id @default(autoincrement())
+  name      String   @default("99Notes")
+  image     String?  @default("")
   email     String   @unique
   password  String
   secretKey String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  pages Page[] @relation("AdminToPage")
 }
 
 model AdminOps {
@@ -297,22 +306,27 @@ model AdminOps {
 }
 
 model Editor {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  name        String   @default("")
+  image       String   @default("")
+  description String   @default("")
+  email       String   @unique
+  password    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Author {
   id         Int      @id @default(autoincrement())
-  name       String
+  name       String   @default("")
   email      String   @unique
-  image      String?
+  image      String?  @default("")
   desciption String?
   password   String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  pages Page[] @relation("AuthorToPage")
 }
 
 model FormData {
