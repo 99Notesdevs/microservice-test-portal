@@ -4,7 +4,11 @@ import logger from "../utils/logger";
 
 export class TestSeriesRepository {
     static async getAllTestSeries() {
-        const testSeries = await prisma.testSeries.findMany();
+        const testSeries = await prisma.testSeries.findMany({
+            include: {
+                questions: true
+            }
+        });
         logger.info(`Fetched all test series: ${JSON.stringify(testSeries)}`);
         return testSeries;
     }
@@ -12,12 +16,16 @@ export class TestSeriesRepository {
     static async getTestSeriesById(id: number) {
         const testSeries = await prisma.testSeries.findUnique({
             where: { id },
+            include: {
+                questions: true
+            }
         });
         logger.info(`Fetched test series by ID ${id}: ${JSON.stringify(testSeries)}`);
         return testSeries;
     }
 
     static async createTestSeries(data: ITestSeries) {
+        logger.info(`Creating test series with data: ${typeof data.questionIds}`);
         const testSeries = await prisma.testSeries.create({
             data: {
                 name: data.name,
@@ -32,7 +40,7 @@ export class TestSeriesRepository {
                 questionsMultiple: data.questionsMultiple,
                 questions: {
                     connect: data.questionIds.map((questionId) => ({
-                        id: questionId,
+                        id: Number(questionId),
                     })),
                 }
             },
@@ -57,7 +65,7 @@ export class TestSeriesRepository {
                 questionsMultiple: data.questionsMultiple,
                 questions: {
                     set: (data.questionIds ?? []).map((questionId) => ({
-                        id: questionId,
+                        id: Number(questionId),
                     })),
                 }
             },

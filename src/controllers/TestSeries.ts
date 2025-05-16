@@ -1,5 +1,6 @@
 import { TestSeriesService } from "../services/testSeriesService";
 import { Request, Response } from "express";
+import logger from "../utils/logger";
 
 export class TestSeriesController {
   static async getAllTestSeries(req: Request, res: Response) {
