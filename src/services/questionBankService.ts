@@ -7,7 +7,7 @@ export class QuestionBankService {
         // Refine category ids -- returns an array of numbers
         const categories = await CategoryService.getCategoriesByIds(categoryIds) as {id: number, name: string}[];
         // Make the limits per category
-        const limitPerCategory = limit > categories.length ? Math.floor(limit / categories.length) : 1;
+        const limitPerCategory = limit > categories.length ? Math.ceil(limit / categories.length) : 1;
         
         // Get questions for each category
         const questions = await Promise.all(
@@ -16,7 +16,7 @@ export class QuestionBankService {
                 return questions;
             })
         );
-        return questions.flat();
+        return questions.flat().slice(0, limit);
     }
 
     static async getPracticeQuestions(categoryId: number, limit: number) {
