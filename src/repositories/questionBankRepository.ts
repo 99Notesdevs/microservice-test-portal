@@ -18,6 +18,7 @@ export class QuestionBankRepository {
                 categories: {
                     id: categoryId,
                 },
+                pyq: true
             },
             orderBy: {
                 createdAt: 'desc',
