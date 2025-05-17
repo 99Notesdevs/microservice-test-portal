@@ -19,6 +19,11 @@ export class QuestionBankService {
         return questions.flat().slice(0, limit);
     }
 
+    static async getAllQuestions(limit: number, categoryId: number) {
+        const questions = await QuestionBankRepository.getAllQuestions(limit, categoryId);
+        return questions;
+    }
+
     static async getPracticeQuestions(categoryId: number, limit: number) {
         const questions = await QuestionBankRepository.getPracticeQuestionsByCategoryId(categoryId, limit);
         return questions;

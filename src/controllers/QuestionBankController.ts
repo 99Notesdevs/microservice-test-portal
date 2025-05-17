@@ -24,6 +24,16 @@ export default class QuestionBankController {
         }
     }
 
+    static async getAllQuestions(req: Request, res: Response) {
+        try {
+            const { limit, categoryId } = req.query;
+            const questions = await QuestionBankService.getAllQuestions(Number(limit), Number(categoryId));
+            res.status(200).json({ success: true, data: questions });
+        } catch (error: unknown) {
+            res.status(404).json({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' });
+        }
+    }
+
     static async getPracticeQuestions(req: Request, res: Response) {
         try {
             const { categoryId, limit } = req.query;
