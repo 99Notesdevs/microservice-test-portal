@@ -51,13 +51,14 @@ export default class QuestionBankController {
 
     static async submitQuestions(req: Request, res: Response) {
         try {
-            const { submissions } = req.body;
+            const { submissions, markingScheme } = req.body;
             if (!submissions || !Array.isArray(submissions)) {
                 throw new Error('Submissions are required');
             }
             logger.info(`Submitting questions for user: ${req.body.authUser}`);
             await sendMessage('question-submit', {
                 submissions,
+                markingScheme,
                 userId: req.body.authUser
             });
             res.status(202).json({ success: true, msg: "Request Queued..." });
