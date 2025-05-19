@@ -13,3 +13,13 @@ export interface ITest {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface IUserTest {
+  id?: number;
+  userId?: number;
+  questionIds: number[];
+  response: string;
+  result: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}

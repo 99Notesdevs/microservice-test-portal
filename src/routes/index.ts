@@ -3,6 +3,7 @@ import questionRouter from "./questions";
 import categoryRouter from "./categories";
 import testSeriesRouter from "./testSeries";
 import testRouter from "./test";
+import premiumUserRouter from "./premiumUser";
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router.use('/questions', questionRouter);
 router.use('/categories', categoryRouter);
 router.use('/testSeries', testSeriesRouter);
 router.use('/test', testRouter);
+router.use('/user', premiumUserRouter)
 
 export default router;

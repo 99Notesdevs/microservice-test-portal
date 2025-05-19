@@ -14,3 +14,13 @@ export interface ITestSeries {
   updatedAt?: Date;
   questionIds: number[];
 }
+
+export interface IUserTestSeries {
+  id?: number;
+  userId?: number;
+  testId: number;
+  response: string;
+  result: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
