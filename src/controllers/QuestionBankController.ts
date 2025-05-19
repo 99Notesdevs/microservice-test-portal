@@ -6,7 +6,7 @@ import logger from '../utils/logger';
 export default class QuestionBankController {
     static async getTestQuestions(req: Request, res: Response) {
         try {
-            const { limit, categoryIds } = req.query || 10;
+            const { limit, categoryIds, multiplechoice } = req.query || 10;
             if (!categoryIds) {
                 throw new Error('Category IDs are required');
             }
@@ -14,7 +14,8 @@ export default class QuestionBankController {
             await sendMessage('question-fetch', {
                 categoryIds: categoryIds.toString(),
                 limit: Number(limit),
-                userId: req.body.authUser
+                userId: req.body.authUser,
+                multiplechoice: Number(multiplechoice)
             });
             // const parsedCategoryIds = categoryIds.toString().split(',').map((id) => Number(id));        
             // const questions = await QuestionBankService.getPracticeQuestions(parsedCategoryIds, Number(limit));

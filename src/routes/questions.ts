@@ -5,7 +5,7 @@ import { authorizeRoles } from '../middlewares/authorizeRoles';
 
 const questionRouter = Router();
 
-// Query: /test?limit=x&categoryIds=y,z,v
+// Query: /test?limit=x&categoryIds=y,z,v&multiplechoice={0|1}
 questionRouter.get('/test', authenticate, authorizeRoles(["Admin", "User"]), QuestionBankController.getTestQuestions);
 
 // Query: /practice?categoryId=x

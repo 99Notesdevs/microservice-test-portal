@@ -1,14 +1,14 @@
 import { prisma } from "../config/prisma";
 
 export class QuestionBankRepository {
-    static async getQuestionsByCategoryId(categoryId: number, limit: number) {
+    static async getQuestionsByCategoryId(categoryId: number, limit: number, multiplechoice: number) {
         const questions = await prisma.$queryRawUnsafe(
             `
                 SELECT * FROM "QuestionBank"
-                WHERE "categoryId" = ($1)
+                WHERE "categoryId" = ($1) AND "multipleCorrectType" = ($3)
                 ORDER BY random()
                 LIMIT ($2)
-            `, categoryId, limit);
+            `, categoryId, limit, !!multiplechoice);
         return questions;
     }
 

@@ -22,10 +22,10 @@ export const createFetchConsumer = async () => {
       // console.log(`Received message from topic ${topic}: ${message.value?.toString()} on partition ${partition}`)
       logger.info(`Received message from topic ${topic}: ${message.value?.toString()} on partition ${partition}`)
       
-      const { categoryIds, limit, userId } = JSON.parse(message.value?.toString() || '{}');
+      const { categoryIds, limit, userId, multiplechoice } = JSON.parse(message.value?.toString() || '{}');
       
       const parsedCategoryIds = categoryIds.toString().split(',').map((id: string) => Number(id));        
-      const questions = await QuestionBankService.getTestQuestions(parsedCategoryIds, Number(limit));
+      const questions = await QuestionBankService.getTestQuestions(parsedCategoryIds, Number(limit), multiplechoice);
 
       // Emit socket event to a userId
       // logger.info(`Questinos: ${JSON.stringify(questions)}`);
