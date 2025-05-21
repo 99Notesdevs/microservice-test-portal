@@ -332,6 +332,7 @@ model AdminOps {
   globalRestrictions Boolean  @default(false)
   globalHeadScripts  String[] @default([])
   globalBodyScripts  String[] @default([])
+  globalCss          String @default("")
 }
 
 model Editor {
