@@ -1,22 +1,24 @@
 import { Router } from "express";
 import { PremiumUserController } from "../controllers/PremiumUser";
+import { authenticate } from "../middlewares/authenticate";
+import { authorizeRoles } from "../middlewares/authorizeRoles";
 
 const premiumUserRouter = Router();
 
-premiumUserRouter.get("/tests", PremiumUserController.getUserTests);
+premiumUserRouter.get("/tests", authenticate, authorizeRoles(["User"]), PremiumUserController.getUserTests);
 
-premiumUserRouter.get("/testSeries", PremiumUserController.getUserTestSeries);
+premiumUserRouter.get("/testSeries", authenticate, authorizeRoles(["User"]), PremiumUserController.getUserTestSeries);
 
-premiumUserRouter.get("/tests/:id", PremiumUserController.getUserTest);
+premiumUserRouter.get("/tests/:id", authenticate, authorizeRoles(["User"]), PremiumUserController.getUserTest);
 
-premiumUserRouter.get("/testSeries/:id", PremiumUserController.getOneUserTestSeries);
+premiumUserRouter.get("/testSeries/:id", authenticate, authorizeRoles(["User"]), PremiumUserController.getOneUserTestSeries);
 
-premiumUserRouter.post("/tests", PremiumUserController.storeUserTest);
+premiumUserRouter.post("/tests", authenticate, authorizeRoles(["User"]), PremiumUserController.storeUserTest);
 
-premiumUserRouter.post("/testSeries", PremiumUserController.storeUserTestSeries);
+premiumUserRouter.post("/testSeries", authenticate, authorizeRoles(["User"]), PremiumUserController.storeUserTestSeries);
 
-premiumUserRouter.put("/tests/:id", PremiumUserController.updateUserTest);
+premiumUserRouter.put("/tests/:id", authenticate, authorizeRoles(["User"]), PremiumUserController.updateUserTest);
 
-premiumUserRouter.put("/testSeries/:id", PremiumUserController.updateUserTestSeries);
+premiumUserRouter.put("/testSeries/:id", authenticate, authorizeRoles(["User"]), PremiumUserController.updateUserTestSeries);
 
 export default premiumUserRouter;
