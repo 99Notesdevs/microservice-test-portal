@@ -26,10 +26,26 @@ export default class QuestionBankController {
         }
     }
 
+    static async getQuestionsByIds(req: Request, res: Response) {
+        try {
+            const { ids } = req.query;
+            if (!ids) {
+                throw new Error('Question IDs are required');
+            }
+            const parsedIds = ids.toString().split(',').map((id) => Number(id));
+            logger.info(`Fetching questions for IDs: ${parsedIds}`);
+            const questions = await QuestionBankService.getQuestionByIds(parsedIds);
+            logger.info(`Questions: ${JSON.stringify(questions)}`);
+            res.status(200).json({ success: true, data: questions });
+        } catch(error: unknown) {
+            res.status(404).json({ success: false, message: error instanceof Error ? error.message : "Internal Server Error" });
+        }
+    }
+
     static async getAllQuestions(req: Request, res: Response) {
         try {
-            const { limit, categoryId } = req.query;
-            const questions = await QuestionBankService.getAllQuestions(Number(limit), Number(categoryId));
+            const { categoryId } = req.query;
+            const questions = await QuestionBankService.getAllQuestions(Number(categoryId));
             res.status(200).json({ success: true, data: questions });
         } catch (error: unknown) {
             res.status(404).json({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' });

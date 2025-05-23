@@ -11,8 +11,11 @@ questionRouter.get('/test', authenticate, authorizeRoles(["Admin", "User"]), Que
 // Query: /practice?categoryId=x
 questionRouter.get('/practice', QuestionBankController.getPracticeQuestions);
 
-// Query: /?limit=x&categoryId=y
-questionRouter.get('/', authenticate, authorizeRoles(["Admin"]), QuestionBankController.getAllQuestions);
+// Query: /?categoryId=y
+questionRouter.get('/', authenticate, authorizeRoles(["Admin", "User"]), QuestionBankController.getAllQuestions);
+
+// Query: /ids?ids=x,y,z
+questionRouter.get('/ids', authenticate, authorizeRoles(["Admin", "User"]), QuestionBankController.getQuestionsByIds);
 
 // Params: /:id
 questionRouter.get('/:id', authenticate, authorizeRoles(["Admin", "User"]), QuestionBankController.getQuestionById);
