@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
-import { AuthTokenRepository } from '../repositories/AuthTokenRepository';
 import dotenv from 'dotenv';
 import logger from '../utils/logger';
+import { getAuthToken } from '../grpc/client/client';
 
 dotenv.config();
 const secret = process.env.TOKEN_SECRET || '';
@@ -15,7 +15,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
         const token = cookie.split(' ')[1];
         if(!token) throw new Error('No token provided');
 
-        const authRepo = await AuthTokenRepository.getAuthToken(token);
+        const authRepo = await getAuthToken(token);
         if (!authRepo) throw new Error('Cannot get token');
         const type = authRepo.type;
         

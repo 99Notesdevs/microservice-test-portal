@@ -4,13 +4,10 @@ import categoryRouter from "./categories";
 import testSeriesRouter from "./testSeries";
 import testRouter from "./test";
 import premiumUserRouter from "./premiumUser";
-import { getUserDetails } from "../grpc/client/client";
 
 const router = Router();
 
 router.get("/healthCheck", async (req, res) => {
-    const response = await getUserDetails("1");
-    console.log(response);
     res.status(200).json({
         message: "Welcome to test portal micorservice",
         status: 200,
