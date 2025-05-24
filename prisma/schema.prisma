@@ -200,7 +200,7 @@ model Page {
   metadata       String?
   status         String  @default("draft")
   imageUrl       String?
-  questionNumber Int     @default(0)
+  questionNumber Int?
 
   categories Categories? @relation()
 
@@ -339,6 +339,7 @@ model AdminOps {
   globalHeadScripts  String[] @default([])
   globalBodyScripts  String[] @default([])
   globalCss          String   @default("")
+  practiceQuestions  Int      @default(0)
 }
 
 model Editor {
