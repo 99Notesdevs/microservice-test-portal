@@ -62,6 +62,9 @@ export class QuestionBankRepository {
         creatorName: string;
         explaination: string;
         multipleCorrectType: boolean;
+        pyq: boolean;
+        year: number | null;
+        acceptance: number | null;
     }) {
         const question = await prisma.questionBank.create({
             data: {
@@ -74,6 +77,9 @@ export class QuestionBankRepository {
                 creatorName: data.creatorName,
                 explaination: data.explaination,
                 multipleCorrectType: data.multipleCorrectType,
+                pyq: data.pyq,
+                year: data.year,
+                acceptance: data.acceptance,
             },
         });
         return question;
@@ -87,6 +93,9 @@ export class QuestionBankRepository {
         creatorName: string;
         explaination: string;
         multipleCorrectType: boolean;
+        pyq: boolean;
+        year: number | null;
+        acceptance: number | null;
     }>) {
         const question = await prisma.questionBank.update({
             where: {
@@ -104,6 +113,9 @@ export class QuestionBankRepository {
                 creatorName: data.creatorName,
                 explaination: data.explaination,
                 multipleCorrectType: data.multipleCorrectType,
+                pyq: data.pyq,
+                year: data.year,
+                acceptance: data.acceptance,
             },
         });
         return question;

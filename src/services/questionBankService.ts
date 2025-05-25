@@ -53,6 +53,9 @@ export class QuestionBankService {
         creatorName: string;
         explaination: string;
         multipleCorrectType: boolean;
+        pyq: boolean;
+        year: number | null;
+        acceptance: number | null;
     }) {
         const question = await QuestionBankRepository.createQuestion(data);
         return question;
@@ -66,6 +69,9 @@ export class QuestionBankService {
         creatorName: string;
         explaination: string;
         multipleCorrectType: boolean;
+        pyq: boolean;
+        year: number | null;
+        acceptance: number | null;
     }>) {
         const question = await QuestionBankRepository.updateQuestion(questionId, data);
         return question;
