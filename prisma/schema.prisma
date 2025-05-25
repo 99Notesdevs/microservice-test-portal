@@ -21,6 +21,8 @@ model User {
   email           String            @unique
   phone           String?           @unique
   password        String
+  oauthId         String?
+  oauthProvider   String?           @default("local")
   userData        UserData?
   comments        Comment[]         @relation("UserToComment")
   resetPassTokens ResetPassToken[]
