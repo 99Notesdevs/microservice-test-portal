@@ -1,4 +1,5 @@
 import { QuestionBankRepository } from "../repositories/questionBankRepository";
+import logger from "../utils/logger";
 import CategoryService from "./categoryService";
 
 export class QuestionBankService {
@@ -19,9 +20,19 @@ export class QuestionBankService {
         return questions.flat().slice(0, limit);
     }
 
-    static async getAllQuestions(limit: number, categoryId: number) {
-        const questions = await QuestionBankRepository.getAllQuestions(limit, categoryId);
+    static async getAllQuestions(categoryId: number) {
+        const questions = await QuestionBankRepository.getAllQuestions(categoryId);
         return questions;
+    }
+
+    static async getQuestionByIds(parsedIds: number[]) {
+        let result = {}
+        for(const id of parsedIds) {
+            const question = await QuestionBankRepository.getQuestionById(id);
+            result = {...result, [`${id}`]: question}
+        }
+        logger.info(`Done fetching...`);
+        return result;
     }
 
     static async getPracticeQuestions(categoryId: number, limit: number) {

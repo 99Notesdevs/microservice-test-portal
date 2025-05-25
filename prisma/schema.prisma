@@ -31,6 +31,7 @@ model User {
   chatRooms       ChatParticipant[]
   UserTests       UserTests[]
   UserTestSeries  UserTestSeries[]
+  bookmarks       Page[]            @relation("UserBookmark")
   wishList        WishList?
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
@@ -62,7 +63,7 @@ model UserTests {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId])
+  @@index([userId])
 }
 
 model UserTestSeries {
@@ -74,7 +75,8 @@ model UserTestSeries {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  test TestSeries @relation("UserTestSeries", fields: [testId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
@@ -147,7 +149,8 @@ model TestSeries {
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 
-  questions QuestionBank[] @relation("TestSeriesToQuestionBank")
+  users     UserTestSeries[] @relation("UserTestSeries")
+  questions QuestionBank[]   @relation("TestSeriesToQuestionBank")
 
   @@index([name])
 }
@@ -189,16 +192,19 @@ model Tags {
 }
 
 model Page {
-  id       Int     @id @default(autoincrement())
-  slug     String  @unique
-  title    String
-  content  String
-  link     String?
-  metadata String?
-  status   String  @default("draft")
-  imageUrl String?
+  id             Int     @id @default(autoincrement())
+  slug           String  @unique
+  title          String
+  content        String
+  link           String?
+  metadata       String?
+  status         String  @default("draft")
+  imageUrl       String?
+  questionNumber Int?
 
   categories Categories? @relation()
+
+  bookmarkBy User[] @relation("UserBookmark")
 
   tags Tags[] @relation("TagToPage")
 
@@ -332,7 +338,8 @@ model AdminOps {
   globalRestrictions Boolean  @default(false)
   globalHeadScripts  String[] @default([])
   globalBodyScripts  String[] @default([])
-  globalCss          String @default("")
+  globalCss          String   @default("")
+  practiceQuestions  Int      @default(0)
 }
 
 model Editor {

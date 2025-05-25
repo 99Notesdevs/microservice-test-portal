@@ -17,6 +17,14 @@ export class PremiumUserRepository {
   static async getUserTestSeries(userId: number) {
     const userTestSeries = await prisma.userTestSeries.findMany({
       where: { userId },
+      include: {
+        test: {
+          select: {
+            id: true,
+            name: true
+          },
+        },
+      },
     });
     logger.info(`Fetched test series for user ID ${userId}: ${JSON.stringify(userTestSeries)}`);
     return userTestSeries;
@@ -35,6 +43,14 @@ export class PremiumUserRepository {
   static async getOneUserTestSeries(id: number) {
     const userTestSeries = await prisma.userTestSeries.findUnique({
       where: { id },
+      include: {
+        test: {
+          select: {
+            id: true,
+            name: true
+          },
+        },
+      },
     });
     logger.info(`Fetched user test series with ID ${id}: ${JSON.stringify(userTestSeries)}`);
     return userTestSeries;
@@ -59,9 +75,9 @@ export class PremiumUserRepository {
     const userTestSeries = await prisma.userTestSeries.create({
       data: {
         userId: data.userId!,
-        testId: data.testId!,
         response: JSON.stringify(data),
         result: JSON.stringify(data),
+        testId: data.testId!,
       },
     });
     logger.info(`Stored user test series: ${JSON.stringify(userTestSeries)}`);

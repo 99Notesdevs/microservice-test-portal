@@ -6,16 +6,17 @@ import logger from '../utils/logger';
 export default class QuestionBankController {
     static async getTestQuestions(req: Request, res: Response) {
         try {
-            const { limit, categoryIds, multiplechoice } = req.query || 10;
-            if (!categoryIds) {
+            const { limitS, limitM, categoryS, categoryM } = req.query || 10;
+            if (!(categoryM || categoryS)) {
                 throw new Error('Category IDs are required');
             }
-            logger.info(`Fetching questions for categories: ${categoryIds}`);
+            logger.info(`Fetching questions for categories single: ${categoryS} and categories multiple: ${categoryM}`);
             await sendMessage('question-fetch', {
-                categoryIds: categoryIds.toString(),
-                limit: Number(limit),
-                userId: req.body.authUser,
-                multiplechoice: Number(multiplechoice)
+                categoryS: categoryS?.toString(),
+                limitS: Number(limitS),
+                categoryM: categoryM?.toString(),
+                limitM: Number(limitM),
+                userId: req.body.authUser
             });
             // const parsedCategoryIds = categoryIds.toString().split(',').map((id) => Number(id));        
             // const questions = await QuestionBankService.getPracticeQuestions(parsedCategoryIds, Number(limit));
@@ -25,10 +26,26 @@ export default class QuestionBankController {
         }
     }
 
+    static async getQuestionsByIds(req: Request, res: Response) {
+        try {
+            const { ids } = req.query;
+            if (!ids) {
+                throw new Error('Question IDs are required');
+            }
+            const parsedIds = ids.toString().split(',').map((id) => Number(id));
+            logger.info(`Fetching questions for IDs: ${parsedIds}`);
+            const questions = await QuestionBankService.getQuestionByIds(parsedIds);
+            logger.info(`Questions: ${JSON.stringify(questions)}`);
+            res.status(200).json({ success: true, data: questions });
+        } catch(error: unknown) {
+            res.status(404).json({ success: false, message: error instanceof Error ? error.message : "Internal Server Error" });
+        }
+    }
+
     static async getAllQuestions(req: Request, res: Response) {
         try {
-            const { limit, categoryId } = req.query;
-            const questions = await QuestionBankService.getAllQuestions(Number(limit), Number(categoryId));
+            const { categoryId } = req.query;
+            const questions = await QuestionBankService.getAllQuestions(Number(categoryId));
             res.status(200).json({ success: true, data: questions });
         } catch (error: unknown) {
             res.status(404).json({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' });

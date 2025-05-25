@@ -40,7 +40,7 @@ export class QuestionBankRepository {
         return question;
     }
 
-    static async getAllQuestions(limit: number, categoryId: number) {
+    static async getAllQuestions(categoryId: number) {
         const questions = await prisma.questionBank.findMany({
             where: {
                 categories: {
@@ -50,7 +50,6 @@ export class QuestionBankRepository {
             orderBy: {
                 createdAt: 'desc',
             },
-            take: limit,
         });
         return questions;
     }

@@ -22,10 +22,15 @@ export const createFetchConsumer = async () => {
       // console.log(`Received message from topic ${topic}: ${message.value?.toString()} on partition ${partition}`)
       logger.info(`Received message from topic ${topic}: ${message.value?.toString()} on partition ${partition}`)
       
-      const { categoryIds, limit, userId, multiplechoice } = JSON.parse(message.value?.toString() || '{}');
+      const { categoryS, limitS, categoryM, limitM, userId } = JSON.parse(message.value?.toString() || '{}');
       
-      const parsedCategoryIds = categoryIds.toString().split(',').map((id: string) => Number(id));        
-      const questions = await QuestionBankService.getTestQuestions(parsedCategoryIds, Number(limit), multiplechoice);
+      const parsedCategoryIdsS = categoryS.toString().split(',').map((id: string) => Number(id));        
+      const questionsS = await QuestionBankService.getTestQuestions(parsedCategoryIdsS, Number(limitS), 0);
+
+      const parsedCategoryIdsM = categoryM.toString().split(',').map((id: string) => Number(id));
+      const questionsM = await QuestionBankService.getTestQuestions(parsedCategoryIdsM, Number(limitM), 1);
+
+      const questions = [...questionsS, ...questionsM];
 
       // Emit socket event to a userId
       // logger.info(`Questinos: ${JSON.stringify(questions)}`);
