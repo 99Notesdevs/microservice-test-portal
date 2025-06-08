@@ -2,6 +2,7 @@ import { QuestionBankService } from '../../../services/questionBankService';
 import logger from '../../logger'
 import { Kafka } from 'kafkajs'
 import { getSocketInstance } from '../../../config/socketInstance'; 
+import { sendMessage } from '../producer';
 
 export const kafka = new Kafka({
   clientId: 'my-test-portal',
@@ -118,6 +119,10 @@ export const createSubmitConsumer = async () => {
         status: 'success',
         userId
       });
+      await sendMessage('user-rating', {
+        userId, 
+        result
+      })
     },
   })
 }

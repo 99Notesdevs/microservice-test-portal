@@ -7,6 +7,7 @@ import { createClient } from 'redis';
 import { createAdapter } from '@socket.io/redis-adapter';
 import { createFetchConsumer } from './utils/Kafka/Workers/fetch-worker';
 import { createSubmitConsumer } from './utils/Kafka/Workers/submit-worker';
+import { createRatingConsumer } from './utils/Kafka/Workers/rating-worker';
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ const io = setupSocketIO(server);
 // Start kafka consumer
 createFetchConsumer();
 createSubmitConsumer();
+createRatingConsumer();
 
 // Configure Redis adapter for Socket.IO if Redis is available
 if (process.env.REDIS_URL) {

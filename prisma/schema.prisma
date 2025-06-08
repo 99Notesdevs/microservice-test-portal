@@ -168,8 +168,8 @@ model QuestionBank {
   pyq                 Boolean  @default(false)
   multipleCorrectType Boolean  @default(false)
   year                Int?
-  totalAttempts       Int?
-  correctAttempts     Int?
+  totalAttempts       Int?     @default(0)
+  correctAttempts     Int?     @default(0)
   rating              Int?
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt

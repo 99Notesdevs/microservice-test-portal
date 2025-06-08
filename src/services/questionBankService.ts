@@ -55,7 +55,7 @@ export class QuestionBankService {
         multipleCorrectType: boolean;
         pyq: boolean;
         year: number | null;
-        acceptance: number | null;
+        rating: number | null;
     }) {
         const question = await QuestionBankRepository.createQuestion(data);
         return question;
@@ -71,7 +71,7 @@ export class QuestionBankService {
         multipleCorrectType: boolean;
         pyq: boolean;
         year: number | null;
-        acceptance: number | null;
+        rating: number | null;
     }>) {
         const question = await QuestionBankRepository.updateQuestion(questionId, data);
         return question;

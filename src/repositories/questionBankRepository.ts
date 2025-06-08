@@ -64,7 +64,7 @@ export class QuestionBankRepository {
         multipleCorrectType: boolean;
         pyq: boolean;
         year: number | null;
-        acceptance: number | null;
+        rating: number | null;
     }) {
         const question = await prisma.questionBank.create({
             data: {
@@ -79,7 +79,24 @@ export class QuestionBankRepository {
                 multipleCorrectType: data.multipleCorrectType,
                 pyq: data.pyq,
                 year: data.year,
-                acceptance: data.acceptance,
+                rating: data.rating,
+            },
+        });
+        return question;
+    }
+
+    static async updateQuestionAttempts(questionId: number, correct: boolean) {
+        const question = await prisma.questionBank.update({
+            where: {
+                id: questionId,
+            },
+            data: {
+                totalAttempts: {
+                    increment: 1,
+                },
+                correctAttempts: correct ? {
+                    increment: 1,
+                } : undefined,
             },
         });
         return question;
@@ -95,7 +112,7 @@ export class QuestionBankRepository {
         multipleCorrectType: boolean;
         pyq: boolean;
         year: number | null;
-        acceptance: number | null;
+        rating: number | null;
     }>) {
         const question = await prisma.questionBank.update({
             where: {
@@ -115,7 +132,7 @@ export class QuestionBankRepository {
                 multipleCorrectType: data.multipleCorrectType,
                 pyq: data.pyq,
                 year: data.year,
-                acceptance: data.acceptance,
+                rating: data.rating
             },
         });
         return question;

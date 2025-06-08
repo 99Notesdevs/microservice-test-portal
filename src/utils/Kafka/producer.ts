@@ -9,7 +9,6 @@ const producer = kafka.producer()
 
 export const sendMessage = async (topic: string, message: any) => {
   await producer.connect();
-  console.log(`Sending message to topic ${topic}: ${JSON.stringify(message)}`)
   logger.info(`Sending message to topic ${topic}: ${JSON.stringify(message)}`)
   await producer.send({
     topic,
