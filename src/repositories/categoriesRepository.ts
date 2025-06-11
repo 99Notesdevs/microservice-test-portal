@@ -28,6 +28,9 @@ export class CategoryRepository {
         const category = await prisma.categories.findUnique({
             where: {
                 id: categoryId,
+            },
+            select: {
+                weight: true,
             }
         });
         return category;

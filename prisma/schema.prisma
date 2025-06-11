@@ -33,6 +33,7 @@ model User {
   chatRooms       ChatParticipant[]
   UserTests       UserTests[]
   UserTestSeries  UserTestSeries[]
+  CategoryRatings CategoryRating[]
   bookmarks       Page[]            @relation("UserBookmark")
   wishList        WishList?
   createdAt       DateTime          @default(now())
@@ -50,9 +51,21 @@ model UserData {
   rating      Int       @default(250)
   updatedAt   DateTime  @updatedAt
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
 
-  solved SolvedPractice[]
-  wrong  WrongPractice[]
+model CategoryRating {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  categoryId Int
+  rating    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Categories @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@unique([userId, categoryId])
 }
 
 model UserTests {
@@ -114,6 +127,10 @@ model Categories {
 
   // One - Many relation (Categories to Questions)
   questions QuestionBank[] @relation("TagToQuestionBank")
+
+  weight Decimal? @default(0.2)
+
+  CategoryRatings CategoryRating[]
 
   @@index([name])
 }
@@ -603,39 +620,6 @@ model ChatParticipant {
 }
 
 // ------------------------------------------------------------------------------------------ End Live Chat
-
-model Practice {
-  id        Int      @id @default(autoincrement())
-  questions String
-  options   String[]
-  level     String
-  tag       String
-  answer    String
-  type      String // either daily or topicwise
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  solvedBy SolvedPractice[]
-  wrongBy  WrongPractice[]
-}
-
-model SolvedPractice {
-  userDataId Int
-  practiceId Int
-  userData   UserData @relation(fields: [userDataId], references: [id], onDelete: Cascade)
-  practice   Practice @relation(fields: [practiceId], references: [id], onDelete: Cascade)
-
-  @@id([userDataId, practiceId])
-}
-
-model WrongPractice {
-  userDataId Int
-  practiceId Int
-  userData   UserData @relation(fields: [userDataId], references: [id], onDelete: Cascade)
-  practice   Practice @relation(fields: [practiceId], references: [id], onDelete: Cascade)
-
-  @@id([userDataId, practiceId])
-}
 
 // ------------------------------------------------------------------------------------------ ENUMs
 

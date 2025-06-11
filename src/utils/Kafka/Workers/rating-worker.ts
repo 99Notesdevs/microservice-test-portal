@@ -3,6 +3,8 @@ import { Kafka } from "kafkajs";
 import { getSocketInstance } from "../../../config/socketInstance";
 import { QuestionBankRepository } from "../../../repositories/questionBankRepository";
 import { getUserRating, updateUserRating } from "../../../grpc/client/client";
+import { RatingCategoryRepository } from "../../../repositories/ratingCategoryRepository";
+import { CategoryRepository } from "../../../repositories/categoriesRepository";
 
 const kafka = new Kafka({
   clientId: "my-test-portal",
@@ -25,30 +27,55 @@ export const createRatingConsumer = async () => {
         `Received message from topic ${topic}: ${message.value?.toString()} on partition ${partition}`
       );
 
-      // Update the number of question attempts in the database
-      // Calculate new rating of the user based on ELO
       const { userId, result } = JSON.parse(
         message.value?.toString() || "{}"
       );
 
       const Rp = (await getUserRating(userId)).rating;
-      let deltaRp = 0;
       console.log(`Current user rating (Rp): ${Rp}`);
       
+      const userRatingCategories = await RatingCategoryRepository.getRatingCategoryByUserId(userId);
+      let deltaRp: Record<string, number> = {};
+      let weightedSum = 0.0;
+      
       for (const [questionId, questionValue] of Object.entries(result)) {
-        const question = questionValue as { isCorrect: boolean; rating: number };
-        console.log(`Processing questionId: ${questionId}, isCorrect: ${question.isCorrect}, rating: ${question.rating}`);
-        const { isCorrect } = question;
+        const question = questionValue as { isCorrect: boolean; rating: number, categories: {id: string}, selectedOption: string };
+        const { isCorrect, categories, selectedOption } = question;
+        const categoryId = parseInt(categories.id);
+
+        const markValue = (!isCorrect && selectedOption === 'unattempted') ? 0 : isCorrect ? 1 : -1;
         const updateQuestionAttempt = await QuestionBankRepository.updateQuestionAttempts(
           parseInt(questionId),
-          isCorrect
+          markValue
         );
-        const Ps = (1.0/(1.0 + Math.pow(10, (Rp - question.rating) / 400)));
-        deltaRp += 8 * ((isCorrect ? 1 : 0) - Ps);
+        
+        // Get player rating for the category id from the database
+        const userRating = userRatingCategories.find(
+          (rating) => rating.categoryId === categoryId
+        ) || { rating: 250 };
+        // evaluate and update the new rating based on ELO -- fetch the ratings first before the loop and then calculate the delta for each category rating for the user, then update all the ratings after the loop
+        const Ps = (1.0/(1.0 + Math.pow(10, (userRating.rating - question.rating) / 400)));
+        const delta = 8 * ((markValue === 1 ? 1 : markValue === 0 ? 0 : 0.1) - Ps);
+        deltaRp[categoryId] = (deltaRp[categoryId] || 250) + delta;
       }
       console.log(`Calculated deltaRp: ${deltaRp}`);
 
-      const newUserRating = Rp + deltaRp;
+      // Update the user rating based on the calculated delta
+      for (const [categoryId, delta] of Object.entries(deltaRp)) {
+        const updatedRating = await RatingCategoryRepository.updateRatingCategory(
+          userId,
+          parseInt(categoryId),
+          delta
+        );
+        const categoryWeightRaw = (await CategoryRepository.getCategoryById(parseInt(categoryId)))?.weight;
+        const categoryWeight = typeof categoryWeightRaw === "number" ? categoryWeightRaw : 0.2;
+        const deltaNum = typeof delta === "number" ? delta : Number(delta);
+        weightedSum += categoryWeight * deltaNum;
+        console.log(`Updated rating for category ${categoryId}: ${updatedRating}`);
+      }
+
+      // Finally, update the overall user rating by taking weighted average of all category ratings
+      const newUserRating = Rp + weightedSum;
       const updated = await updateUserRating(userId, newUserRating);
       console.log(`Updated user rating: ${newUserRating}, status: ${updated}`);
 
@@ -58,7 +85,8 @@ export const createRatingConsumer = async () => {
         io.to(`room-${userId}`).emit(`user-rating`, {
           status: updated,
           userId,
-          rating: newUserRating,
+          rating: deltaRp,
+          overallRating: newUserRating,
           message: "Rating updated successfully",
         });
       }

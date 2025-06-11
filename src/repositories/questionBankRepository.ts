@@ -85,7 +85,7 @@ export class QuestionBankRepository {
         return question;
     }
 
-    static async updateQuestionAttempts(questionId: number, correct: boolean) {
+    static async updateQuestionAttempts(questionId: number, correct: number) {
         const question = await prisma.questionBank.update({
             where: {
                 id: questionId,
@@ -94,7 +94,7 @@ export class QuestionBankRepository {
                 totalAttempts: {
                     increment: 1,
                 },
-                correctAttempts: correct ? {
+                correctAttempts: correct === 1 ? {
                     increment: 1,
                 } : undefined,
             },

@@ -65,14 +65,14 @@ export const createSubmitConsumer = async () => {
           switch (isMultipleChoice) {
             case 0:
               if(selectedOption === 'unattempted') {
-                result[questionId] = {...question, isCorrect: false};
+                result[questionId] = {...question, isCorrect: false, selectedOption};
                 score += markingScheme.unattempted;
               }
               else if (question.answer === selectedOption) {
-                result[questionId] = {...question, isCorrect: true};
+                result[questionId] = {...question, isCorrect: true, selectedOption};
                 score += markingScheme.correct;
               } else {
-                result[questionId] = {...question, isCorrect: false};
+                result[questionId] = {...question, isCorrect: false, selectedOption};
                 score += markingScheme.incorrect;
               }
               break;
@@ -88,18 +88,18 @@ export const createSubmitConsumer = async () => {
               // Check the T F status on the frontend
               if (selectedOptions.length === 0) {
                 score += markingScheme.partialUnattempted;
-                result[questionId] = { ...question, isCorrect: true, isPartiallyCorrect: false}; // T F -- Unattempted
+                result[questionId] = { ...question, isCorrect: true, isPartiallyCorrect: false, selectedOption}; // T F -- Unattempted
               } else if (hasIncorrectOption) {
                 score += markingScheme.partialWrong;
-                result[questionId] = { ...question, isCorrect: false, isPartiallyCorrect: false}; // F F -- Incorrect
+                result[questionId] = { ...question, isCorrect: false, isPartiallyCorrect: false, selectedOption}; // F F -- Incorrect
               } else if (allCorrect) {
                 score += markingScheme.partial * correctOptions.length;
-                result[questionId] = { ...question, isCorrect: true, isPartiallyCorrect: true}; // T T -- Correct
+                result[questionId] = { ...question, isCorrect: true, isPartiallyCorrect: true, selectedOption}; // T T -- Correct
               } else {
                 // @ts-ignore
                 const correctSelectedCount = selectedOptions.filter(option => correctOptions.includes(option)).length;
                 score += markingScheme.partial * correctSelectedCount;
-                result[questionId] = { ...question, isCorrect: false, isPartiallyCorrect: true}; // F T -- Partially Correct
+                result[questionId] = { ...question, isCorrect: false, isPartiallyCorrect: true, selectedOption}; // F T -- Partially Correct
               }
               break;
             default:
