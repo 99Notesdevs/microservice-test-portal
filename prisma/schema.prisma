@@ -65,6 +65,7 @@ model CategoryRating {
   category Categories @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@index([categoryId])
   @@unique([userId, categoryId])
 }
 
@@ -128,9 +129,9 @@ model Categories {
   // One - Many relation (Categories to Questions)
   questions QuestionBank[] @relation("TagToQuestionBank")
 
-  weight Decimal? @default(0.2)
-
   CategoryRatings CategoryRating[]
+
+  weight Decimal? @default(0.2)
 
   @@index([name])
 }
@@ -208,6 +209,7 @@ model Tags {
   // Many - Many relation between Tags and Pages
   pages Page[]  @relation("TagToPage")
   blogs Blogs[] @relation("TagToBlog")
+  currentBlogs CurrentAffairArticleBlog[] @relation("TagToCurrentBlog")
 
   @@index([name])
 }
@@ -280,6 +282,23 @@ model Comment {
   @@index([commentId])
 }
 
+model CurrentAffairArticleBlog {
+  id            Int           @id @default(autoincrement())
+  title         String
+  content       String
+  slug          String        @unique
+  author        String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  parentSlug    String
+  currentAffairArticle CurrentAffairArticle @relation("CurrentAffairArticleToBlog", fields: [parentSlug], references: [slug], onDelete: Cascade, onUpdate: Cascade)
+
+  tags         Tags[]        @relation("TagToCurrentBlog")
+  
+  @@index([slug])
+  @@index([parentSlug])
+}
+
 model CurrentAffairArticle {
   id            Int           @id @default(autoincrement())
   title         String
@@ -293,6 +312,8 @@ model CurrentAffairArticle {
   quizQuestions String?
   parentSlug    String
   currentAffair CurrentAffair @relation(fields: [parentSlug], references: [slug], onDelete: Cascade, onUpdate: Cascade)
+
+  blogs         CurrentAffairArticleBlog[] @relation("CurrentAffairArticleToBlog")
 
   @@index([slug])
   @@index([parentSlug])
