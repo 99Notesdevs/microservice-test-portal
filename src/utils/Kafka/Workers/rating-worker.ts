@@ -44,6 +44,7 @@ export const createRatingConsumer = async () => {
         const categoryId = parseInt(categories.id);
 
         const markValue = (!isCorrect && selectedOption === 'unattempted') ? 0 : isCorrect ? 1 : -1;
+        // Updating question attempts in the database
         const updateQuestionAttempt = await QuestionBankRepository.updateQuestionAttempts(
           parseInt(questionId),
           markValue
@@ -53,10 +54,10 @@ export const createRatingConsumer = async () => {
         const userRating = userRatingCategories.find(
           (rating) => rating.categoryId === categoryId
         ) || { rating: 250 };
-        // evaluate and update the new rating based on ELO -- fetch the ratings first before the loop and then calculate the delta for each category rating for the user, then update all the ratings after the loop
+        // Calculate Ps and deltaRp for each category
         const Ps = (1.0/(1.0 + Math.pow(10, (userRating.rating - question.rating) / 400)));
         const delta = 8 * ((markValue === 1 ? 1 : markValue === 0 ? 0 : 0.1) - Ps);
-        deltaRp[categoryId] = (deltaRp[categoryId] || 250) + delta;
+        deltaRp[categoryId] = (deltaRp[categoryId] || 0) + delta;
       }
       console.log(`Calculated deltaRp: ${deltaRp}`);
 
@@ -93,3 +94,5 @@ export const createRatingConsumer = async () => {
     },
   });
 }
+// Propagate the category id to the leaves and update the user rating on all the leaves, then recusrsively update the user rating on all the parents
+// if leaf then update the user rating on the leaf and then update the user rating on the parent

@@ -29,10 +29,38 @@ export class CategoryRepository {
             where: {
                 id: categoryId,
             },
-            select: {
-                weight: true,
+            include: {
+                daughterTag: true,
             }
         });
+        return category;
+    }
+
+    static async getCategoryByParentId(parentTagId: number) {
+        const categories = await prisma.categories.findMany({
+            where: {
+                parentTagId: parentTagId,
+            },
+            include: {
+                daughterTag: true,
+            }
+        });
+        return categories;
+    }
+
+    static async getParentCategory(categoryId: number) {
+        const category = await prisma.categories.findFirst({
+            where: {
+                daughterTag: {
+                    some: {
+                        id: categoryId,
+                    }
+                }
+            },
+            include: {
+                daughterTag: true
+            }
+        })
         return category;
     }
 
