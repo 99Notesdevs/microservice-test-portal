@@ -4,7 +4,7 @@ export class RatingCategoryRepository {
     static async getRating(userId: number, categoryId: number) {
         return await prisma.categoryRating.findUnique({
             where: { userId_categoryId: { userId, categoryId } },
-            select: {rating: true}
+            select: {id: true, rating: true}
         });
     }
 

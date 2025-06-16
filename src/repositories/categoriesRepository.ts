@@ -28,9 +28,6 @@ export class CategoryRepository {
         const category = await prisma.categories.findUnique({
             where: {
                 id: categoryId,
-            },
-            include: {
-                daughterTag: true,
             }
         });
         return category;

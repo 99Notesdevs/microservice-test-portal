@@ -57,14 +57,31 @@ async function propagateRatingUpwards(categoryId: number, userId: number) {
 
         currentId = parent.id;
     }
+    return currentId;
+}
+
+async function getWeightedRating(userId: number, categoryId: number) {
+    const daughterCategories = await CategoryRepository.getCategoryByParentId(categoryId);
+
+    const ratings = await Promise.all(daughterCategories.map(async (c) => (await RatingCategoryRepository.getRating(userId, c.id)) || {id: c.id, rating: 250}));
+    let total = 0;
+    for (const rating of ratings) {
+        const categoryWeight = await CategoryRepository.getCategoryById(rating.id);
+        total += Number(categoryWeight?.weight || 0.2) * Number(rating.rating);
+    }
+    return total;
 }
 
 export async function attemptQuestionService(userId: number, categoryId: number, isCorrect: number, questionRating: number) {
     const targetCategories = await getLeafCategories(categoryId);
+
+    let parent = 0;
     for(const leaf of targetCategories) {
         updateElo(userId, leaf.id, isCorrect, questionRating);
     }
     for(const leaf of targetCategories) {
-        propagateRatingUpwards(leaf.id, userId);
+        parent = await propagateRatingUpwards(leaf.id, userId);
     }
+    const globalRating = await getWeightedRating(userId, parent);
+    return globalRating;
 }

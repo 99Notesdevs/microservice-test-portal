@@ -4,7 +4,7 @@ import { getSocketInstance } from "../../../config/socketInstance";
 import { QuestionBankRepository } from "../../../repositories/questionBankRepository";
 import { getUserRating, updateUserRating } from "../../../grpc/client/client";
 import { RatingCategoryRepository } from "../../../repositories/ratingCategoryRepository";
-import { CategoryRepository } from "../../../repositories/categoriesRepository";
+import { attemptQuestionService } from "../../../services/attempQuestionService";
 
 const kafka = new Kafka({
   clientId: "my-test-portal",
@@ -31,12 +31,7 @@ export const createRatingConsumer = async () => {
         message.value?.toString() || "{}"
       );
 
-      const Rp = (await getUserRating(userId)).rating;
-      console.log(`Current user rating (Rp): ${Rp}`);
-      
-      const userRatingCategories = await RatingCategoryRepository.getRatingCategoryByUserId(userId);
-      let deltaRp: Record<string, number> = {};
-      let weightedSum = 0.0;
+      let newGlobalRating = 0;
       
       for (const [questionId, questionValue] of Object.entries(result)) {
         const question = questionValue as { isCorrect: boolean; rating: number, categories: {id: string}, selectedOption: string };
@@ -49,45 +44,17 @@ export const createRatingConsumer = async () => {
           parseInt(questionId),
           markValue
         );
-        
-        // Get player rating for the category id from the database
-        const userRating = userRatingCategories.find(
-          (rating) => rating.categoryId === categoryId
-        ) || { rating: 250 };
-        // Calculate Ps and deltaRp for each category
-        const Ps = (1.0/(1.0 + Math.pow(10, (userRating.rating - question.rating) / 400)));
-        const delta = 8 * ((markValue === 1 ? 1 : markValue === 0 ? 0 : 0.1) - Ps);
-        deltaRp[categoryId] = (deltaRp[categoryId] || 0) + delta;
-      }
-      console.log(`Calculated deltaRp: ${deltaRp}`);
 
-      // Update the user rating based on the calculated delta
-      for (const [categoryId, delta] of Object.entries(deltaRp)) {
-        const updatedRating = await RatingCategoryRepository.updateRatingCategory(
-          userId,
-          parseInt(categoryId),
-          delta
-        );
-        const categoryWeightRaw = (await CategoryRepository.getCategoryById(parseInt(categoryId)))?.weight;
-        const categoryWeight = typeof categoryWeightRaw === "number" ? categoryWeightRaw : 0.2;
-        const deltaNum = typeof delta === "number" ? delta : Number(delta);
-        weightedSum += categoryWeight * deltaNum;
-        console.log(`Updated rating for category ${categoryId}: ${updatedRating}`);
+        // Do the Elo calculation
+        newGlobalRating = await attemptQuestionService(userId, categoryId, markValue, question.rating);
       }
-
-      // Finally, update the overall user rating by taking weighted average of all category ratings
-      const newUserRating = Rp + weightedSum;
-      const updated = await updateUserRating(userId, newUserRating);
-      console.log(`Updated user rating: ${newUserRating}, status: ${updated}`);
 
       const io = getSocketInstance();
       if (!io) logger.error("Socket instance is not available");
       else {
         io.to(`room-${userId}`).emit(`user-rating`, {
-          status: updated,
           userId,
-          rating: deltaRp,
-          overallRating: newUserRating,
+          overallRating: newGlobalRating,
           message: "Rating updated successfully",
         });
       }
