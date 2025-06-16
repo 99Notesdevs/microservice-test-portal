@@ -49,6 +49,8 @@ export const createRatingConsumer = async () => {
         newGlobalRating = await attemptQuestionService(userId, categoryId, markValue, question.rating);
       }
 
+      await updateUserRating(userId, newGlobalRating);
+
       const io = getSocketInstance();
       if (!io) logger.error("Socket instance is not available");
       else {
