@@ -35,6 +35,7 @@ model User {
   UserTestSeries  UserTestSeries[]
   CategoryRatings CategoryRating[]
   userProgress    UserProgress[]
+  userCalendar    UserCalendar[]
   bookmarks       Page[]            @relation("UserBookmark")
   wishList        WishList?
   createdAt       DateTime          @default(now())
@@ -120,6 +121,22 @@ model UserTestSeries {
 
   user User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   test TestSeries @relation("UserTestSeries", fields: [testId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model UserCalendar {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  date      Int
+  month     Int
+  year      Int
+  status    String   @default("pending")
+  event     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
