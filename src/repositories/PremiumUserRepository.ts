@@ -30,6 +30,48 @@ export class PremiumUserRepository {
     return userTestSeries;
   }
 
+  // Get the user score, best score and average score for recent five testSeries
+  static async getUserTestSeriesScore(userId: number) {
+    const userTestSeries = await prisma.userTestSeries.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+      take: 5,
+      select: {
+        testId: true,
+        score: true,
+      },
+    });
+    logger.info(`Fetched user test series scores for user ID ${userId}: ${JSON.stringify(userTestSeries)}`);
+    return userTestSeries;
+  }
+
+  // Get the average score for a specific test
+  static async getAverageScore(testId: number) {
+    const averageScore = await prisma.userTestSeries.aggregate({
+      _avg: {
+        score: true,
+      },
+      where: {
+        testId,
+      },
+    });
+    logger.info(`Calculated average score for test ID ${testId}: ${JSON.stringify(averageScore)}`);
+    return averageScore._avg.score || undefined;
+  }
+
+  // Get the best score for a specific test
+  static async getBestScore(testId: number) {
+    const bestScore = await prisma.userTestSeries.findFirst({
+      where: { testId },
+      orderBy: { score: 'desc' },
+      select: {
+        score: true,
+      },
+    });
+    logger.info(`Fetched best score for test ID ${testId}: ${JSON.stringify(bestScore)}`);
+    return bestScore ? bestScore.score : undefined;
+  }
+
   // Get a specific test for a user
   static async getUserTest(id: number) {
     const userTest = await prisma.userTests.findUnique({
@@ -76,6 +118,7 @@ export class PremiumUserRepository {
       data: {
         userId: data.userId!,
         response: JSON.stringify(data),
+        score: data.score,
         result: JSON.stringify(data),
         testId: data.testId!,
       },

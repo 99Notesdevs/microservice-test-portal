@@ -2,6 +2,13 @@ import { PremiumUserRepository } from "../repositories/PremiumUserRepository";
 import { IUserTest } from "../interfaces/tests.interface";
 import { IUserTestSeries } from "../interfaces/testSeries.interface";
 
+type TestSeriesData = {
+  testId: number;
+  score: number;
+  averageScore?: number;
+  bestScore?: number;
+};
+
 export class PremiumUserService {
   static async getUserTests(userId: number) {
     return await PremiumUserRepository.getUserTests(userId);
@@ -25,6 +32,18 @@ export class PremiumUserService {
       throw new Error(`User test series with ID ${id} not found`);
     }
     return userTestSeries;
+  }
+
+  static async getLast5TestSeriesData(userId: number) {
+    const last5: TestSeriesData[] = await PremiumUserRepository.getUserTestSeriesScore(userId);
+    if (!last5) {
+      throw new Error(`No test series found for user ID ${userId}`);
+    }
+    for(const series of last5) {
+      series['averageScore'] = await PremiumUserRepository.getAverageScore(series.testId);
+      series['bestScore'] = await PremiumUserRepository.getBestScore(series.testId);
+    }
+    return last5;
   }
 
   static async storeUserTest(data: IUserTest) {

@@ -89,6 +89,7 @@ model UserTestSeries {
   testId    Int
   response  String
   result    String
+  score     Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

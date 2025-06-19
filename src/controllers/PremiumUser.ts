@@ -42,6 +42,16 @@ export class PremiumUserController {
     }
   }
 
+  static async getLast5TestSeriesData(req: Request, res: Response) {
+    try {
+      const userId = parseInt(req.body.authUser);
+      const last5TestSeries = await PremiumUserService.getLast5TestSeriesData(userId);
+      res.status(200).json({ success: true, data: last5TestSeries });
+    } catch (error: unknown) {
+      res.status(500).json({ success: false, message: error instanceof Error ? error.message : "Internal Server Error" });
+    }
+  }
+
   static async storeUserTest(req: Request, res: Response) {
     try {
       const body = req.body;
@@ -65,6 +75,7 @@ export class PremiumUserController {
         userId: parseInt(body.authUser),
         testId: body.testId,
         response: JSON.stringify(body.response),
+        score: parseInt(body.score),
         result: JSON.stringify(body.result),
       }
       const newUserTestSeries = await PremiumUserService.storeUserTestSeries(data);
@@ -98,6 +109,7 @@ export class PremiumUserController {
         testId: body.testId,
         response: JSON.stringify(body.response),
         result: JSON.stringify(body.result),
+        score: parseInt(body.score)
       }
       const updatedUserTestSeries = await PremiumUserService.updateUserTestSeries(id, data);
       res.status(200).json({ success: true, data: updatedUserTestSeries });

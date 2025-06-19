@@ -21,6 +21,7 @@ export interface IUserTestSeries {
   testId: number;
   response: string;
   result: string;
+  score: number;
   createdAt?: Date;
   updatedAt?: Date;
 }
