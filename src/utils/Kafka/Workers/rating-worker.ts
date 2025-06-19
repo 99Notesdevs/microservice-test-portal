@@ -2,9 +2,9 @@ import logger from "../../logger";
 import { Kafka } from "kafkajs";
 import { getSocketInstance } from "../../../config/socketInstance";
 import { QuestionBankRepository } from "../../../repositories/questionBankRepository";
-import { getUserRating, updateUserRating } from "../../../grpc/client/client";
-import { RatingCategoryRepository } from "../../../repositories/ratingCategoryRepository";
+import { updateUserRating } from "../../../grpc/client/client";
 import { attemptQuestionService } from "../../../services/attempQuestionService";
+import { UserProgressService } from "../../../services/userProgressService";
 
 const kafka = new Kafka({
   clientId: "my-test-portal",
@@ -50,6 +50,7 @@ export const createRatingConsumer = async () => {
       }
 
       await updateUserRating(userId, newGlobalRating);
+      await UserProgressService.updateUserProgress(userId, newGlobalRating);
 
       const io = getSocketInstance();
       if (!io) logger.error("Socket instance is not available");

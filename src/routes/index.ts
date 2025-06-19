@@ -5,6 +5,7 @@ import testSeriesRouter from "./testSeries";
 import testRouter from "./test";
 import premiumUserRouter from "./premiumUser";
 import ratingCategoryRouter from "./ratingCategory";
+import progressRouter from "./userProgress";
 
 const router = Router();
 
@@ -21,5 +22,6 @@ router.use('/testSeries', testSeriesRouter);
 router.use('/test', testRouter);
 router.use('/user', premiumUserRouter);
 router.use('/ratingCategory', ratingCategoryRouter);
+router.use('/progress', progressRouter);
 
 export default router;
