@@ -1,3 +1,4 @@
+import { Decimal } from "@prisma/client/runtime/library";
 import { CategoryRepository } from "../repositories/categoriesRepository";
 
 export default class CategoryService {
@@ -26,6 +27,11 @@ export default class CategoryService {
 
     static async updateCategory(categoryId: number, name: string) {
         const category = await CategoryRepository.updateCategory(categoryId, name);
+        return category;
+    }
+
+    static async updateCategoryWeight(categoryId: number, weight: Decimal) {
+        const category = await CategoryRepository.updateCategoryWeight(categoryId, weight);
         return category;
     }
 

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import CategoryService from '../services/categoryService';
+import { Decimal } from '@prisma/client/runtime/library';
 
 export default class CategoriesController {
     static async getCategoriesByIds(req: Request, res: Response) {
@@ -58,6 +59,20 @@ export default class CategoriesController {
                 throw new Error('Category ID and name are required');
             }
             const category = await CategoryService.updateCategory(Number(id), name);
+            res.status(200).json({ success: true, data: category });
+        } catch (error: unknown) {
+            res.status(400).json({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' });
+        }
+    }
+
+    static async updateCategoryWeight(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            const { weight } = req.body;
+            if (!id || weight === undefined) {
+                throw new Error('Category ID and weight are required');
+            }
+            const category = await CategoryService.updateCategoryWeight(Number(id), new Decimal(weight));
             res.status(200).json({ success: true, data: category });
         } catch (error: unknown) {
             res.status(400).json({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' });

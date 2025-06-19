@@ -1,3 +1,4 @@
+import { Decimal } from "@prisma/client/runtime/library";
 import { prisma } from "../config/prisma";
 
 export class CategoryRepository {
@@ -81,6 +82,18 @@ export class CategoryRepository {
         });
         return category;
     }
+
+    static async updateCategoryWeight(categoryId: number, weight: Decimal) {
+        return prisma.categories.update({
+            where: {
+                id: categoryId,
+            },
+            data: {
+                weight,
+            },
+        });
+    }
+
     static async deleteCategory(categoryId: number) {
         const category = await prisma.categories.delete({
             where: {

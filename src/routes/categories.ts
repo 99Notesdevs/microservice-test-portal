@@ -18,6 +18,10 @@ categoryRouter.post('/', authenticate, authorizeRoles(["Admin"]), CategoriesCont
 categoryRouter.put('/:id', authenticate, authorizeRoles(["Admin"]), CategoriesController.updateCategory);
 
 // Params: /:id
+// Body: { weight: Decimal }
+categoryRouter.put('/:id/weight', authenticate, authorizeRoles(["Admin"]), CategoriesController.updateCategoryWeight);
+
+// Params: /:id
 categoryRouter.delete('/:id', authenticate, authorizeRoles(["Admin"]), CategoriesController.deleteCategory);
 
 export default categoryRouter;
