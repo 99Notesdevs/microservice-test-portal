@@ -6,6 +6,7 @@ import testRouter from "./test";
 import premiumUserRouter from "./premiumUser";
 import ratingCategoryRouter from "./ratingCategory";
 import progressRouter from "./userProgress";
+import progressConstraintsRouter from "./progressConstraints";
 
 const router = Router();
 
@@ -23,5 +24,6 @@ router.use('/test', testRouter);
 router.use('/user', premiumUserRouter);
 router.use('/ratingCategory', ratingCategoryRouter);
 router.use('/progress', progressRouter);
+router.use('/progressConstraints', progressConstraintsRouter);
 
 export default router;

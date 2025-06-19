@@ -54,35 +54,44 @@ model UserData {
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model ProgressConstraints {
+  id          Int      @id @default(autoincrement())
+  weakLimit   Int
+  strongLimit Int
+  xp_status   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 model UserProgress {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  progressMin  Int
-  progressMax  Int
-  date      DateTime @default(dbgenerated("CURRENT_DATE"))
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  progressMin Int
+  progressMax Int
+  date        DateTime @default(dbgenerated("CURRENT_DATE"))
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId])
   @@unique([userId, date])
+  @@index([userId])
 }
 
 model CategoryRating {
-  id        Int      @id @default(autoincrement())
-  userId    Int
+  id         Int      @id @default(autoincrement())
+  userId     Int
   categoryId Int
-  rating    Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  rating     Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   category Categories @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
+  @@unique([userId, categoryId])
   @@index([userId])
   @@index([categoryId])
-  @@unique([userId, categoryId])
 }
 
 model UserTests {
@@ -224,8 +233,8 @@ model Tags {
   updatedAt DateTime @updatedAt
 
   // Many - Many relation between Tags and Pages
-  pages Page[]  @relation("TagToPage")
-  blogs Blogs[] @relation("TagToBlog")
+  pages        Page[]                     @relation("TagToPage")
+  blogs        Blogs[]                    @relation("TagToBlog")
   currentBlogs CurrentAffairArticleBlog[] @relation("TagToCurrentBlog")
 
   @@index([name])
@@ -300,18 +309,18 @@ model Comment {
 }
 
 model CurrentAffairArticleBlog {
-  id            Int           @id @default(autoincrement())
-  title         String
-  content       String
-  slug          String        @unique
-  author        String
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  parentSlug    String
+  id                   Int                  @id @default(autoincrement())
+  title                String
+  content              String
+  slug                 String               @unique
+  author               String
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+  parentSlug           String
   currentAffairArticle CurrentAffairArticle @relation("CurrentAffairArticleToBlog", fields: [parentSlug], references: [slug], onDelete: Cascade, onUpdate: Cascade)
 
-  tags         Tags[]        @relation("TagToCurrentBlog")
-  
+  tags Tags[] @relation("TagToCurrentBlog")
+
   @@index([slug])
   @@index([parentSlug])
 }
@@ -330,7 +339,7 @@ model CurrentAffairArticle {
   parentSlug    String
   currentAffair CurrentAffair @relation(fields: [parentSlug], references: [slug], onDelete: Cascade, onUpdate: Cascade)
 
-  blogs         CurrentAffairArticleBlog[] @relation("CurrentAffairArticleToBlog")
+  blogs CurrentAffairArticleBlog[] @relation("CurrentAffairArticleToBlog")
 
   @@index([slug])
   @@index([parentSlug])
