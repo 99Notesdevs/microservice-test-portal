@@ -6,6 +6,7 @@ export class ProgressConstraintController {
     const progressConstraints = await ProgressConstraintsService.getProgressConstraintsById(1);
     if (!progressConstraints) {
       res.status(404).json({ success: false, error: "Progress constraints not found" });
+      return;
     }
     res.status(200).json({ success: true, data: progressConstraints });
   }
@@ -14,6 +15,7 @@ export class ProgressConstraintController {
     const { weakLimit, strongLimit, xp_status } = req.body;
     if (typeof weakLimit !== 'number' || typeof strongLimit !== 'number' || typeof xp_status !== 'string') {
       res.status(400).json({ success: false, error: "Invalid input data" });
+      return;
     }
     const newProgressConstraints = await ProgressConstraintsService.createProgressConstraints({
       weakLimit,
