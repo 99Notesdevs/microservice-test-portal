@@ -11,9 +11,9 @@ premiumUserRouter.get("/testSeries", authenticate, authorizeRoles(["User"]), Pre
 
 premiumUserRouter.get("/tests/:id", authenticate, authorizeRoles(["User"]), PremiumUserController.getUserTest);
 
-premiumUserRouter.get("/testSeries/:id", authenticate, authorizeRoles(["User"]), PremiumUserController.getOneUserTestSeries);
-
 premiumUserRouter.get("/testSeries/data", authenticate, authorizeRoles(["User"]), PremiumUserController.getLast5TestSeriesData);
+
+premiumUserRouter.get("/testSeries/:id", authenticate, authorizeRoles(["User"]), PremiumUserController.getOneUserTestSeries);
 
 premiumUserRouter.post("/tests", authenticate, authorizeRoles(["User"]), PremiumUserController.storeUserTest);
 
