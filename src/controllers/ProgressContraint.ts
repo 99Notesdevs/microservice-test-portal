@@ -24,4 +24,27 @@ export class ProgressConstraintController {
     });
     res.status(201).json({ success: true, data: newProgressConstraints });
   }
+
+  static async updateProgressConstraints(req: Request, res: Response) {
+    const { id } = req.params;
+    const { weakLimit, strongLimit, xp_status } = req.body;
+
+    if (typeof weakLimit !== 'number' || typeof strongLimit !== 'number' || typeof xp_status !== 'string') {
+      res.status(400).json({ success: false, error: "Invalid input data" });
+      return;
+    }
+
+    const updatedProgressConstraints = await ProgressConstraintsService.updateProgressConstraints(Number(id), {
+      weakLimit,
+      strongLimit,
+      xp_status
+    });
+
+    if (!updatedProgressConstraints) {
+      res.status(404).json({ success: false, error: "Progress constraints not found" });
+      return;
+    }
+
+    res.status(200).json({ success: true, data: updatedProgressConstraints });
+  }
 }

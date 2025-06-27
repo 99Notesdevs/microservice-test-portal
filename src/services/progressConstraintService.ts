@@ -15,4 +15,14 @@ export class ProgressConstraintsService {
     logger.info(`Created new progress constraints with ID: ${newProgressConstraints.id}`);
     return newProgressConstraints;
   }
+
+  static async updateProgressConstraints(id: number, data: { weakLimit: number; strongLimit: number; xp_status: string }) {
+    const updatedProgressConstraints = await ProgressConstraintsRepository.updateProgressConstraints(id, data);
+    if (!updatedProgressConstraints) {
+      logger.warn(`Progress constraints not found for ID: ${id}`);
+      return null;
+    }
+    logger.info(`Updated progress constraints with ID: ${id}`);
+    return updatedProgressConstraints;
+  }
 }

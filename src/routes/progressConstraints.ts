@@ -9,4 +9,6 @@ progressConstraintsRouter.get("/", ProgressConstraintController.getProgressConst
 
 progressConstraintsRouter.post("/", authenticate, authorizeRoles(["Admin"]), ProgressConstraintController.createProgressConstraints);
 
+progressConstraintsRouter.put("/:id", authenticate, authorizeRoles(["Admin"]), ProgressConstraintController.updateProgressConstraints);
+
 export default progressConstraintsRouter;

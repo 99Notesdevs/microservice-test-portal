@@ -24,4 +24,16 @@ export class ProgressConstraintsRepository {
     });
     return newProgressConstraints;
   }
+
+  static async updateProgressConstraints(id: number, data: {weakLimit: number; strongLimit: number; xp_status: string}) {
+    const updatedProgressConstraints = await prisma.progressConstraints.update({
+      where: { id },
+      data: {
+        weakLimit: data.weakLimit,
+        strongLimit: data.strongLimit,
+        xp_status: data.xp_status,
+      },
+    });
+    return updatedProgressConstraints;
+  }
 }
