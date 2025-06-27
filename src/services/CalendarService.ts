@@ -1,4 +1,5 @@
 import { CalendarRepository } from "../repositories/CalendarRepository";
+import { PremiumUserRepository } from "../repositories/PremiumUserRepository";
 
 export class CalendarService {
   static async createEvent(data: {
@@ -10,6 +11,12 @@ export class CalendarService {
     event: string;
   }) {
     return await CalendarRepository.createEvent(data);
+  }
+
+  static async getTests(month: number, year: number, uid: number) {
+    const tests = await PremiumUserRepository.getTestsByMonthAndYear(month, year, uid);
+    const testSeries = await PremiumUserRepository.getTestSeriesByMonthAndYear(month, year, uid);
+    return { tests, testSeries };
   }
 
   static async getEventsByUser(userId: number) {

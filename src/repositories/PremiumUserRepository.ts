@@ -30,6 +30,48 @@ export class PremiumUserRepository {
     return userTestSeries;
   }
 
+  static async getTestsByMonthAndYear(month: number, year: number, userId: number) {
+    const tests = await prisma.userTests.findMany({
+      where: {
+        userId,
+        createdAt: {
+          gte: new Date(year, month - 1, 1),
+          lt: new Date(year, month, 1),
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        result: true
+      }
+    });
+    logger.info(`Fetched tests for user ID ${userId} in month ${month} of year ${year}: ${JSON.stringify(tests)}`);
+    return tests;
+  }
+
+  static async getTestSeriesByMonthAndYear(month: number, year: number, userId: number) {
+    const testSeries = await prisma.userTestSeries.findMany({
+      where: {
+        userId,
+        createdAt: {
+          gte: new Date(year, month - 1, 1),
+          lt: new Date(year, month, 1),
+        },
+      },
+      include: {
+        test: {
+          select: {
+            id: true,
+            name: true
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+    logger.info(`Fetched test series for user ID ${userId} in month ${month} of year ${year}: ${JSON.stringify(testSeries)}`);
+    return testSeries;
+  }
+
   // Get the user score, best score and average score for recent five testSeries
   static async getUserTestSeriesScore(userId: number) {
     const userTestSeries = await prisma.userTestSeries.findMany({

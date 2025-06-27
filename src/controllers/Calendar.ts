@@ -11,6 +11,25 @@ export class CalendarController {
     }
   }
 
+  static async getTests(req: Request, res: Response) {
+    try {
+      const body = req.body;
+      const uid = req.body.authUser;
+      if(!uid) {
+        throw new Error("Unauthorized: User ID is required");
+      }
+      if (!body || typeof body.month !== 'number' || typeof body.year !== 'number') {
+        throw new Error("Invalid request body. Expected { month: number, year: number }");
+      }
+      const month = body.month;
+      const year = body.year;
+      const tests = await CalendarService.getTests(month, year, parseInt(uid));
+      res.status(200).json({ success: true, data: tests });
+    } catch(error: unknown) {
+      res.status(500).json({ success: false, message: error instanceof Error ? error.message : "An unknown error occurred" });
+    }
+  }
+
   static async getEventsByUser(req: Request, res: Response) {
     try {
       const userId = Number(req.params.userId);
