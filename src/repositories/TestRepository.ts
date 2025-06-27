@@ -20,7 +20,18 @@ export class TestRepository {
 
     static async createTest(data: ITest) {
         const test = await prisma.tests.create({
-            data,
+            data: {
+                name: data.name,
+                correctAttempted: data.correctAttempted,
+                wrongAttempted: data.wrongAttempted,
+                notAttempted: data.notAttempted,
+                partialAttempted: data.partialAttempted,
+                partialNotAttempted: data.partialNotAttempted,
+                partialWrongAttempted: data.partialWrongAttempted,
+                timeTaken: data.timeTaken,
+                questionsSingle: data.questionsSingle,
+                questionsMultiple: data.questionsMultiple
+            }
         });
         logger.info(`Created test: ${JSON.stringify(test)}`);
         return test;
@@ -29,7 +40,18 @@ export class TestRepository {
     static async updateTest(id: number, data: Partial<ITest>) {
         const test = await prisma.tests.update({
             where: { id },
-            data,
+            data: {
+                name: data.name,
+                correctAttempted: data.correctAttempted,
+                wrongAttempted: data.wrongAttempted,
+                notAttempted: data.notAttempted,
+                partialAttempted: data.partialAttempted,
+                partialNotAttempted: data.partialNotAttempted,
+                partialWrongAttempted: data.partialWrongAttempted,
+                timeTaken: data.timeTaken,
+                questionsSingle: data.questionsSingle,
+                questionsMultiple: data.questionsMultiple
+            }
         });
         logger.info(`Updated test: ${JSON.stringify(test)}`);
         return test;
