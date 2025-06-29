@@ -5,7 +5,7 @@ import main from "./routes/index";
 export const app = express();
 
 app.use(cors({
-    origin: ['http://localhost:3000', "http://localhost:5173", "http://localhost:38893", "http://13.126.229.93"],
+    origin: ['http://localhost:3000', "http://localhost:5173", "http://localhost:38893", "http://13.126.229.93:5173", "http://13.126.229.93"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"]
