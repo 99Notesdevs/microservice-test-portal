@@ -13,16 +13,16 @@ export class CalendarController {
 
   static async getTests(req: Request, res: Response) {
     try {
-      const body = req.body;
+      const params = req.params;
       const uid = req.body.authUser;
       if(!uid) {
         throw new Error("Unauthorized: User ID is required");
       }
-      if (!body || typeof body.month !== 'number' || typeof body.year !== 'number') {
+      if (!params || typeof params.month !== 'number' || typeof params.year !== 'number') {
         throw new Error("Invalid request body. Expected { month: number, year: number }");
       }
-      const month = body.month;
-      const year = body.year;
+      const month = params.month;
+      const year = params.year;
       const tests = await CalendarService.getTests(month, year, parseInt(uid));
       res.status(200).json({ success: true, data: tests });
     } catch(error: unknown) {
