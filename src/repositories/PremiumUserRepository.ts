@@ -42,7 +42,8 @@ export class PremiumUserRepository {
       orderBy: { createdAt: 'desc' },
       select: {
         id: true,
-        result: true
+        result: true,
+        createdAt: true,
       }
     });
     logger.info(`Fetched tests for user ID ${userId} in month ${month} of year ${year}: ${JSON.stringify(tests)}`);
