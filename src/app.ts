@@ -8,7 +8,7 @@ app.use(cors({
     origin: ['http://localhost:3000', "http://localhost:5173", "http://localhost:38893", "http://13.126.229.93:5173", "http://13.126.229.93"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization", "x-auth-type"],
     optionsSuccessStatus: 200
 }));
 // app.use(cors({
