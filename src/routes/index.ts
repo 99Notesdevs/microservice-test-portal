@@ -8,6 +8,7 @@ import ratingCategoryRouter from "./ratingCategory";
 import progressRouter from "./userProgress";
 import progressConstraintsRouter from "./progressConstraints";
 import calendarRouter from "./calendar";
+import adminMessageRouter from "./adminMessage";
 
 const router = Router();
 
@@ -27,5 +28,6 @@ router.use('/ratingCategory', ratingCategoryRouter);
 router.use('/progress', progressRouter);
 router.use('/progressConstraints', progressConstraintsRouter);
 router.use('/calendar', calendarRouter);
+router.use('admin-messages', adminMessageRouter);
 
 export default router;
