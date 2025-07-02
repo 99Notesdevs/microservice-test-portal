@@ -419,6 +419,28 @@ model Admin {
   pages Page[] @relation("AdminToPage")
 }
 
+model AdminLogs {
+  id        Int      @id @default(autoincrement())
+  method    String
+  endpoint  String
+  status    String
+  user      String?
+  userId    Int?
+  details   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AdminMessages {
+  id        Int      @id @default(autoincrement())
+  type      String
+  ratingS   Int?     @default(0)
+  ratingE   Int?     @default(0)
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model AdminOps {
   id                 Int      @id @default(autoincrement())
   globalRestrictions Boolean  @default(false)
