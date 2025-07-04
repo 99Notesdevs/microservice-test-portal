@@ -28,6 +28,6 @@ router.use('/ratingCategory', ratingCategoryRouter);
 router.use('/progress', progressRouter);
 router.use('/progressConstraints', progressConstraintsRouter);
 router.use('/calendar', calendarRouter);
-router.use('admin-messages', adminMessageRouter);
+router.use('/admin-messages', adminMessageRouter);
 
 export default router;

@@ -29,7 +29,7 @@ export class AdminMessageRepository {
                         lte: rating,
                     },
                     ratingE: {
-                        lte: rating,
+                        gte: rating,
                     },
                 },
                 orderBy: {
