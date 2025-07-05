@@ -55,7 +55,11 @@ export class CalendarController {
   static async updateEvent(req: Request, res: Response) {
     try {
       const id = Number(req.params.id);
-      const event = await CalendarService.updateEvent(id, req.body);
+      const updateData = {
+        event: req.body.event,
+        status: req.body.status
+      };
+      const event = await CalendarService.updateEvent(id, updateData);
       res.status(200).json(event);
     } catch (error) {
       res.status(500).json({ message: "Failed to update event", error });
