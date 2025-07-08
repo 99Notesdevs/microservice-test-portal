@@ -1,8 +1,10 @@
 import { Decimal } from "@prisma/client/runtime/library";
 import { prisma } from "../config/prisma";
+import logger from "../utils/logger";
 
 export class CategoryRepository {
     static async getAllUniqueCategories(categoryIds: number[]) {
+        logger.info(`Fetching all categories for multiple selected Ids: ${categoryIds}`);
         const categories = await prisma.$queryRawUnsafe(`
             WITH RECURSIVE category_tree AS (
                 SELECT id, name, "parentTagId"      
@@ -17,24 +19,34 @@ export class CategoryRepository {
             FROM category_tree;
         `, categoryIds);
 
+        logger.info(`Fetched categories for multiple selected Ids: ${categoryIds}`);
+
         return categories;
     }
     
     static async getAllCategories() {
+        logger.info("Fetching all categories");
         const categories = await prisma.categories.findMany();
         return categories;
     }
 
     static async getCategoryById(categoryId: number) {
+        logger.info(`Fetching category by ID: ${categoryId}`);
         const category = await prisma.categories.findUnique({
             where: {
                 id: categoryId,
             }
         });
+        if (!category) {
+            logger.warn(`Category with ID ${categoryId} not found`);
+            throw new Error(`Category with ID ${categoryId} not found`);
+        }
+        logger.info(`Fetched category by ID: ${categoryId}`);
         return category;
     }
 
     static async getCategoryByParentId(parentTagId: number) {
+        logger.info(`Fetching categories by parent ID: ${parentTagId}`);
         const categories = await prisma.categories.findMany({
             where: {
                 parentTagId: parentTagId,
@@ -43,10 +55,12 @@ export class CategoryRepository {
                 daughterTag: true,
             }
         });
+        logger.info(`Fetched categories for parent ID: ${parentTagId}`);
         return categories;
     }
 
     static async getParentCategory(categoryId: number) {
+        logger.info(`Fetching parent category for category ID: ${categoryId}`);
         const category = await prisma.categories.findFirst({
             where: {
                 daughterTag: {
@@ -59,19 +73,23 @@ export class CategoryRepository {
                 daughterTag: true
             }
         })
+        logger.info(`Fetched parent category for category ID: ${categoryId}`);
         return category;
     }
 
     static async createCategory(name: string, pageId: number, parentTagId: number) {
+        logger.info(`Creating category with name: ${name}, pageId: ${pageId}, parentTagId: ${parentTagId}`);
         const category = await prisma.categories.create({
             data: {
                 name,
                 parentTagId
             },
         });
+        logger.info(`Created category with ID: ${category.id}`);
         return category;
     }
     static async updateCategory(categoryId: number, name: string) {
+        logger.info(`Updating category with ID: ${categoryId} to name: ${name}`);
         const category = await prisma.categories.update({
             where: {
                 id: categoryId,
@@ -80,6 +98,7 @@ export class CategoryRepository {
                 name,
             },
         });
+        logger.info(`Updated category with ID: ${category.id}`);
         return category;
     }
 
@@ -95,11 +114,13 @@ export class CategoryRepository {
     }
 
     static async deleteCategory(categoryId: number) {
+        logger.info(`Deleting category with ID: ${categoryId}`);
         const category = await prisma.categories.delete({
             where: {
                 id: categoryId,
             },
         });
+        logger.info(`Deleted category with ID: ${categoryId}`);
         return category;
     }
 }

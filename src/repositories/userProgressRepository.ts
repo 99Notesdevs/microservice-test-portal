@@ -1,30 +1,32 @@
 import { prisma } from "../config/prisma";
+import logger from "../utils/logger";
 
 export class UserProgressRepository {
-  // Get user progress for a specific user
   static async getUserProgress(userId: number) {
+    logger.info(`Fetching user progress for user ${userId}`);
     const userProgress = await prisma.userProgress.findMany({
       where: { userId },
       orderBy: { date: 'desc' },
-      take: 30, // Get the last 30 days of progress
+      take: 30,
     });
     return userProgress;
   }
 
   static async getUserProgressByDate(userId: number, date: Date) {
+    logger.info(`Fetching user progress for user ${userId} on date ${date}`);
     const progress = await prisma.userProgress.findUnique({
       where: {
         userId_date: {
           userId,
-          date: new Date(date.setHours(0, 0, 0, 0)), // Normalize date to start of the day
+          date: new Date(date.setHours(0, 0, 0, 0)),
         },
       },
     });
     return progress;
   }
 
-  // Update user progress for a specific user
   static async updateUserProgress(userId: number, progressMin: number, progressMax: number) {
+    logger.info(`Updating user progress for user ${userId} with min: ${progressMin}, max: ${progressMax}`);
     const today = new Date();
     today.setHours(0, 0, 0, 0); 
     const updatedProgress = await prisma.userProgress.upsert({

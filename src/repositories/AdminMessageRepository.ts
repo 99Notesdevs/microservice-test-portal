@@ -1,7 +1,9 @@
 import { prisma } from "../config/prisma";
+import logger from "../utils/logger";
 
 export class AdminMessageRepository {
     static async getGlobalMessages(skip: number, take: number) {
+        logger.info(`Fetching global messages with skip: ${skip}, take: ${take}`);
         try {
             const messages = await prisma.adminMessages.findMany({
                 where: {
@@ -13,14 +15,16 @@ export class AdminMessageRepository {
                     createdAt: "desc",
                 },
             });
+            logger.info(`Fetched ${messages.length} global messages`);
             return messages;
         } catch (error) {
-            console.error("Error fetching global messages:", error);
+            logger.error("Error fetching global messages:", error);
             throw new Error("Failed to fetch global messages");
         }
     }
 
     static async getMessageByRating(rating: number, skip: number, take: number) {
+        logger.info(`Fetching range messages with rating: ${rating}, skip: ${skip}, take: ${take}`);
         try {
             const messages = await prisma.adminMessages.findMany({
                 where: {
@@ -38,23 +42,26 @@ export class AdminMessageRepository {
                 skip,
                 take,
             });
+            logger.info(`Fetched ${messages.length} range messages`);
             return messages;
         } catch (error) {
-            console.error("Error fetching range messages:", error);
+            logger.error("Error fetching range messages:", error);
             throw new Error("Failed to fetch range messages");
         }
     }
 
     static async getMessageById(id: number) {
+        logger.info(`Fetching message by ID: ${id}`);
         try {
             const message = await prisma.adminMessages.findUnique({
                 where: {
                     id,
                 },
             });
+            logger.info(`Fetched message by ID: ${id}`);
             return message;
         } catch (error) {
-            console.error("Error fetching message by ID:", error);
+            logger.error("Error fetching message by ID:", error);
             throw new Error("Failed to fetch message by ID");
         }
     }
@@ -65,13 +72,15 @@ export class AdminMessageRepository {
         ratingS?: number;
         ratingE?: number;
     }) {
+        logger.info("Creating a new message with data:", data);
         try {
             const message = await prisma.adminMessages.create({
                 data,
             });
+            logger.info("Message created successfully:", message);
             return message;
         } catch (error) {
-            console.error("Error creating message:", error);
+            logger.error("Error creating message:", error);
             throw new Error("Failed to create message");
         }
     }
@@ -82,6 +91,7 @@ export class AdminMessageRepository {
         ratingS?: number;
         ratingE?: number;
     }) {
+        logger.info(`Updating message with ID: ${id} with data:`, data);
         try {
             const message = await prisma.adminMessages.update({
                 where: {
@@ -89,23 +99,26 @@ export class AdminMessageRepository {
                 },
                 data,
             });
+            logger.info(`Message updated successfully:`, message);
             return message;
         } catch (error) {
-            console.error("Error updating message:", error);
+            logger.error("Error updating message:", error);
             throw new Error("Failed to update message");
         }
     }
 
     static async deleteMessage(id: number) {
+        logger.info(`Deleting message with ID: ${id}`);
         try {
             const message = await prisma.adminMessages.delete({
                 where: {
                     id,
                 },
             });
+            logger.info(`Message deleted successfully:`, message);
             return message;
         } catch (error) {
-            console.error("Error deleting message:", error);
+            logger.error("Error deleting message:", error);
             throw new Error("Failed to delete message");
         }
     }

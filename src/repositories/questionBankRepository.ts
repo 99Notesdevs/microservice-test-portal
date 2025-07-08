@@ -1,7 +1,9 @@
 import { prisma } from "../config/prisma";
+import logger from "../utils/logger";
 
 export class QuestionBankRepository {
     static async getQuestionsByCategoryId(categoryId: number, limit: number, multiplechoice: number) {
+        logger.info("getQuestionsByCategoryId called", { categoryId, limit, multiplechoice });
         const questions = await prisma.$queryRawUnsafe(
             `
                 SELECT * FROM "QuestionBank"
@@ -9,10 +11,12 @@ export class QuestionBankRepository {
                 ORDER BY random()
                 LIMIT ($2)
             `, categoryId, limit, !!multiplechoice);
+        logger.info("getQuestionsByCategoryId result", { length: (questions as any[]).length });
         return questions;
     }
 
     static async getPracticeQuestionsByCategoryId(categoryId: number, limit: number) {
+        logger.info("getPracticeQuestionsByCategoryId called", { categoryId, limit });
         const questions = await prisma.questionBank.findMany({
             where: {
                 categories: {
@@ -25,10 +29,12 @@ export class QuestionBankRepository {
             },
             take: limit,
         });
+        logger.info("getPracticeQuestionsByCategoryId result", { length: (questions as any[]).length });
         return questions;
     }
 
     static async getQuestionById(questionId: number) {
+        logger.info("getQuestionById called", { questionId });
         const question = await prisma.questionBank.findUnique({
             where: {
                 id: questionId,
@@ -37,10 +43,12 @@ export class QuestionBankRepository {
                 categories: true, // Include related category data
             },
         });
+        logger.info("getQuestionById result", { found: !!question });
         return question;
     }
 
     static async getAllQuestions(categoryId: number) {
+        logger.info("getAllQuestions called", { categoryId });
         const questions = await prisma.questionBank.findMany({
             where: {
                 categories: {
@@ -51,6 +59,7 @@ export class QuestionBankRepository {
                 createdAt: 'desc',
             },
         });
+        logger.info("getAllQuestions result", { length: (questions as any[]).length });
         return questions;
     }
 
@@ -66,6 +75,7 @@ export class QuestionBankRepository {
         year: number | null;
         rating: number | null;
     }) {
+        logger.info("createQuestion called", { ...data, optionsLength: data.options.length });
         const question = await prisma.questionBank.create({
             data: {
                 question: data.question,
@@ -82,10 +92,12 @@ export class QuestionBankRepository {
                 rating: data.rating,
             },
         });
+        logger.info("createQuestion result", { id: question.id });
         return question;
     }
 
     static async updateQuestionAttempts(questionId: number, correct: number) {
+        logger.info("updateQuestionAttempts called", { questionId, correct });
         const question = await prisma.questionBank.update({
             where: {
                 id: questionId,
@@ -99,6 +111,7 @@ export class QuestionBankRepository {
                 } : undefined,
             },
         });
+        logger.info("updateQuestionAttempts result", { id: question.id });
         return question;
     }
 
@@ -114,6 +127,7 @@ export class QuestionBankRepository {
         year: number | null;
         rating: number | null;
     }>) {
+        logger.info("updateQuestion called", { questionId, ...data, optionsLength: data.options?.length });
         const question = await prisma.questionBank.update({
             where: {
                 id: questionId,
@@ -135,15 +149,18 @@ export class QuestionBankRepository {
                 rating: data.rating
             },
         });
+        logger.info("updateQuestion result", { id: question.id });
         return question;
     }
 
     static async deleteQuestion(questionId: number) {
+        logger.info("deleteQuestion called", { questionId });
         const question = await prisma.questionBank.delete({
             where: {
                 id: questionId,
             },
         });
+        logger.info("deleteQuestion result", { id: question.id });
         return question;
     }
 }
