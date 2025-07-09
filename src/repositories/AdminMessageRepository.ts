@@ -1,10 +1,20 @@
 import { prisma } from "../config/prisma";
 import logger from "../utils/logger";
+import redis from "../config/RedisClient";
 
 export class AdminMessageRepository {
+    private static cacheTTL = 60 * 60;
+
     static async getGlobalMessages(skip: number, take: number) {
         logger.info(`Fetching global messages with skip: ${skip}, take: ${take}`);
         try {
+            const cacheKey = `globalMessages:${skip}:${take}`;
+            const cachedMessages = await redis.get(cacheKey);
+            if (cachedMessages) {
+                logger.info("Returning cached global messages");
+                return JSON.parse(cachedMessages);
+            }
+
             const messages = await prisma.adminMessages.findMany({
                 where: {
                     type: "global",
@@ -15,6 +25,7 @@ export class AdminMessageRepository {
                     createdAt: "desc",
                 },
             });
+            await redis.setex(cacheKey, this.cacheTTL, JSON.stringify(messages));
             logger.info(`Fetched ${messages.length} global messages`);
             return messages;
         } catch (error) {
@@ -25,6 +36,13 @@ export class AdminMessageRepository {
 
     static async getMessageByRating(rating: number, skip: number, take: number) {
         logger.info(`Fetching range messages with rating: ${rating}, skip: ${skip}, take: ${take}`);
+        const cacheKey = `rangeMessages:${rating}:${skip}:${take}`;
+        const cachedMessages = await redis.get(cacheKey);
+        if (cachedMessages) {
+            logger.info("Returning cached range messages");
+            return JSON.parse(cachedMessages);
+        }
+
         try {
             const messages = await prisma.adminMessages.findMany({
                 where: {
@@ -42,6 +60,12 @@ export class AdminMessageRepository {
                 skip,
                 take,
             });
+
+            if(messages.length === 0) {
+                logger.warn(`No range messages found for rating: ${rating}`);
+                return [];
+            }
+            await redis.setex(cacheKey, this.cacheTTL, JSON.stringify(messages));
             logger.info(`Fetched ${messages.length} range messages`);
             return messages;
         } catch (error) {
@@ -78,6 +102,7 @@ export class AdminMessageRepository {
                 data,
             });
             logger.info("Message created successfully:", message);
+            await redis.del(`globalMessages:*`);
             return message;
         } catch (error) {
             logger.error("Error creating message:", error);
@@ -100,6 +125,7 @@ export class AdminMessageRepository {
                 data,
             });
             logger.info(`Message updated successfully:`, message);
+            await redis.del(`globalMessages:*`);
             return message;
         } catch (error) {
             logger.error("Error updating message:", error);

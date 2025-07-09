@@ -4,7 +4,6 @@ import { IUserTestSeries } from "../interfaces/testSeries.interface";
 import logger from "../utils/logger";
 
 export class PremiumUserRepository {
-  // Get all tests for a specific user
   static async getUserTests(userId: number) {
     const userTests = await prisma.userTests.findMany({
       where: { userId },
@@ -13,7 +12,6 @@ export class PremiumUserRepository {
     return userTests;
   }
 
-  // Get all test series for a specific user
   static async getUserTestSeries(userId: number) {
     const userTestSeries = await prisma.userTestSeries.findMany({
       where: { userId },
@@ -73,7 +71,6 @@ export class PremiumUserRepository {
     return testSeries;
   }
 
-  // Get the user score, best score and average score for recent five testSeries
   static async getUserTestSeriesScore(userId: number) {
     const userTestSeries = await prisma.userTestSeries.findMany({
       where: { userId },
@@ -88,7 +85,6 @@ export class PremiumUserRepository {
     return userTestSeries;
   }
 
-  // Get the average score for a specific test
   static async getAverageScore(testId: number) {
     const averageScore = await prisma.userTestSeries.aggregate({
       _avg: {
@@ -102,7 +98,6 @@ export class PremiumUserRepository {
     return averageScore._avg.score || undefined;
   }
 
-  // Get the best score for a specific test
   static async getBestScore(testId: number) {
     const bestScore = await prisma.userTestSeries.findFirst({
       where: { testId },
@@ -115,7 +110,6 @@ export class PremiumUserRepository {
     return bestScore ? bestScore.score : undefined;
   }
 
-  // Get a specific test for a user
   static async getUserTest(id: number) {
     const userTest = await prisma.userTests.findUnique({
       where: { id },
@@ -124,7 +118,6 @@ export class PremiumUserRepository {
     return userTest;
   }
 
-  // Get a specific test series for a user
   static async getOneUserTestSeries(id: number) {
     const userTestSeries = await prisma.userTestSeries.findUnique({
       where: { id },
@@ -141,7 +134,6 @@ export class PremiumUserRepository {
     return userTestSeries;
   }
 
-  // Store a new test for a user
   static async storeUserTest(data: IUserTest) {
     const userTest = await prisma.userTests.create({
       data: {
@@ -155,7 +147,6 @@ export class PremiumUserRepository {
     return userTest;
   }
 
-  // Store a new test series for a user
   static async storeUserTestSeries(data: IUserTestSeries) {
     const userTestSeries = await prisma.userTestSeries.create({
       data: {
@@ -170,7 +161,6 @@ export class PremiumUserRepository {
     return userTestSeries;
   }
 
-  // Update an existing test for a user
   static async updateUserTest(id: number, data: Partial<IUserTest>) {
     const updatedUserTest = await prisma.userTests.update({
       where: { id },
@@ -184,7 +174,6 @@ export class PremiumUserRepository {
     return updatedUserTest;
   }
 
-  // Update an existing test series for a user
   static async updateUserTestSeries(id: number, data: Partial<IUserTestSeries>) {
     const updatedUserTestSeries = await prisma.userTestSeries.update({
       where: { id },

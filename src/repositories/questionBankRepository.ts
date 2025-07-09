@@ -40,7 +40,7 @@ export class QuestionBankRepository {
                 id: questionId,
             },
             include: {
-                categories: true, // Include related category data
+                categories: true,
             },
         });
         logger.info("getQuestionById result", { found: !!question });
@@ -82,7 +82,7 @@ export class QuestionBankRepository {
                 answer: data.answer,
                 options: data.options,
                 categories: {
-                    connect: { id: data.categoryId }, // Connect to the related category
+                    connect: { id: data.categoryId },
                 },
                 creatorName: data.creatorName,
                 explaination: data.explaination,
@@ -138,7 +138,7 @@ export class QuestionBankRepository {
                 options: data.options,
                 ...(data.categoryId && {
                     categories: {
-                        connect: { id: data.categoryId }, // Update the related category
+                        connect: { id: data.categoryId },
                     },
                 }),
                 creatorName: data.creatorName,

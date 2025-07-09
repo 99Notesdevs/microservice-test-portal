@@ -1,25 +1,58 @@
 import { prisma } from "../config/prisma";
 import { ITestSeries } from "../interfaces/testSeries.interface";
 import logger from "../utils/logger";
+import redis from "../config/RedisClient";
 
 export class TestSeriesRepository {
+    private static cacheTTL = 60 * 60;
+
     static async getAllTestSeries() {
+        logger.info("Fetching all test series");
+        const cacheKey = "allTestSeries";
+        const cachedTestSeries = await redis.get(cacheKey);
+        if (cachedTestSeries) {
+            logger.info("Returning cached test series");
+            return JSON.parse(cachedTestSeries);
+        }
+
         const testSeries = await prisma.testSeries.findMany({
             include: {
                 questions: true
             }
         });
+        
+        if (testSeries.length === 0) {
+            logger.warn("No test series found");
+            throw new Error("No test series found");
+        }
+        await redis.setex(cacheKey, this.cacheTTL, JSON.stringify(testSeries));
+        
         logger.info(`Fetched all test series: ${JSON.stringify(testSeries)}`);
         return testSeries;
     }
 
     static async getTestSeriesById(id: number) {
+        logger.info(`Fetching test series by ID: ${id}`);
+        const cacheKey = `testSeries:${id}`;
+        const cachedTestSeries = await redis.get(cacheKey);
+        if (cachedTestSeries) {
+            logger.info(`Returning cached test series for ID: ${id}`);
+            return JSON.parse(cachedTestSeries);
+        }
+
         const testSeries = await prisma.testSeries.findUnique({
             where: { id },
             include: {
                 questions: true
             }
         });
+        
+        if (!testSeries) {
+            logger.warn(`Test series with ID ${id} not found`);
+            throw new Error(`Test series with ID ${id} not found`);
+        }
+        await redis.setex(cacheKey, this.cacheTTL, JSON.stringify(testSeries));
+
         logger.info(`Fetched test series by ID ${id}: ${JSON.stringify(testSeries)}`);
         return testSeries;
     }

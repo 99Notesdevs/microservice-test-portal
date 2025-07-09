@@ -1,11 +1,25 @@
 import { Decimal } from "@prisma/client/runtime/library";
 import { prisma } from "../config/prisma";
 import logger from "../utils/logger";
+import redis from "../config/RedisClient";
 
 export class CategoryRepository {
+    private static cacheTTL = 60 * 60;
+    
     static async getAllUniqueCategories(categoryIds: number[]) {
+        if (!categoryIds || categoryIds.length === 0) {
+            logger.warn("No category IDs provided for fetching unique categories");
+            return [];
+        }
+        const cacheKey = `uniqueCategories:${categoryIds.join(",")}`;
+        const cachedCategories = await redis.get(cacheKey);
+        if (cachedCategories) {
+            logger.info(`Returning cached unique categories for IDs: ${categoryIds}`);
+            return JSON.parse(cachedCategories);
+        }
+
         logger.info(`Fetching all categories for multiple selected Ids: ${categoryIds}`);
-        const categories = await prisma.$queryRawUnsafe(`
+        const categories = await prisma.$queryRawUnsafe<Array<{ id: number; name: string }>>(`
             WITH RECURSIVE category_tree AS (
                 SELECT id, name, "parentTagId"      
                 FROM "Categories"
@@ -19,6 +33,11 @@ export class CategoryRepository {
             FROM category_tree;
         `, categoryIds);
 
+        if (categories && categories.length > 0) {
+            await redis.setex(cacheKey, this.cacheTTL, JSON.stringify(categories));
+        } else {
+            logger.warn(`No categories found for IDs: ${categoryIds}`);
+        }
         logger.info(`Fetched categories for multiple selected Ids: ${categoryIds}`);
 
         return categories;

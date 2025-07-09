@@ -2,7 +2,6 @@ import { prisma } from "../config/prisma";
 import { ITest } from "../interfaces/tests.interface";
 import logger from "../utils/logger";
 
-
 export class TestRepository {
     static async getAllTests() {
         const tests = await prisma.tests.findMany();
