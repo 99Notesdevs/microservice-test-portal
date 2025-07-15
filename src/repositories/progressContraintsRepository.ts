@@ -42,6 +42,7 @@ export class ProgressConstraintsRepository {
             xp_status: data.xp_status,
         }
     });
+    await redis.setex(`progressConstraints:1`, this.cacheTTL, JSON.stringify(newProgressConstraints));
     return newProgressConstraints;
   }
 

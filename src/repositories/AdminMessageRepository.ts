@@ -102,7 +102,7 @@ export class AdminMessageRepository {
                 data,
             });
             logger.info("Message created successfully:", message);
-            await redis.del(`globalMessages:*`);
+            await redis.flushall();
             return message;
         } catch (error) {
             logger.error("Error creating message:", error);
@@ -125,7 +125,7 @@ export class AdminMessageRepository {
                 data,
             });
             logger.info(`Message updated successfully:`, message);
-            await redis.del(`globalMessages:*`);
+            await redis.flushall();
             return message;
         } catch (error) {
             logger.error("Error updating message:", error);
@@ -142,6 +142,7 @@ export class AdminMessageRepository {
                 },
             });
             logger.info(`Message deleted successfully:`, message);
+            await redis.flushall();
             return message;
         } catch (error) {
             logger.error("Error deleting message:", error);
