@@ -13,11 +13,9 @@ export const createConsumer = async (groupId: string, topic: string, handler: (m
   await consumer.subscribe({ topic, fromBeginning: false })
 
   logger.info(`Consumer connected to topic ${topic} with group ID ${groupId}`)
-  console.log(`Consumer connected to topic ${topic} with group ID ${groupId}`)
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
-      console.log(`Received message from topic ${topic}: ${message.value?.toString()} on partition ${partition}`)
       logger.info(`Received message from topic ${topic}: ${message.value?.toString()} on partition ${partition}`)
       const decoded = message.value?.toString()
       if (decoded) {
