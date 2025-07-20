@@ -91,6 +91,8 @@ services:
       TOKEN_SECRET: ${TOKEN_SECRET}
       PORT: ${PORT}
       KAFKA_BROKER: ${KAFKA_BROKER}
+      DOMAIN: ${DOMAIN}
+      ENV: ${ENV}
     volumes:
       - .:/app
       - /app/node_modules
