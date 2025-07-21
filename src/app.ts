@@ -2,31 +2,21 @@ import express from "express";
 import cors from "cors";
 import main from "./routes/index";
 import { logRequest } from "./middlewares/logsMiddleware";
+import cookieParser from "cookie-parser";
 
 export const app = express();
 
 app.use(cors({
-    origin: ['http://localhost:3000', "http://localhost:5173", "http://localhost:38893", "http://13.126.229.93:5173", "http://13.126.229.93"],
+    origin: ['http://main.main.local:3000', "http://tests.main.local:5173", "http://localhost:44275", "http://13.126.229.93:5173", "http://13.126.229.93"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization", "x-auth-type"],
-    optionsSuccessStatus: 200
+    optionsSuccessStatus: 200,
 }));
-// app.use(cors({
-//     origin: function (origin, callback) {
-//         if(!origin || !allowedOrigins.includes(origin)) {
-//             callback(null, true);
-//         } else {
-//             callback(new Error("Not allowed by CORS"));
-//         }
-//     },
-//     methods: ["GET", "POST", "PUT", "DELETE"],
-//     credentials: true,
-//     maxAge: 86400,
-// }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cookieParser());
 app.use(logRequest);
 
 app.use("/api/v1", main);
