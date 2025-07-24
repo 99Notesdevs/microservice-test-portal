@@ -12,14 +12,12 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     try {
         const cookie = req.cookies['token'];
         if (!cookie) throw new Error('No Cookie provided');
-        const token = cookie.split(' ')[1];
-        if(!token) throw new Error('No token provided');
 
-        const authRepo = await getAuthToken(token);
+        const authRepo = await getAuthToken(cookie);
         if (!authRepo) throw new Error('Cannot get token');
         const type = authRepo.type;
-        
-        const { id } = jwt.verify(token, secret) as { id: string };
+
+        const { id } = jwt.verify(cookie, secret) as { id: string };
         if(!id) throw new Error('Cannot verify token');
         logger.info("Identity verified successfully");
         
