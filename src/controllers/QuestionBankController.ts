@@ -20,7 +20,7 @@ export default class QuestionBankController {
             });
             // const parsedCategoryIds = categoryIds.toString().split(',').map((id) => Number(id));        
             // const questions = await QuestionBankService.getPracticeQuestions(parsedCategoryIds, Number(limit));
-            res.status(202).json({ success: true, msg: "Request Queued..." });
+            res.status(202).json({ success: true, message: "Request Queued..." });
         } catch (error: unknown) {
             res.status(404).json({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' });
         }
@@ -78,7 +78,7 @@ export default class QuestionBankController {
                 markingScheme,
                 userId: req.body.authUser
             });
-            res.status(202).json({ success: true, msg: "Request Queued..." });
+            res.status(202).json({ success: true, message: "Request Queued..." });
         } catch (error: unknown) {
             res.status(404).json({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' });
         }

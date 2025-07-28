@@ -5,9 +5,9 @@ export class CalendarController {
   static async createEvent(req: Request, res: Response) {
     try {
       const event = await CalendarService.createEvent(req.body);
-      res.status(201).json(event);
+      res.status(201).json({success: true, data: event});
     } catch (error) {
-      res.status(500).json({ message: "Failed to create event", error });
+      res.status(500).json({ success: false, message: "Failed to create event", error });
     }
   }
 
@@ -33,9 +33,9 @@ export class CalendarController {
     try {
       const userId = Number(req.params.userId);
       const events = await CalendarService.getEventsByUser(userId);
-      res.status(200).json(events);
+      res.status(200).json({ success: true, data: events });
     } catch (error) {
-      res.status(500).json({ message: "Failed to fetch events", error });
+      res.status(500).json({ success: false, message: "Failed to fetch events", error });
     }
   }
 
@@ -46,9 +46,9 @@ export class CalendarController {
       const month = Number(req.query.month);
       const year = Number(req.query.year);
       const events = await CalendarService.getEventsByDate(userId, date, month, year);
-      res.status(200).json(events);
+      res.status(200).json({ success: true, data: events });
     } catch (error) {
-      res.status(500).json({ message: "Failed to fetch events by date", error });
+      res.status(500).json({ success: false, message: "Failed to fetch events by date", error });
     }
   }
 
@@ -60,9 +60,9 @@ export class CalendarController {
         status: req.body.status
       };
       const event = await CalendarService.updateEvent(id, updateData);
-      res.status(200).json(event);
+      res.status(200).json({ success: true, data: event });
     } catch (error) {
-      res.status(500).json({ message: "Failed to update event", error });
+      res.status(500).json({ success: false, message: "Failed to update event", error });
     }
   }
 
@@ -72,7 +72,7 @@ export class CalendarController {
       await CalendarService.deleteEvent(id);
       res.status(204).send();
     } catch (error) {
-      res.status(500).json({ message: "Failed to delete event", error });
+      res.status(500).json({ success: false, message: "Failed to delete event", error });
     }
   }
 }
