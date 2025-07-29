@@ -28,6 +28,7 @@ model User {
   resetPassTokens ResetPassToken[]
   orders          Order[]
   cart            Cart?
+  ratings         ProductRating[] @relation("UserToProductRating")
   address         Address[]
   messages        ChatMessage[]
   chatRooms       ChatParticipant[]
@@ -529,12 +530,24 @@ model Product {
   cartItem    CartItem[]
   inventory   Inventory?
   wishList    WishList[]
+  ratings     ProductRating[] @relation("ProductToProductRating")
 
   category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@index([name])
 }
 
+model ProductRating {
+  id          Int      @id @default(autoincrement())
+  userId      Int      
+  productId   Int
+  rating      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation("UserToProductRating", fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation("ProductToProductRating", fields: [productId], references: [id], onDelete: Cascade)
+}
 model Order {
   id          Int         @id @default(autoincrement())
   orderDate   DateTime    @default(now())
