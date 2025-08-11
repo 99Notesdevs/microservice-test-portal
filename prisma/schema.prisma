@@ -525,6 +525,7 @@ model Product {
   stock       Int
   imageUrl    String?
   categoryId  Int
+  shippingCharges Float @default(50)
   validity    Int?
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
