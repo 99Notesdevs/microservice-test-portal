@@ -526,6 +526,7 @@ model Product {
   imageUrl    String?
   categoryId  Int
   shippingCharges Float @default(50)
+  type ProductType @default(softCopy)
   validity    Int?
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
@@ -744,7 +745,10 @@ enum OrderType {
   Books
   Notes
 }
-
+enum ProductType {
+  softCopy
+  hardCopy
+}
 enum OrderStatus {
   Pending
   Completed
