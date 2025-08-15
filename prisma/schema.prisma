@@ -395,6 +395,7 @@ model About99Notes {
   id        Int      @id @default(autoincrement())
   title     String
   content   String
+  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -524,6 +525,7 @@ model Product {
   salePrice   Float?
   stock       Int
   imageUrl    String?
+  metadata    String?
   categoryId  Int
   shippingCharges Float @default(50)
   type ProductType @default(softCopy)
@@ -540,6 +542,7 @@ model Product {
 
   @@index([name])
 }
+
 model Offers  {
   id          Int      @id @default(autoincrement())
   name        String
@@ -547,6 +550,7 @@ model Offers  {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
 model ProductRating {
   id          Int      @id @default(autoincrement())
   userId      Int      
@@ -558,6 +562,7 @@ model ProductRating {
   user User @relation("UserToProductRating", fields: [userId], references: [id], onDelete: Cascade)
   product Product @relation("ProductToProductRating", fields: [productId], references: [id], onDelete: Cascade)
 }
+
 model Order {
   id          Int         @id @default(autoincrement())
   orderDate   DateTime    @default(now())
@@ -631,6 +636,7 @@ model Shipping {
   shippingAddress String
   trackingNumber  String
   carrier         String
+  status          ShippingStatus
   shippingDate    DateTime
   orderId         Int
   createdAt       DateTime @default(now())
@@ -688,15 +694,36 @@ model Payment {
 model Coupon {
   id          Int      @id @default(autoincrement())
   code        String   @unique
+  description String?
   discount    Float
   validity    Int
   type        String
+  minOrderValue   Float?            // Minimum order value to apply coupon
+  startDate       DateTime?         @default(now())
+  endDate         DateTime?         // If null, coupon never expires
   usageLimit  Int?     // Maximum number of times this coupon can be used
+  usageLimitPerUser Int?     // Maximum number of times this coupon can be used per user
   timesUsed   Int      @default(0) // How many times the coupon has been used
   isActive    Boolean  @default(true) // Admin toggle to enable/disable the coupon
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  userCoupons     UserCoupon[]
   users UserData[] @relation("UserToCoupon")
+}
+
+model UserCoupon {
+  id              Int       @id @default(autoincrement())
+  userId          Int
+  couponId        Int
+  coupon          Coupon    @relation(fields: [couponId], references: [id])
+  usageLimit      Int?      // Per-user usage limit
+  timesUsed       Int       @default(0)
+  createdAt       DateTime  @default(now())
+  
+  @@unique([userId, couponId])
+  @@index([userId])
+  @@index([couponId])
 }
 
 // ------------------------------------------------------------------------------------------ End Ecommerce
@@ -767,4 +794,11 @@ enum MessageType {
   IMAGE
   FILE
   SYSTEM
+}
+
+enum ShippingStatus{
+  Processing
+  Shipped 
+  Delivered
+  Cancelled
 }
