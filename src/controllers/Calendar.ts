@@ -15,7 +15,7 @@ export class CalendarController {
     try {
       const month = parseInt(req.query.month as string);
       const year = parseInt(req.query.year as string);
-      const uid = req.body.authUser;
+      const uid = req.authUser;
       if(!uid) {
         throw new Error("Unauthorized: User ID is required");
       }
