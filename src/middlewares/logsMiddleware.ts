@@ -8,10 +8,10 @@ export async function logRequest(
 ) {
   if (
     ["POST", "PUT", "DELETE"].includes(req.method) &&
-    req.body.authType !== "User"
+    req.authType !== "User"
   ) {
-    const user = req.body.authType || null;
-    const id = req.body.authUser || null;
+    const user = req.authType || null;
+    const id = parseInt(req.authUser!) || null;
 
     const details = { ...req.body };
 

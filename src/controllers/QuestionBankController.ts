@@ -16,7 +16,7 @@ export default class QuestionBankController {
                 limitS: Number(limitS),
                 categoryM: categoryM?.toString(),
                 limitM: Number(limitM),
-                userId: req.body.authUser
+                userId: parseInt(req.authUser!)
             });
             // const parsedCategoryIds = categoryIds.toString().split(',').map((id) => Number(id));        
             // const questions = await QuestionBankService.getPracticeQuestions(parsedCategoryIds, Number(limit));
@@ -72,11 +72,11 @@ export default class QuestionBankController {
             if (!submissions || !Array.isArray(submissions)) {
                 throw new Error('Submissions are required');
             }
-            logger.info(`Submitting questions for user: ${req.body.authUser}`);
+            logger.info(`Submitting questions for user: ${req.authUser}`);
             await sendMessage('question-submit', {
                 submissions,
                 markingScheme,
-                userId: req.body.authUser
+                userId: parseInt(req.authUser!)
             });
             res.status(202).json({ success: true, message: "Request Queued..." });
         } catch (error: unknown) {

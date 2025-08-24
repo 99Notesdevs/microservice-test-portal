@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 export class PremiumUserController {
   static async getUserTests(req: Request, res: Response) {
     try {
-      const userId = parseInt(req.body.authUser);
+      const userId = parseInt(req.authUser!);
       const userTests = await PremiumUserService.getUserTests(userId);
       res.status(200).json({ success: true, data: userTests });
     } catch (error: unknown) {
@@ -14,7 +14,7 @@ export class PremiumUserController {
 
   static async getUserTestSeries(req: Request, res: Response) {
     try {
-      const userId = parseInt(req.body.authUser);
+      const userId = parseInt(req.authUser!);
       const userTestSeries = await PremiumUserService.getUserTestSeries(userId);
       res.status(200).json({ success: true, data: userTestSeries });
     } catch (error: unknown) {
@@ -44,7 +44,7 @@ export class PremiumUserController {
 
   static async getLast5TestSeriesData(req: Request, res: Response) {
     try {
-      const userId = parseInt(req.body.authUser);
+      const userId = parseInt(req.authUser!);
       const last5TestSeries = await PremiumUserService.getLast5TestSeriesData(userId);
       res.status(200).json({ success: true, data: last5TestSeries });
     } catch (error: unknown) {
@@ -56,7 +56,7 @@ export class PremiumUserController {
     try {
       const body = req.body;
       const data = {
-        userId: parseInt(body.authUser),
+        userId: parseInt(req.authUser!),
         questionIds: body.questionIds as number[],
         response: JSON.stringify(body.response),
         result: JSON.stringify(body.result),
@@ -72,7 +72,7 @@ export class PremiumUserController {
     try {
       const body = req.body;
       const data = {
-        userId: parseInt(body.authUser),
+        userId: parseInt(req.authUser!),
         testId: body.testId,
         response: JSON.stringify(body.response),
         score: parseInt(body.score),
