@@ -1,6 +1,8 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import http from 'http';
 import { app } from './app';
-import dotenv from 'dotenv';
 import logger from './utils/logger';
 import { setupSocketIO } from './config/socket';
 import { createClient } from 'redis';
@@ -9,7 +11,6 @@ import { createFetchConsumer } from './utils/Kafka/Workers/fetch-worker';
 import { createSubmitConsumer } from './utils/Kafka/Workers/submit-worker';
 import { createRatingConsumer } from './utils/Kafka/Workers/rating-worker';
 
-dotenv.config();
 
 const port = Number(process.env.PORT ) || 5500;
 
