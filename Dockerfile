@@ -2,16 +2,27 @@ FROM node:18-alpine
 
 WORKDIR /app
 
+# Copy package files
 COPY package.json package-lock.json ./
-RUN npm ci --ignore-scripts
 
+# Install production dependencies only
+RUN npm ci --omit=dev --ignore-scripts
+
+# Copy Prisma schema
 COPY prisma ./prisma/
-RUN npx prisma generate
 
+# Generate Prisma client
+RUN npx prisma generate || true
+
+# Copy pre-compiled dist folder
+COPY dist ./dist
+
+# Copy everything else
 COPY . .
+
+# Rebuild native modules
 RUN npm rebuild || true
 
 EXPOSE 5500
 
-# Use production start command
 CMD ["npm", "run", "start"]
