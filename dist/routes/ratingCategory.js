@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const RatingCategory_1 = require("../controllers/RatingCategory");
+const express_1 = require("express");
+const ratingCategoryRouter = (0, express_1.Router)();
+ratingCategoryRouter.get("/user/:userId", RatingCategory_1.RatingCategoryController.getRatingCategoryByUserId);
+ratingCategoryRouter.get("/category/:categoryId", RatingCategory_1.RatingCategoryController.getRatingCategoryByCategoryId);
+ratingCategoryRouter.get("/:userId/:categoryId", RatingCategory_1.RatingCategoryController.getRating);
+ratingCategoryRouter.put("/:userId/:categoryId", RatingCategory_1.RatingCategoryController.updateRatingCategory);
+ratingCategoryRouter.delete("/:userId/:categoryId", RatingCategory_1.RatingCategoryController.deleteRatingCategory);
+exports.default = ratingCategoryRouter;

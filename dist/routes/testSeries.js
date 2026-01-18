@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const TestSeries_1 = require("../controllers/TestSeries");
+const authenticate_1 = require("../middlewares/authenticate");
+const authorizeRoles_1 = require("../middlewares/authorizeRoles");
+const testSeriesRouter = (0, express_1.Router)();
+testSeriesRouter.get("/", authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["Admin", "User"]), TestSeries_1.TestSeriesController.getAllTestSeries);
+testSeriesRouter.get("/:id", authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["Admin", "User"]), TestSeries_1.TestSeriesController.getTestSeriesById);
+testSeriesRouter.post("/", authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["Admin"]), TestSeries_1.TestSeriesController.createTestSeries);
+testSeriesRouter.put("/:id", authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["Admin"]), TestSeries_1.TestSeriesController.updateTestSeries);
+testSeriesRouter.delete("/:id", authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["Admin"]), TestSeries_1.TestSeriesController.deleteTestSeries);
+exports.default = testSeriesRouter;

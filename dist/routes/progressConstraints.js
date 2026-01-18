@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const ProgressContraint_1 = require("../controllers/ProgressContraint");
+const express_1 = require("express");
+const authenticate_1 = require("../middlewares/authenticate");
+const authorizeRoles_1 = require("../middlewares/authorizeRoles");
+const progressConstraintsRouter = (0, express_1.Router)();
+progressConstraintsRouter.get("/", ProgressContraint_1.ProgressConstraintController.getProgressConstraintsById);
+progressConstraintsRouter.post("/", authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["Admin"]), ProgressContraint_1.ProgressConstraintController.createProgressConstraints);
+progressConstraintsRouter.put("/:id", authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["Admin"]), ProgressContraint_1.ProgressConstraintController.updateProgressConstraints);
+exports.default = progressConstraintsRouter;
