@@ -6,8 +6,9 @@ export class QuestionBankRepository {
         logger.info("getQuestionsByCategoryId called", { categoryId, limit, multiplechoice });
         const questions = await prisma.$queryRawUnsafe(
             `
-                SELECT * FROM "QuestionBank"
-                WHERE "categoryId" = ($1) AND "multipleCorrectType" = ($3)
+                SELECT DISTINCT qb.* FROM "QuestionBank" qb
+                INNER JOIN "_TagToQuestionBank" tqb ON qb.id = tqb."B"
+                WHERE tqb."A" = ($1) AND qb."multipleCorrectType" = ($3)
                 ORDER BY random()
                 LIMIT ($2)
             `, categoryId, limit, !!multiplechoice);
@@ -20,9 +21,14 @@ export class QuestionBankRepository {
         const questions = await prisma.questionBank.findMany({
             where: {
                 categories: {
-                    id: categoryId,
+                    some: {
+                        id: categoryId,
+                    }
                 },
                 pyq: true
+            },
+            include: {
+                categories: true,
             },
             orderBy: {
                 createdAt: 'desc',
@@ -52,8 +58,13 @@ export class QuestionBankRepository {
         const questions = await prisma.questionBank.findMany({
             where: {
                 categories: {
-                    id: categoryId,
+                    some: {
+                        id: categoryId,
+                    }
                 },
+            },
+            include: {
+                categories: true,
             },
             orderBy: {
                 createdAt: 'desc',
@@ -67,7 +78,7 @@ export class QuestionBankRepository {
         question: string;
         answer: string;
         options: string[];
-        categoryId: number;
+        categoryIds: number[];
         creatorName: string;
         explaination: string;
         multipleCorrectType: boolean;
@@ -75,15 +86,15 @@ export class QuestionBankRepository {
         year: number | null;
         rating: number | null;
     }) {
-        logger.info("createQuestion called", { ...data, optionsLength: data.options.length });
+        logger.info("createQuestion called", { ...data, optionsLength: data.options.length, categoryIdsLength: data.categoryIds.length });
         const question = await prisma.questionBank.create({
             data: {
                 question: data.question,
                 answer: data.answer,
                 options: data.options,
                 categories: {
-                    connect: { id: data.categoryId },
-                },
+                    connect: data.categoryIds.map(id => ({ id: Number(id) })),
+                } as any,
                 creatorName: data.creatorName,
                 explaination: data.explaination,
                 multipleCorrectType: data.multipleCorrectType,
@@ -119,7 +130,7 @@ export class QuestionBankRepository {
         question: string;
         answer: string;
         options: string[];
-        categoryId: number;
+        categoryIds: number[];
         creatorName: string;
         explaination: string;
         multipleCorrectType: boolean;
@@ -127,7 +138,7 @@ export class QuestionBankRepository {
         year: number | null;
         rating: number | null;
     }>) {
-        logger.info("updateQuestion called", { questionId, ...data, optionsLength: data.options?.length });
+        logger.info("updateQuestion called", { questionId, ...data, optionsLength: data.options?.length, categoryIdsLength: data.categoryIds?.length });
         const question = await prisma.questionBank.update({
             where: {
                 id: questionId,
@@ -136,10 +147,10 @@ export class QuestionBankRepository {
                 question: data.question,
                 answer: data.answer,
                 options: data.options,
-                ...(data.categoryId && {
+                ...(data.categoryIds && data.categoryIds.length > 0 && {
                     categories: {
-                        connect: { id: data.categoryId },
-                    },
+                        set: data.categoryIds.map(id => ({ id: Number(id) })),
+                    } as any,
                 }),
                 creatorName: data.creatorName,
                 explaination: data.explaination,

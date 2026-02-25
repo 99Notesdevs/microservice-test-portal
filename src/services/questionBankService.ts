@@ -49,7 +49,7 @@ export class QuestionBankService {
         question: string;
         answer: string;
         options: string[];
-        categoryId: number;
+        categoryIds: number[];
         creatorName: string;
         explaination: string;
         multipleCorrectType: boolean;
@@ -65,7 +65,7 @@ export class QuestionBankService {
         question: string;
         answer: string;
         options: string[];
-        categoryId: number;
+        categoryIds: number[];
         creatorName: string;
         explaination: string;
         multipleCorrectType: boolean;
