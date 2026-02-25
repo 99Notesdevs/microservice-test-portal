@@ -1,0 +1,17 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const PremiumUser_1 = require("../controllers/PremiumUser");
+const authenticate_1 = require("../middlewares/authenticate");
+const authorizeRoles_1 = require("../middlewares/authorizeRoles");
+const premiumUserRouter = (0, express_1.Router)();
+premiumUserRouter.get("/tests", authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["User"]), PremiumUser_1.PremiumUserController.getUserTests);
+premiumUserRouter.get("/testSeries", authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["User"]), PremiumUser_1.PremiumUserController.getUserTestSeries);
+premiumUserRouter.get("/tests/:id", authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["User"]), PremiumUser_1.PremiumUserController.getUserTest);
+premiumUserRouter.get("/testSeries/data", authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["User"]), PremiumUser_1.PremiumUserController.getLast5TestSeriesData);
+premiumUserRouter.get("/testSeries/:id", authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["User"]), PremiumUser_1.PremiumUserController.getOneUserTestSeries);
+premiumUserRouter.post("/tests", authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["User"]), PremiumUser_1.PremiumUserController.storeUserTest);
+premiumUserRouter.post("/testSeries", authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["User"]), PremiumUser_1.PremiumUserController.storeUserTestSeries);
+premiumUserRouter.put("/tests/:id", authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["User"]), PremiumUser_1.PremiumUserController.updateUserTest);
+premiumUserRouter.put("/testSeries/:id", authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["User"]), PremiumUser_1.PremiumUserController.updateUserTestSeries);
+exports.default = premiumUserRouter;

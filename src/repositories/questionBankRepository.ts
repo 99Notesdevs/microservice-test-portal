@@ -18,23 +18,20 @@ export class QuestionBankRepository {
 
     static async getPracticeQuestionsByCategoryId(categoryId: number, limit: number) {
         logger.info("getPracticeQuestionsByCategoryId called", { categoryId, limit });
-        const questions = await prisma.questionBank.findMany({
-            where: {
-                categories: {
-                    some: {
-                        id: categoryId,
-                    }
-                },
-                pyq: true
-            },
-            include: {
-                categories: true,
-            },
-            orderBy: {
-                createdAt: 'desc',
-            },
-            take: limit,
-        });
+        const questions = await prisma.$queryRawUnsafe(
+            `
+                SELECT qb.*, COALESCE(json_agg(json_build_object('id', c.id, 'name', c.name)) FILTER (WHERE c.id IS NOT NULL), '[]') as categories
+                FROM "QuestionBank" qb
+                LEFT JOIN "_CategoryToQuestionBank" tqb ON qb.id = tqb."B"
+                LEFT JOIN "Categories" c ON c.id = tqb."A"
+                WHERE qb."pyq" = true AND EXISTS (
+                  SELECT 1 FROM "_CategoryToQuestionBank" t2 WHERE t2."B" = qb.id AND t2."A" = ($1)
+                )
+                GROUP BY qb.id
+                ORDER BY qb."createdAt" DESC
+                LIMIT ($2)
+            `, categoryId, limit
+        );
         logger.info("getPracticeQuestionsByCategoryId result", { length: (questions as any[]).length });
         return questions;
     }
@@ -55,21 +52,19 @@ export class QuestionBankRepository {
 
     static async getAllQuestions(categoryId: number) {
         logger.info("getAllQuestions called", { categoryId });
-        const questions = await prisma.questionBank.findMany({
-            where: {
-                categories: {
-                    some: {
-                        id: categoryId,
-                    }
-                },
-            },
-            include: {
-                categories: true,
-            },
-            orderBy: {
-                createdAt: 'desc',
-            },
-        });
+        const questions = await prisma.$queryRawUnsafe(
+            `
+                SELECT qb.*, COALESCE(json_agg(json_build_object('id', c.id, 'name', c.name)) FILTER (WHERE c.id IS NOT NULL), '[]') as categories
+                FROM "QuestionBank" qb
+                LEFT JOIN "_CategoryToQuestionBank" tqb ON qb.id = tqb."B"
+                LEFT JOIN "Categories" c ON c.id = tqb."A"
+                WHERE EXISTS (
+                  SELECT 1 FROM "_CategoryToQuestionBank" t2 WHERE t2."B" = qb.id AND t2."A" = ($1)
+                )
+                GROUP BY qb.id
+                ORDER BY qb."createdAt" DESC
+            `, categoryId
+        );
         logger.info("getAllQuestions result", { length: (questions as any[]).length });
         return questions;
     }
