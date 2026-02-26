@@ -6,7 +6,7 @@
 
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -164,7 +164,7 @@ model Categories {
 
   // One - One relation (History is related to it's unique page)
   pageId Int?
-  page   Page? @relation(fields: [pageId], references: [id])
+  page   Page? @relation(fields: [pageId], references: [id], onDelete: Cascade)
 
   // One - Many relation (Tree type structure)
   daughterTag Categories[] @relation("TagToTag")
@@ -172,7 +172,7 @@ model Categories {
   parentTagId Int?
 
   // One - Many relation (Categories to Questions)
-  questions QuestionBank[] @relation("TagToQuestionBank")
+  questions QuestionBank[] @relation("CategoryToQuestionBank")
 
   CategoryRatings CategoryRating[]
 
@@ -240,9 +240,8 @@ model QuestionBank {
   // Test series to question bank relation
   testSeries TestSeries[] @relation("TestSeriesToQuestionBank")
 
-  // One - Many relation (Categories to Questions)
-  categories Categories @relation("TagToQuestionBank", fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  categoryId Int
+  // Many - Many relation (Categories to Questions)
+  categories Categories[] @relation("CategoryToQuestionBank")
 }
 
 model Tags {
@@ -577,10 +576,10 @@ model Order {
   payment     Payment[]
 
   billingAddressId Int?
-  billingAddress   Address? @relation("BillingAddress", fields: [billingAddressId], references: [id], onDelete: Cascade)
+  billingAddress   Address? @relation("BillingAddress", fields: [billingAddressId], references: [id], onDelete: SetNull, onUpdate: Cascade)
 
   shippingAddressId Int?
-  shippingAddress   Address? @relation("ShippingAddress", fields: [shippingAddressId], references: [id], onDelete: Cascade)
+  shippingAddress   Address? @relation("ShippingAddress", fields: [shippingAddressId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 

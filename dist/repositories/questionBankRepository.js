@@ -20,8 +20,9 @@ class QuestionBankRepository {
         return __awaiter(this, void 0, void 0, function* () {
             logger_1.default.info("getQuestionsByCategoryId called", { categoryId, limit, multiplechoice });
             const questions = yield prisma_1.prisma.$queryRawUnsafe(`
-                SELECT * FROM "QuestionBank"
-                WHERE "categoryId" = ($1) AND "multipleCorrectType" = ($3)
+                SELECT DISTINCT qb.* FROM "QuestionBank" qb
+                INNER JOIN "_TagToQuestionBank" tqb ON qb.id = tqb."B"
+                WHERE tqb."A" = ($1) AND qb."multipleCorrectType" = ($3)
                 ORDER BY random()
                 LIMIT ($2)
             `, categoryId, limit, !!multiplechoice);
@@ -32,18 +33,18 @@ class QuestionBankRepository {
     static getPracticeQuestionsByCategoryId(categoryId, limit) {
         return __awaiter(this, void 0, void 0, function* () {
             logger_1.default.info("getPracticeQuestionsByCategoryId called", { categoryId, limit });
-            const questions = yield prisma_1.prisma.questionBank.findMany({
-                where: {
-                    categories: {
-                        id: categoryId,
-                    },
-                    pyq: true
-                },
-                orderBy: {
-                    createdAt: 'desc',
-                },
-                take: limit,
-            });
+            const questions = yield prisma_1.prisma.$queryRawUnsafe(`
+                SELECT qb.*, COALESCE(json_agg(json_build_object('id', c.id, 'name', c.name)) FILTER (WHERE c.id IS NOT NULL), '[]') as categories
+                FROM "QuestionBank" qb
+                LEFT JOIN "_CategoryToQuestionBank" tqb ON qb.id = tqb."B"
+                LEFT JOIN "Categories" c ON c.id = tqb."A"
+                WHERE qb."pyq" = true AND EXISTS (
+                  SELECT 1 FROM "_CategoryToQuestionBank" t2 WHERE t2."B" = qb.id AND t2."A" = ($1)
+                )
+                GROUP BY qb.id
+                ORDER BY qb."createdAt" DESC
+                LIMIT ($2)
+            `, categoryId, limit);
             logger_1.default.info("getPracticeQuestionsByCategoryId result", { length: questions.length });
             return questions;
         });
@@ -66,30 +67,31 @@ class QuestionBankRepository {
     static getAllQuestions(categoryId) {
         return __awaiter(this, void 0, void 0, function* () {
             logger_1.default.info("getAllQuestions called", { categoryId });
-            const questions = yield prisma_1.prisma.questionBank.findMany({
-                where: {
-                    categories: {
-                        id: categoryId,
-                    },
-                },
-                orderBy: {
-                    createdAt: 'desc',
-                },
-            });
+            const questions = yield prisma_1.prisma.$queryRawUnsafe(`
+                SELECT qb.*, COALESCE(json_agg(json_build_object('id', c.id, 'name', c.name)) FILTER (WHERE c.id IS NOT NULL), '[]') as categories
+                FROM "QuestionBank" qb
+                LEFT JOIN "_CategoryToQuestionBank" tqb ON qb.id = tqb."B"
+                LEFT JOIN "Categories" c ON c.id = tqb."A"
+                WHERE EXISTS (
+                  SELECT 1 FROM "_CategoryToQuestionBank" t2 WHERE t2."B" = qb.id AND t2."A" = ($1)
+                )
+                GROUP BY qb.id
+                ORDER BY qb."createdAt" DESC
+            `, categoryId);
             logger_1.default.info("getAllQuestions result", { length: questions.length });
             return questions;
         });
     }
     static createQuestion(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            logger_1.default.info("createQuestion called", Object.assign(Object.assign({}, data), { optionsLength: data.options.length }));
+            logger_1.default.info("createQuestion called", Object.assign(Object.assign({}, data), { optionsLength: data.options.length, categoryIdsLength: data.categoryIds.length }));
             const question = yield prisma_1.prisma.questionBank.create({
                 data: {
                     question: data.question,
                     answer: data.answer,
                     options: data.options,
                     categories: {
-                        connect: { id: data.categoryId },
+                        connect: data.categoryIds.map(id => ({ id: Number(id) })),
                     },
                     creatorName: data.creatorName,
                     explaination: data.explaination,
@@ -125,15 +127,15 @@ class QuestionBankRepository {
     }
     static updateQuestion(questionId, data) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
-            logger_1.default.info("updateQuestion called", Object.assign(Object.assign({ questionId }, data), { optionsLength: (_a = data.options) === null || _a === void 0 ? void 0 : _a.length }));
+            var _a, _b;
+            logger_1.default.info("updateQuestion called", Object.assign(Object.assign({ questionId }, data), { optionsLength: (_a = data.options) === null || _a === void 0 ? void 0 : _a.length, categoryIdsLength: (_b = data.categoryIds) === null || _b === void 0 ? void 0 : _b.length }));
             const question = yield prisma_1.prisma.questionBank.update({
                 where: {
                     id: questionId,
                 },
-                data: Object.assign(Object.assign({ question: data.question, answer: data.answer, options: data.options }, (data.categoryId && {
+                data: Object.assign(Object.assign({ question: data.question, answer: data.answer, options: data.options }, (data.categoryIds && data.categoryIds.length > 0 && {
                     categories: {
-                        connect: { id: data.categoryId },
+                        set: data.categoryIds.map(id => ({ id: Number(id) })),
                     },
                 })), { creatorName: data.creatorName, explaination: data.explaination, multipleCorrectType: data.multipleCorrectType, pyq: data.pyq, year: data.year, rating: data.rating }),
             });

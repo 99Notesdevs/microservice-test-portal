@@ -126,11 +126,13 @@ class QuestionBankController {
     static createQuestion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { question, answer, options, categoryId, creatorName, explaination, multipleCorrectType, pyq, year, rating } = req.body;
-                if (!question || !answer || !options || !categoryId || !creatorName || !explaination) {
-                    throw new Error('All fields (question, answer, options, categoryId, creatorName, explaination) are required');
+                const { question, answer, options, categoryIds, creatorName, explaination, multipleCorrectType, pyq, year, rating } = req.body;
+                if (!question || !answer || !options || !categoryIds || !creatorName || !explaination) {
+                    throw new Error('All fields (question, answer, options, categoryIds, creatorName, explaination) are required');
                 }
-                const newQuestion = yield questionBankService_1.QuestionBankService.createQuestion({ question, answer, options, categoryId, creatorName, explaination, multipleCorrectType, pyq, year, rating });
+                // Ensure categoryIds is an array of numbers
+                const categoryIdsArray = Array.isArray(categoryIds) ? categoryIds.map(id => Number(id)) : [Number(categoryIds)];
+                const newQuestion = yield questionBankService_1.QuestionBankService.createQuestion({ question, answer, options, categoryIds: categoryIdsArray, creatorName, explaination, multipleCorrectType, pyq, year, rating });
                 res.status(201).json({ success: true, data: newQuestion });
             }
             catch (error) {
@@ -145,6 +147,12 @@ class QuestionBankController {
                 const data = req.body;
                 if (!id) {
                     throw new Error('Question ID is required');
+                }
+                // If categoryIds is provided, ensure it's an array of numbers
+                if (data.categoryIds) {
+                    data.categoryIds = Array.isArray(data.categoryIds)
+                        ? data.categoryIds.map((id) => Number(id))
+                        : [Number(data.categoryIds)];
                 }
                 const updatedQuestion = yield questionBankService_1.QuestionBankService.updateQuestion(Number(id), data);
                 res.status(200).json({ success: true, data: updatedQuestion });

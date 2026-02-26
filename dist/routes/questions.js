@@ -18,12 +18,12 @@ questionRouter.get('/', authenticate_1.authenticate, (0, authorizeRoles_1.author
 questionRouter.get('/ids', authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["Admin", "User"]), QuestionBankController_1.default.getQuestionsByIds);
 // Params: /:id
 questionRouter.get('/:id', authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["Admin", "User"]), QuestionBankController_1.default.getQuestionById);
-// Body: { question: string, answer: string, options: string[], categoryId: number }
+// Body: { question: string, answer: string, options: string[], categoryIds: number[] }
 questionRouter.post('/', authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["Admin"]), QuestionBankController_1.default.createQuestion);
 // Body: { submissions: Array<{ questionId: number, selectedOption: string }> }
 questionRouter.post('/submit', authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["Admin", "User"]), QuestionBankController_1.default.submitQuestions);
 // Params: /:id
-// Body: Partial<{ question: string, answer: string, options: string[], categoryId: number }>
+// Body: Partial<{ question: string, answer: string, options: string[], categoryIds: number[] }>
 questionRouter.put('/:id', authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["Admin"]), QuestionBankController_1.default.updateQuestion);
 // Params: /:id
 questionRouter.delete('/:id', authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["Admin"]), QuestionBankController_1.default.deleteQuestion);

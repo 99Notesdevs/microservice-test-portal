@@ -34,9 +34,8 @@ export const createRatingConsumer = async () => {
       let newGlobalRating = 0;
       
       for (const [questionId, questionValue] of Object.entries(result)) {
-        const question = questionValue as { isCorrect: boolean; rating: number, categories: {id: string}, selectedOption: string };
+        const question = questionValue as { isCorrect: boolean; rating: number, categories: {id: string}[], selectedOption: string };
         const { isCorrect, categories, selectedOption } = question;
-        const categoryId = parseInt(categories.id);
 
         const markValue = (!isCorrect && selectedOption === 'unattempted') ? 0 : isCorrect ? 1 : -1;
         // Updating question attempts in the database
@@ -45,8 +44,11 @@ export const createRatingConsumer = async () => {
           markValue
         );
 
-        // Do the Elo calculation
-        newGlobalRating = await attemptQuestionService(userId, categoryId, markValue, question.rating);
+        // Do the Elo calculation for all categories the question belongs to
+        for (const category of categories) {
+          const categoryId = parseInt(category.id);
+          newGlobalRating = await attemptQuestionService(userId, categoryId, markValue, question.rating);
+        }
       }
 
       await updateUserRating(userId, newGlobalRating);

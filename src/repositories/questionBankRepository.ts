@@ -6,8 +6,9 @@ export class QuestionBankRepository {
         logger.info("getQuestionsByCategoryId called", { categoryId, limit, multiplechoice });
         const questions = await prisma.$queryRawUnsafe(
             `
-                SELECT * FROM "QuestionBank"
-                WHERE "categoryId" = ($1) AND "multipleCorrectType" = ($3)
+                SELECT DISTINCT qb.* FROM "QuestionBank" qb
+                INNER JOIN "_TagToQuestionBank" tqb ON qb.id = tqb."B"
+                WHERE tqb."A" = ($1) AND qb."multipleCorrectType" = ($3)
                 ORDER BY random()
                 LIMIT ($2)
             `, categoryId, limit, !!multiplechoice);
@@ -17,18 +18,20 @@ export class QuestionBankRepository {
 
     static async getPracticeQuestionsByCategoryId(categoryId: number, limit: number) {
         logger.info("getPracticeQuestionsByCategoryId called", { categoryId, limit });
-        const questions = await prisma.questionBank.findMany({
-            where: {
-                categories: {
-                    id: categoryId,
-                },
-                pyq: true
-            },
-            orderBy: {
-                createdAt: 'desc',
-            },
-            take: limit,
-        });
+        const questions = await prisma.$queryRawUnsafe(
+            `
+                SELECT qb.*, COALESCE(json_agg(json_build_object('id', c.id, 'name', c.name)) FILTER (WHERE c.id IS NOT NULL), '[]') as categories
+                FROM "QuestionBank" qb
+                LEFT JOIN "_CategoryToQuestionBank" tqb ON qb.id = tqb."B"
+                LEFT JOIN "Categories" c ON c.id = tqb."A"
+                WHERE qb."pyq" = true AND EXISTS (
+                  SELECT 1 FROM "_CategoryToQuestionBank" t2 WHERE t2."B" = qb.id AND t2."A" = ($1)
+                )
+                GROUP BY qb.id
+                ORDER BY qb."createdAt" DESC
+                LIMIT ($2)
+            `, categoryId, limit
+        );
         logger.info("getPracticeQuestionsByCategoryId result", { length: (questions as any[]).length });
         return questions;
     }
@@ -49,16 +52,19 @@ export class QuestionBankRepository {
 
     static async getAllQuestions(categoryId: number) {
         logger.info("getAllQuestions called", { categoryId });
-        const questions = await prisma.questionBank.findMany({
-            where: {
-                categories: {
-                    id: categoryId,
-                },
-            },
-            orderBy: {
-                createdAt: 'desc',
-            },
-        });
+        const questions = await prisma.$queryRawUnsafe(
+            `
+                SELECT qb.*, COALESCE(json_agg(json_build_object('id', c.id, 'name', c.name)) FILTER (WHERE c.id IS NOT NULL), '[]') as categories
+                FROM "QuestionBank" qb
+                LEFT JOIN "_CategoryToQuestionBank" tqb ON qb.id = tqb."B"
+                LEFT JOIN "Categories" c ON c.id = tqb."A"
+                WHERE EXISTS (
+                  SELECT 1 FROM "_CategoryToQuestionBank" t2 WHERE t2."B" = qb.id AND t2."A" = ($1)
+                )
+                GROUP BY qb.id
+                ORDER BY qb."createdAt" DESC
+            `, categoryId
+        );
         logger.info("getAllQuestions result", { length: (questions as any[]).length });
         return questions;
     }
@@ -67,7 +73,7 @@ export class QuestionBankRepository {
         question: string;
         answer: string;
         options: string[];
-        categoryId: number;
+        categoryIds: number[];
         creatorName: string;
         explaination: string;
         multipleCorrectType: boolean;
@@ -75,15 +81,15 @@ export class QuestionBankRepository {
         year: number | null;
         rating: number | null;
     }) {
-        logger.info("createQuestion called", { ...data, optionsLength: data.options.length });
+        logger.info("createQuestion called", { ...data, optionsLength: data.options.length, categoryIdsLength: data.categoryIds.length });
         const question = await prisma.questionBank.create({
             data: {
                 question: data.question,
                 answer: data.answer,
                 options: data.options,
                 categories: {
-                    connect: { id: data.categoryId },
-                },
+                    connect: data.categoryIds.map(id => ({ id: Number(id) })),
+                } as any,
                 creatorName: data.creatorName,
                 explaination: data.explaination,
                 multipleCorrectType: data.multipleCorrectType,
@@ -119,7 +125,7 @@ export class QuestionBankRepository {
         question: string;
         answer: string;
         options: string[];
-        categoryId: number;
+        categoryIds: number[];
         creatorName: string;
         explaination: string;
         multipleCorrectType: boolean;
@@ -127,7 +133,7 @@ export class QuestionBankRepository {
         year: number | null;
         rating: number | null;
     }>) {
-        logger.info("updateQuestion called", { questionId, ...data, optionsLength: data.options?.length });
+        logger.info("updateQuestion called", { questionId, ...data, optionsLength: data.options?.length, categoryIdsLength: data.categoryIds?.length });
         const question = await prisma.questionBank.update({
             where: {
                 id: questionId,
@@ -136,10 +142,10 @@ export class QuestionBankRepository {
                 question: data.question,
                 answer: data.answer,
                 options: data.options,
-                ...(data.categoryId && {
+                ...(data.categoryIds && data.categoryIds.length > 0 && {
                     categories: {
-                        connect: { id: data.categoryId },
-                    },
+                        set: data.categoryIds.map(id => ({ id: Number(id) })),
+                    } as any,
                 }),
                 creatorName: data.creatorName,
                 explaination: data.explaination,

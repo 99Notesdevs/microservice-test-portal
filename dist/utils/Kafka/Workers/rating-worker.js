@@ -38,12 +38,14 @@ const createRatingConsumer = () => __awaiter(void 0, void 0, void 0, function* (
             for (const [questionId, questionValue] of Object.entries(result)) {
                 const question = questionValue;
                 const { isCorrect, categories, selectedOption } = question;
-                const categoryId = parseInt(categories.id);
                 const markValue = (!isCorrect && selectedOption === 'unattempted') ? 0 : isCorrect ? 1 : -1;
                 // Updating question attempts in the database
                 const updateQuestionAttempt = yield questionBankRepository_1.QuestionBankRepository.updateQuestionAttempts(parseInt(questionId), markValue);
-                // Do the Elo calculation
-                newGlobalRating = yield (0, attempQuestionService_1.attemptQuestionService)(userId, categoryId, markValue, question.rating);
+                // Do the Elo calculation for all categories the question belongs to
+                for (const category of categories) {
+                    const categoryId = parseInt(category.id);
+                    newGlobalRating = yield (0, attempQuestionService_1.attemptQuestionService)(userId, categoryId, markValue, question.rating);
+                }
             }
             yield (0, client_1.updateUserRating)(userId, newGlobalRating);
             yield userProgressService_1.UserProgressService.updateUserProgress(userId, newGlobalRating);
