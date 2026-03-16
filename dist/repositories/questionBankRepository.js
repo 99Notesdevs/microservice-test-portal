@@ -58,6 +58,7 @@ class QuestionBankRepository {
                 },
                 include: {
                     categories: true,
+                    exam: true,
                 },
             });
             logger_1.default.info("getQuestionById result", { found: !!question });
@@ -84,6 +85,7 @@ class QuestionBankRepository {
     }
     static createQuestion(data) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
             logger_1.default.info("createQuestion called", Object.assign(Object.assign({}, data), { optionsLength: data.options.length, categoryIdsLength: data.categoryIds.length }));
             const question = yield prisma_1.prisma.questionBank.create({
                 data: {
@@ -99,7 +101,9 @@ class QuestionBankRepository {
                     pyq: data.pyq,
                     year: data.year,
                     rating: data.rating,
+                    examId: (_a = data.examId) !== null && _a !== void 0 ? _a : undefined,
                 },
+                include: { exam: true },
             });
             logger_1.default.info("createQuestion result", { id: question.id });
             return question;
@@ -133,11 +137,12 @@ class QuestionBankRepository {
                 where: {
                     id: questionId,
                 },
-                data: Object.assign(Object.assign({ question: data.question, answer: data.answer, options: data.options }, (data.categoryIds && data.categoryIds.length > 0 && {
+                data: Object.assign(Object.assign(Object.assign({ question: data.question, answer: data.answer, options: data.options }, (data.categoryIds && data.categoryIds.length > 0 && {
                     categories: {
                         set: data.categoryIds.map(id => ({ id: Number(id) })),
                     },
-                })), { creatorName: data.creatorName, explaination: data.explaination, multipleCorrectType: data.multipleCorrectType, pyq: data.pyq, year: data.year, rating: data.rating }),
+                })), { creatorName: data.creatorName, explaination: data.explaination, multipleCorrectType: data.multipleCorrectType, pyq: data.pyq, year: data.year, rating: data.rating }), (data.hasOwnProperty('examId') ? { examId: data.examId } : {})),
+                include: { exam: true },
             });
             logger_1.default.info("updateQuestion result", { id: question.id });
             return question;

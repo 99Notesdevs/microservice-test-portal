@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.QuestionBankService = void 0;
 const questionBankRepository_1 = require("../repositories/questionBankRepository");
+const examRepository_1 = require("../repositories/examRepository");
 const logger_1 = __importDefault(require("../utils/logger"));
 const categoryService_1 = __importDefault(require("./categoryService"));
 class QuestionBankService {
@@ -62,13 +63,26 @@ class QuestionBankService {
     }
     static createQuestion(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const question = yield questionBankRepository_1.QuestionBankRepository.createQuestion(data);
+            var _a;
+            let examId = (_a = data.examId) !== null && _a !== void 0 ? _a : null;
+            if (!examId && data.examName) {
+                const exam = yield examRepository_1.ExamRepository.findOrCreateByName(data.examName);
+                examId = exam.id;
+            }
+            const question = yield questionBankRepository_1.QuestionBankRepository.createQuestion(Object.assign(Object.assign({}, data), { examId }));
             return question;
         });
     }
     static updateQuestion(questionId, data) {
         return __awaiter(this, void 0, void 0, function* () {
-            const question = yield questionBankRepository_1.QuestionBankRepository.updateQuestion(questionId, data);
+            var _a;
+            let examId = (_a = data.examId) !== null && _a !== void 0 ? _a : null;
+            if (!examId && data.examName) {
+                const exam = yield examRepository_1.ExamRepository.findOrCreateByName(data.examName);
+                examId = exam.id;
+            }
+            const payload = Object.assign(Object.assign({}, data), { examId });
+            const question = yield questionBankRepository_1.QuestionBankRepository.updateQuestion(questionId, payload);
             return question;
         });
     }

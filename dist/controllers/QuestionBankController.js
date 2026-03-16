@@ -126,13 +126,13 @@ class QuestionBankController {
     static createQuestion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { question, answer, options, categoryIds, creatorName, explaination, multipleCorrectType, pyq, year, rating } = req.body;
+                const { question, answer, options, categoryIds, creatorName, explaination, multipleCorrectType, pyq, year, rating, examId, examName } = req.body;
                 if (!question || !answer || !options || !categoryIds || !creatorName || !explaination) {
                     throw new Error('All fields (question, answer, options, categoryIds, creatorName, explaination) are required');
                 }
                 // Ensure categoryIds is an array of numbers
                 const categoryIdsArray = Array.isArray(categoryIds) ? categoryIds.map(id => Number(id)) : [Number(categoryIds)];
-                const newQuestion = yield questionBankService_1.QuestionBankService.createQuestion({ question, answer, options, categoryIds: categoryIdsArray, creatorName, explaination, multipleCorrectType, pyq, year, rating });
+                const newQuestion = yield questionBankService_1.QuestionBankService.createQuestion({ question, answer, options, categoryIds: categoryIdsArray, creatorName, explaination, multipleCorrectType, pyq, year, rating, examId, examName });
                 res.status(201).json({ success: true, data: newQuestion });
             }
             catch (error) {

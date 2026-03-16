@@ -44,6 +44,7 @@ export class QuestionBankRepository {
             },
             include: {
                 categories: true,
+                exam: true,
             },
         });
         logger.info("getQuestionById result", { found: !!question });
@@ -80,6 +81,7 @@ export class QuestionBankRepository {
         pyq: boolean;
         year: number | null;
         rating: number | null;
+        examId?: number | null;
     }) {
         logger.info("createQuestion called", { ...data, optionsLength: data.options.length, categoryIdsLength: data.categoryIds.length });
         const question = await prisma.questionBank.create({
@@ -96,7 +98,9 @@ export class QuestionBankRepository {
                 pyq: data.pyq,
                 year: data.year,
                 rating: data.rating,
+                examId: data.examId ?? undefined,
             },
+            include: { exam: true },
         });
         logger.info("createQuestion result", { id: question.id });
         return question;
@@ -132,6 +136,7 @@ export class QuestionBankRepository {
         pyq: boolean;
         year: number | null;
         rating: number | null;
+        examId?: number | null;
     }>) {
         logger.info("updateQuestion called", { questionId, ...data, optionsLength: data.options?.length, categoryIdsLength: data.categoryIds?.length });
         const question = await prisma.questionBank.update({
@@ -152,8 +157,10 @@ export class QuestionBankRepository {
                 multipleCorrectType: data.multipleCorrectType,
                 pyq: data.pyq,
                 year: data.year,
-                rating: data.rating
+                rating: data.rating,
+                ...(data.hasOwnProperty('examId') ? { examId: (data as any).examId } : {}),
             },
+            include: { exam: true },
         });
         logger.info("updateQuestion result", { id: question.id });
         return question;

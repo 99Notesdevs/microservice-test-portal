@@ -1,4 +1,5 @@
 import { QuestionBankRepository } from "../repositories/questionBankRepository";
+import { ExamRepository } from "../repositories/examRepository";
 import logger from "../utils/logger";
 import CategoryService from "./categoryService";
 
@@ -56,8 +57,15 @@ export class QuestionBankService {
         pyq: boolean;
         year: number | null;
         rating: number | null;
+        examId?: number | null;
+        examName?: string | null;
     }) {
-        const question = await QuestionBankRepository.createQuestion(data);
+        let examId = data.examId ?? null;
+        if (!examId && data.examName) {
+            const exam = await ExamRepository.findOrCreateByName(data.examName);
+            examId = exam.id;
+        }
+        const question = await QuestionBankRepository.createQuestion({ ...data, examId });
         return question;
     }
 
@@ -72,8 +80,16 @@ export class QuestionBankService {
         pyq: boolean;
         year: number | null;
         rating: number | null;
+        examId?: number | null;
+        examName?: string | null;
     }>) {
-        const question = await QuestionBankRepository.updateQuestion(questionId, data);
+        let examId = (data as any).examId ?? null;
+        if (!examId && (data as any).examName) {
+            const exam = await ExamRepository.findOrCreateByName((data as any).examName);
+            examId = exam.id;
+        }
+        const payload = { ...data, examId } as any;
+        const question = await QuestionBankRepository.updateQuestion(questionId, payload);
         return question;
     }
 
