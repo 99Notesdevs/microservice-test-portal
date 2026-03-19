@@ -51,20 +51,29 @@ export class QuestionBankRepository {
         return question;
     }
 
-    static async getAllQuestions(categoryId: number) {
-        logger.info("getAllQuestions called", { categoryId });
+    static async getAllQuestions(categoryIds: number[]) {
+        logger.info("getAllQuestions called", { categoryIds });
+        const categoryIdsCsv = categoryIds.join(',');
+        const requiredCategoryCount = categoryIds.length;
+
         const questions = await prisma.$queryRawUnsafe(
             `
                 SELECT qb.*, COALESCE(json_agg(json_build_object('id', c.id, 'name', c.name)) FILTER (WHERE c.id IS NOT NULL), '[]') as categories
                 FROM "QuestionBank" qb
                 LEFT JOIN "_CategoryToQuestionBank" tqb ON qb.id = tqb."B"
                 LEFT JOIN "Categories" c ON c.id = tqb."A"
-                WHERE EXISTS (
-                  SELECT 1 FROM "_CategoryToQuestionBank" t2 WHERE t2."B" = qb.id AND t2."A" = ($1)
+                WHERE qb.id IN (
+                  SELECT t2."B"
+                  FROM "_CategoryToQuestionBank" t2
+                  WHERE t2."A" = ANY (string_to_array($1, ',')::int[])
+                  GROUP BY t2."B"
+                  HAVING COUNT(DISTINCT t2."A") = $2
                 )
                 GROUP BY qb.id
                 ORDER BY qb."createdAt" DESC
-            `, categoryId
+            `,
+            categoryIdsCsv,
+            requiredCategoryCount
         );
         logger.info("getAllQuestions result", { length: (questions as any[]).length });
         return questions;

@@ -28,7 +28,7 @@ model User {
   resetPassTokens ResetPassToken[]
   orders          Order[]
   cart            Cart?
-  ratings         ProductRating[] @relation("UserToProductRating")
+  ratings         ProductRating[]   @relation("UserToProductRating")
   address         Address[]
   messages        ChatMessage[]
   chatRooms       ChatParticipant[]
@@ -54,7 +54,7 @@ model UserData {
   rating      Int       @default(250)
   updatedAt   DateTime  @updatedAt
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  coupon      Coupon[]  @relation("UserToCoupon" )
+  coupon      Coupon[]  @relation("UserToCoupon")
 }
 
 model ProgressConstraints {
@@ -234,6 +234,8 @@ model QuestionBank {
   totalAttempts       Int?     @default(0)
   correctAttempts     Int?     @default(0)
   rating              Int?
+  examId              Int?
+  exam                Exam?    @relation(fields: [examId], references: [id], onDelete: SetNull)
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
 
@@ -242,6 +244,19 @@ model QuestionBank {
 
   // Many - Many relation (Categories to Questions)
   categories Categories[] @relation("CategoryToQuestionBank")
+}
+
+model Exam {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  slug      String?
+  metadata  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  questions QuestionBank[]
+
+  @@index([name])
 }
 
 model Tags {
@@ -517,32 +532,32 @@ model Category {
 }
 
 model Product {
-  id          Int         @id @default(autoincrement())
-  name        String
-  description String
-  price       Float
-  salePrice   Float?
-  stock       Int
-  imageUrl    String?
-  metadata    String?
-  categoryId  Int
-  shippingCharges Float @default(50)
-  type ProductType @default(softCopy)
-  validity    Int?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  orderItem   OrderItem[]
-  cartItem    CartItem[]
-  inventory   Inventory?
-  wishList    WishList[]
-  ratings     ProductRating[] @relation("ProductToProductRating")
+  id              Int             @id @default(autoincrement())
+  name            String
+  description     String
+  price           Float
+  salePrice       Float?
+  stock           Int
+  imageUrl        String?
+  metadata        String?
+  categoryId      Int
+  shippingCharges Float           @default(50)
+  type            ProductType     @default(softCopy)
+  validity        Int?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  orderItem       OrderItem[]
+  cartItem        CartItem[]
+  inventory       Inventory?
+  wishList        WishList[]
+  ratings         ProductRating[] @relation("ProductToProductRating")
 
   category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@index([name])
 }
 
-model Offers  {
+model Offers {
   id          Int      @id @default(autoincrement())
   name        String
   description String
@@ -551,15 +566,15 @@ model Offers  {
 }
 
 model ProductRating {
-  id          Int      @id @default(autoincrement())
-  userId      Int      
-  productId   Int
-  rating      Int
-  review      String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  productId Int
+  rating    Int
+  review    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  user User @relation("UserToProductRating", fields: [userId], references: [id], onDelete: Cascade)
+  user    User    @relation("UserToProductRating", fields: [userId], references: [id], onDelete: Cascade)
   product Product @relation("ProductToProductRating", fields: [productId], references: [id], onDelete: Cascade)
 }
 
@@ -632,15 +647,15 @@ model Inventory {
 }
 
 model Shipping {
-  id              Int      @id @default(autoincrement())
+  id              Int            @id @default(autoincrement())
   shippingAddress String
   trackingNumber  String
   carrier         String
   status          ShippingStatus
   shippingDate    DateTime
   orderId         Int
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
 
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
@@ -693,35 +708,35 @@ model Payment {
 }
 
 model Coupon {
-  id          Int      @id @default(autoincrement())
-  code        String   @unique
-  description String?
-  discount    Float
-  validity    Int
-  type        String
-  minOrderValue   Float?            // Minimum order value to apply coupon
-  startDate       DateTime?         @default(now())
-  endDate         DateTime?         // If null, coupon never expires
-  usageLimit  Int?     // Maximum number of times this coupon can be used
-  usageLimitPerUser Int?     // Maximum number of times this coupon can be used per user
-  timesUsed   Int      @default(0) // How many times the coupon has been used
-  isActive    Boolean  @default(true) // Admin toggle to enable/disable the coupon
+  id                Int       @id @default(autoincrement())
+  code              String    @unique
+  description       String?
+  discount          Float
+  validity          Int
+  type              String
+  minOrderValue     Float? // Minimum order value to apply coupon
+  startDate         DateTime? @default(now())
+  endDate           DateTime? // If null, coupon never expires
+  usageLimit        Int? // Maximum number of times this coupon can be used
+  usageLimitPerUser Int? // Maximum number of times this coupon can be used per user
+  timesUsed         Int       @default(0) // How many times the coupon has been used
+  isActive          Boolean   @default(true) // Admin toggle to enable/disable the coupon
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  userCoupons     UserCoupon[]
-  users UserData[] @relation("UserToCoupon")
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  userCoupons UserCoupon[]
+  users       UserData[]   @relation("UserToCoupon")
 }
 
 model UserCoupon {
-  id              Int       @id @default(autoincrement())
-  userId          Int
-  couponId        Int
-  coupon          Coupon    @relation(fields: [couponId], references: [id])
-  usageLimit      Int?      // Per-user usage limit
-  timesUsed       Int       @default(0)
-  createdAt       DateTime  @default(now())
-  
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  couponId   Int
+  coupon     Coupon   @relation(fields: [couponId], references: [id])
+  usageLimit Int? // Per-user usage limit
+  timesUsed  Int      @default(0)
+  createdAt  DateTime @default(now())
+
   @@unique([userId, couponId])
   @@index([userId])
   @@index([couponId])
@@ -779,10 +794,12 @@ enum OrderType {
   Books
   Notes
 }
+
 enum ProductType {
   softCopy
   hardCopy
 }
+
 enum OrderStatus {
   Pending
   Completed
@@ -797,9 +814,9 @@ enum MessageType {
   SYSTEM
 }
 
-enum ShippingStatus{
+enum ShippingStatus {
   Processing
-  Shipped 
+  Shipped
   Delivered
   Cancelled
 }
