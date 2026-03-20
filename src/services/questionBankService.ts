@@ -8,17 +8,16 @@ export class QuestionBankService {
     static async getTestQuestions(categoryIds: number[], limit: number, multiplechoice: number) {
         // Refine category ids -- returns an array of numbers
         const categories = await CategoryService.getCategoriesByIds(categoryIds) as {id: number, name: string}[];
-        // Make the limits per category
-        const limitPerCategory = limit > categories.length ? Math.ceil(limit / categories.length) : 1;
-        
-        // Get questions for each category
-        const questions = await Promise.all(
-            categories.map(async (category) => {
-                const questions = await QuestionBankRepository.getQuestionsByCategoryId(category.id, limitPerCategory, multiplechoice);
-                return questions;
-            })
+        const refinedCategoryIds = categories.map((category) => category.id);
+
+        // Fetch once across all selected categories to avoid duplicate questions
+        // when a question belongs to multiple selected categories.
+        const questions = await QuestionBankRepository.getQuestionsByCategoryId(
+            refinedCategoryIds,
+            limit,
+            multiplechoice,
         );
-        return questions.flat().slice(0, limit);
+        return questions;
     }
 
     static async getAllQuestions(categoryIds: number[]) {
