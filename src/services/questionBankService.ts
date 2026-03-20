@@ -21,8 +21,8 @@ export class QuestionBankService {
         return questions.flat().slice(0, limit);
     }
 
-    static async getAllQuestions(categoryId: number) {
-        const questions = await QuestionBankRepository.getAllQuestions(categoryId);
+    static async getAllQuestions(categoryIds: number[]) {
+        const questions = await QuestionBankRepository.getAllQuestions(categoryIds);
         return questions;
     }
 

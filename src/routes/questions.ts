@@ -11,7 +11,7 @@ questionRouter.get('/test', authenticate, authorizeRoles(["Admin", "User"]), Que
 // Query: /practice?categoryId=x
 questionRouter.get('/practice', QuestionBankController.getPracticeQuestions);
 
-// Query: /?categoryId=y
+// Query: /?categoryIds=y,z
 questionRouter.get('/', authenticate, authorizeRoles(["Admin", "User"]), QuestionBankController.getAllQuestions);
 
 // Query: /ids?ids=x,y,z

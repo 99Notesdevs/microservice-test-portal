@@ -44,8 +44,23 @@ export default class QuestionBankController {
 
     static async getAllQuestions(req: Request, res: Response) {
         try {
-            const { categoryId } = req.query;
-            const questions = await QuestionBankService.getAllQuestions(Number(categoryId));
+            const { categoryIds } = req.query;
+            if (!categoryIds) {
+                throw new Error('Category IDs are required');
+            }
+
+            const parsedCategoryIds = (Array.isArray(categoryIds) ? categoryIds.join(',') : categoryIds.toString())
+                .split(',')
+                .map((id) => Number(id.trim()))
+                .filter((id) => !Number.isNaN(id));
+
+            const uniqueCategoryIds = Array.from(new Set(parsedCategoryIds));
+
+            if (uniqueCategoryIds.length === 0) {
+                throw new Error('Invalid Category IDs');
+            }
+
+            const questions = await QuestionBankService.getAllQuestions(uniqueCategoryIds);
             res.status(200).json({ success: true, data: questions });
         } catch (error: unknown) {
             res.status(404).json({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' });
