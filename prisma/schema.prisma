@@ -237,6 +237,7 @@ model QuestionBank {
   totalAttempts       Int?     @default(0)
   correctAttempts     Int?     @default(0)
   rating              Int?
+  completed           Boolean  @default(true)
   examId              Int?
   exam                Exam?    @relation(fields: [examId], references: [id], onDelete: SetNull)
   createdAt           DateTime @default(now())
@@ -367,6 +368,7 @@ model CurrentAffairArticle {
   content       String
   link          String?
   metadata      String?
+  order         Int           @default(0)
   slug          String        @unique
   author        String
   createdAt     DateTime      @default(now())

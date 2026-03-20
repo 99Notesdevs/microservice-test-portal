@@ -114,13 +114,13 @@ export default class QuestionBankController {
 
     static async createQuestion(req: Request, res: Response) {
         try {
-            const { question, answer, options, categoryIds, creatorName, explaination, multipleCorrectType, pyq, year, rating, examId, examName } = req.body;
+            const { question, answer, options, categoryIds, creatorName, explaination, multipleCorrectType, pyq, year, rating, completed, examId, examName } = req.body;
             if (!question || !answer || !options || !categoryIds || !creatorName || !explaination) {
                 throw new Error('All fields (question, answer, options, categoryIds, creatorName, explaination) are required');
             }
             // Ensure categoryIds is an array of numbers
             const categoryIdsArray = Array.isArray(categoryIds) ? categoryIds.map(id => Number(id)) : [Number(categoryIds)];
-            const newQuestion = await QuestionBankService.createQuestion({ question, answer, options, categoryIds: categoryIdsArray, creatorName, explaination, multipleCorrectType, pyq, year, rating, examId, examName });
+            const newQuestion = await QuestionBankService.createQuestion({ question, answer, options, categoryIds: categoryIdsArray, creatorName, explaination, multipleCorrectType, pyq, year, rating, completed, examId, examName });
             res.status(201).json({ success: true, data: newQuestion });
         } catch (error: unknown) {
             res.status(400).json({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' });

@@ -57,6 +57,7 @@ export class QuestionBankService {
         pyq: boolean;
         year: number | null;
         rating: number | null;
+        completed?: boolean;
         examId?: number | null;
         examName?: string | null;
     }) {
@@ -80,6 +81,7 @@ export class QuestionBankService {
         pyq: boolean;
         year: number | null;
         rating: number | null;
+        completed: boolean;
         examId?: number | null;
         examName?: string | null;
     }>) {
