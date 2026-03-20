@@ -65,20 +65,26 @@ class QuestionBankRepository {
             return question;
         });
     }
-    static getAllQuestions(categoryId) {
+    static getAllQuestions(categoryIds) {
         return __awaiter(this, void 0, void 0, function* () {
-            logger_1.default.info("getAllQuestions called", { categoryId });
+            logger_1.default.info("getAllQuestions called", { categoryIds });
+            const categoryIdsCsv = categoryIds.join(',');
+            const requiredCategoryCount = categoryIds.length;
             const questions = yield prisma_1.prisma.$queryRawUnsafe(`
                 SELECT qb.*, COALESCE(json_agg(json_build_object('id', c.id, 'name', c.name)) FILTER (WHERE c.id IS NOT NULL), '[]') as categories
                 FROM "QuestionBank" qb
                 LEFT JOIN "_CategoryToQuestionBank" tqb ON qb.id = tqb."B"
                 LEFT JOIN "Categories" c ON c.id = tqb."A"
-                WHERE EXISTS (
-                  SELECT 1 FROM "_CategoryToQuestionBank" t2 WHERE t2."B" = qb.id AND t2."A" = ($1)
+                WHERE qb.id IN (
+                  SELECT t2."B"
+                  FROM "_CategoryToQuestionBank" t2
+                  WHERE t2."A" = ANY (string_to_array($1, ',')::int[])
+                  GROUP BY t2."B"
+                  HAVING COUNT(DISTINCT t2."A") = $2
                 )
                 GROUP BY qb.id
                 ORDER BY qb."createdAt" DESC
-            `, categoryId);
+            `, categoryIdsCsv, requiredCategoryCount);
             logger_1.default.info("getAllQuestions result", { length: questions.length });
             return questions;
         });

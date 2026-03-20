@@ -12,7 +12,7 @@ const questionRouter = (0, express_1.Router)();
 questionRouter.get('/test', authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["Admin", "User"]), QuestionBankController_1.default.getTestQuestions);
 // Query: /practice?categoryId=x
 questionRouter.get('/practice', QuestionBankController_1.default.getPracticeQuestions);
-// Query: /?categoryId=y
+// Query: /?categoryIds=y,z
 questionRouter.get('/', authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["Admin", "User"]), QuestionBankController_1.default.getAllQuestions);
 // Query: /ids?ids=x,y,z
 questionRouter.get('/ids', authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["Admin", "User"]), QuestionBankController_1.default.getQuestionsByIds);

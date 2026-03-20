@@ -61,8 +61,19 @@ class QuestionBankController {
     static getAllQuestions(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { categoryId } = req.query;
-                const questions = yield questionBankService_1.QuestionBankService.getAllQuestions(Number(categoryId));
+                const { categoryIds } = req.query;
+                if (!categoryIds) {
+                    throw new Error('Category IDs are required');
+                }
+                const parsedCategoryIds = (Array.isArray(categoryIds) ? categoryIds.join(',') : categoryIds.toString())
+                    .split(',')
+                    .map((id) => Number(id.trim()))
+                    .filter((id) => !Number.isNaN(id));
+                const uniqueCategoryIds = Array.from(new Set(parsedCategoryIds));
+                if (uniqueCategoryIds.length === 0) {
+                    throw new Error('Invalid Category IDs');
+                }
+                const questions = yield questionBankService_1.QuestionBankService.getAllQuestions(uniqueCategoryIds);
                 res.status(200).json({ success: true, data: questions });
             }
             catch (error) {
