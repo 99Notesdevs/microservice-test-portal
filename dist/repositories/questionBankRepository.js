@@ -94,21 +94,9 @@ class QuestionBankRepository {
             var _a;
             logger_1.default.info("createQuestion called", Object.assign(Object.assign({}, data), { optionsLength: data.options.length, categoryIdsLength: data.categoryIds.length }));
             const question = yield prisma_1.prisma.questionBank.create({
-                data: {
-                    question: data.question,
-                    answer: data.answer,
-                    options: data.options,
-                    categories: {
+                data: Object.assign(Object.assign({ question: data.question, answer: data.answer, options: data.options, categories: {
                         connect: data.categoryIds.map(id => ({ id: Number(id) })),
-                    },
-                    creatorName: data.creatorName,
-                    explaination: data.explaination,
-                    multipleCorrectType: data.multipleCorrectType,
-                    pyq: data.pyq,
-                    year: data.year,
-                    rating: data.rating,
-                    examId: (_a = data.examId) !== null && _a !== void 0 ? _a : undefined,
-                },
+                    }, creatorName: data.creatorName, explaination: data.explaination, multipleCorrectType: data.multipleCorrectType, pyq: data.pyq, year: data.year, rating: data.rating }, (typeof data.completed === 'boolean' ? { completed: data.completed } : {})), { examId: (_a = data.examId) !== null && _a !== void 0 ? _a : undefined }),
                 include: { exam: true },
             });
             logger_1.default.info("createQuestion result", { id: question.id });
@@ -143,11 +131,11 @@ class QuestionBankRepository {
                 where: {
                     id: questionId,
                 },
-                data: Object.assign(Object.assign(Object.assign({ question: data.question, answer: data.answer, options: data.options }, (data.categoryIds && data.categoryIds.length > 0 && {
+                data: Object.assign(Object.assign(Object.assign(Object.assign({ question: data.question, answer: data.answer, options: data.options }, (data.categoryIds && data.categoryIds.length > 0 && {
                     categories: {
                         set: data.categoryIds.map(id => ({ id: Number(id) })),
                     },
-                })), { creatorName: data.creatorName, explaination: data.explaination, multipleCorrectType: data.multipleCorrectType, pyq: data.pyq, year: data.year, rating: data.rating }), (data.hasOwnProperty('examId') ? { examId: data.examId } : {})),
+                })), { creatorName: data.creatorName, explaination: data.explaination, multipleCorrectType: data.multipleCorrectType, pyq: data.pyq, year: data.year, rating: data.rating }), (typeof data.completed === 'boolean' ? { completed: data.completed } : {})), (data.hasOwnProperty('examId') ? { examId: data.examId } : {})),
                 include: { exam: true },
             });
             logger_1.default.info("updateQuestion result", { id: question.id });

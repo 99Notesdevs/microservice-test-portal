@@ -98,6 +98,7 @@ export class QuestionBankRepository {
         pyq: boolean;
         year: number | null;
         rating: number | null;
+        completed?: boolean;
         examId?: number | null;
     }) {
         logger.info("createQuestion called", { ...data, optionsLength: data.options.length, categoryIdsLength: data.categoryIds.length });
@@ -115,6 +116,7 @@ export class QuestionBankRepository {
                 pyq: data.pyq,
                 year: data.year,
                 rating: data.rating,
+                ...(typeof data.completed === 'boolean' ? { completed: data.completed } : {}),
                 examId: data.examId ?? undefined,
             },
             include: { exam: true },
@@ -153,6 +155,7 @@ export class QuestionBankRepository {
         pyq: boolean;
         year: number | null;
         rating: number | null;
+        completed: boolean;
         examId?: number | null;
     }>) {
         logger.info("updateQuestion called", { questionId, ...data, optionsLength: data.options?.length, categoryIdsLength: data.categoryIds?.length });
@@ -175,6 +178,7 @@ export class QuestionBankRepository {
                 pyq: data.pyq,
                 year: data.year,
                 rating: data.rating,
+                ...(typeof data.completed === 'boolean' ? { completed: data.completed } : {}),
                 ...(data.hasOwnProperty('examId') ? { examId: (data as any).examId } : {}),
             },
             include: { exam: true },

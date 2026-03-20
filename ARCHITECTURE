@@ -1,0 +1,91 @@
+# test-microservice-backend architecture
+
+This document describes the intended architecture of the **test-microservice-backend** service (Node.js + TypeScript + Express) as implemented in this repository.
+
+## What this service does
+
+`test-microservice-backend` powers the Tests/Quiz/Submission domain and provides both HTTP APIs and real-time features.
+
+- REST API is mounted under `/api/v1`.
+- Socket.IO is attached to the HTTP server.
+- Kafka consumers are started during boot.
+
+The service follows the repo layering pattern:
+
+- **Routes** → **Controllers** → **Services** → **Repositories**
+
+## Runtime entrypoints
+
+- `src/server.ts`
+  - Loads environment (`dotenv`).
+  - Creates an HTTP server and attaches Socket.IO (`setupSocketIO`).
+  - Starts Kafka workers (fetch/submit/rating).
+  - Optionally configures a Redis adapter for Socket.IO when Redis connection details are available.
+  - Listens on `PORT` (defaults to `5500`).
+  - Handles graceful shutdown.
+
+- `src/app.ts`
+  - Builds the Express app.
+  - Configures CORS, JSON/urlencoded parsing, cookies.
+  - Installs request logging middleware (`logRequest`).
+  - Mounts router at `/api/v1`.
+
+## Request lifecycle
+
+```mermaid
+flowchart LR
+  A[Client] -->|HTTP| B[Express app.ts]
+  B --> C[Middleware chain]
+  C --> D[Router: /api/v1]
+  D --> E[Controller]
+  E --> F[Service]
+  F --> G[Repository]
+  G --> H[(Postgres via Prisma)]
+  G --> I[(Redis cache)]
+  G --> K[gRPC clients]
+  E -->|JSON| A
+
+  A -->|WebSocket| W[Socket.IO]
+  W --> I
+
+  subgraph Kafka[Kafka workers]
+    KW[Consumers] --> KS[Services/Repos]
+  end
+```
+
+## Key modules and boundaries
+
+- Routing: `src/routes/`
+- Controllers: `src/controllers/`
+- Services: `src/services/`
+- Repositories: `src/repositories/`
+- Middleware: `src/middlewares/`
+- Validation: `src/validations/`
+- Kafka workers: `src/utils/Kafka/Workers/`
+- Socket.IO setup: `src/config/socket`
+
+## Data & integrations
+
+- Database: Postgres via Prisma (`prisma/schema.prisma`).
+- Kafka: `kafkajs` consumers started at boot.
+- Redis (mandatory): used for caching in repositories and (optionally) as the Socket.IO Redis adapter.
+- gRPC: protos and clients exist under `src/grpc/`.
+
+## Configuration & environment variables
+
+Common env vars (exact usage may vary):
+
+- Server: `PORT`, `ENV`, `DOMAIN`
+- DB: `DATABASE_URL`
+- Auth: `TOKEN_SECRET`
+- Redis (socket adapter): `REDIS_URL`
+- Kafka: `KAFKA_BROKERS`, `KAFKA_CLIENT_ID`, topic names as used by workers
+- gRPC: `GRPC_HOST`, `GRPC_PORT`
+
+## Local development
+
+- Start: `npm run dev`
+
+## Known inconsistencies
+
+See [test-microservice-backend/INCONSISTENCIES.md](test-microservice-backend/INCONSISTENCIES.md).
