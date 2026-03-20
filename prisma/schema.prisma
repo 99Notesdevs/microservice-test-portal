@@ -174,6 +174,9 @@ model Categories {
   // One - Many relation (Categories to Questions)
   questions QuestionBank[] @relation("CategoryToQuestionBank")
 
+  // Many - Many relation (Categories to Current Affairs Articles)
+  currentAffairArticles CurrentAffairArticle[] @relation("CategoryToCurrentAffairArticle")
+
   CategoryRatings CategoryRating[]
 
   weight Decimal? @default(0.2)
@@ -373,6 +376,8 @@ model CurrentAffairArticle {
   currentAffair CurrentAffair @relation(fields: [parentSlug], references: [slug], onDelete: Cascade, onUpdate: Cascade)
 
   blogs CurrentAffairArticleBlog[] @relation("CurrentAffairArticleToBlog")
+
+  categories Categories[] @relation("CategoryToCurrentAffairArticle")
 
   @@index([slug])
   @@index([parentSlug])

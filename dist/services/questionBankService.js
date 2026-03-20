@@ -32,9 +32,9 @@ class QuestionBankService {
             return questions.flat().slice(0, limit);
         });
     }
-    static getAllQuestions(categoryId) {
+    static getAllQuestions(categoryIds) {
         return __awaiter(this, void 0, void 0, function* () {
-            const questions = yield questionBankRepository_1.QuestionBankRepository.getAllQuestions(categoryId);
+            const questions = yield questionBankRepository_1.QuestionBankRepository.getAllQuestions(categoryIds);
             return questions;
         });
     }
