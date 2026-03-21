@@ -24,7 +24,7 @@ export class QuestionBankRepository {
                 FROM "QuestionBank" qb
                 LEFT JOIN "_CategoryToQuestionBank" tqb ON qb.id = tqb."B"
                 LEFT JOIN "Categories" c ON c.id = tqb."A"
-                WHERE qb."pyq" = true AND EXISTS (
+                WHERE EXISTS (
                   SELECT 1 FROM "_CategoryToQuestionBank" t2 WHERE t2."B" = qb.id AND t2."A" = ($1)
                 )
                 GROUP BY qb.id
