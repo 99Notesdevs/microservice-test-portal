@@ -30,7 +30,7 @@ export const createFetchConsumer = async () => {
       const parsedCategoryIdsM = categoryM.toString().split(',').map((id: string) => Number(id));
       const questionsM = await QuestionBankService.getTestQuestions(parsedCategoryIdsM, Number(limitM), 1);
 
-      const questions = [...questionsS, ...questionsM];
+      const questions = [...(Array.isArray(questionsS) ? questionsS : []), ...(Array.isArray(questionsM) ? questionsM : [])];
 
       // Emit socket event to a userId
       // logger.info(`Questinos: ${JSON.stringify(questions)}`);

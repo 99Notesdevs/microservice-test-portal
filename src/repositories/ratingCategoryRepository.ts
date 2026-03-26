@@ -13,10 +13,36 @@ export class RatingCategoryRepository {
     static async getRatingCategoryByUserId(userId: number) {
         logger.info(`Fetching rating categories for user ${userId}`);
         return await prisma.categoryRating.findMany({
-            where: { userId: userId },
+            where: {
+                userId: userId,
+                category: {
+                    parentTagId: null,
+                },
+            },
             select: {
                 categoryId: true,
                 rating: true,
+                category: {
+                    select: {
+                        id: true,
+                        name: true,
+                        daughterTag: {
+                            select: {
+                                id: true,
+                                name: true,
+                                parentTagId: true,
+                                CategoryRatings: {
+                                    where: {
+                                        userId: userId,
+                                    },
+                                    select: {
+                                        rating: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
             },
         });
     }

@@ -68,7 +68,7 @@ export const createSubmitConsumer = async () => {
                 result[questionId] = {...question, isCorrect: false, selectedOption};
                 score += markingScheme.unattempted;
               }
-              else if (question.answer === selectedOption) {
+              else if ((question.answer === selectedOption) || (selectedOption.toString() === (question.answer.charCodeAt(0) - 65).toString())) {
                 result[questionId] = {...question, isCorrect: true, selectedOption};
                 score += markingScheme.correct;
               } else {
@@ -108,6 +108,7 @@ export const createSubmitConsumer = async () => {
           }
         }
       }
+      console.log('Final Score:', result, score);
 
       // Emit socket event to a userId
       const io = getSocketInstance();

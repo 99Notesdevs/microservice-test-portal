@@ -2,16 +2,24 @@ import { prisma } from "../config/prisma";
 import logger from "../utils/logger";
 
 export class QuestionBankRepository {
-    static async getQuestionsByCategoryId(categoryId: number, limit: number, multiplechoice: number) {
-        logger.info("getQuestionsByCategoryId called", { categoryId, limit, multiplechoice });
+    static async getQuestionsByCategoryId(categoryIds: number[], limit: number, multiplechoice: number) {
+        logger.info("getQuestionsByCategoryId called", { categoryIds, limit, multiplechoice });
+        const categoryIdsCsv = categoryIds.join(',');
         const questions = await prisma.$queryRawUnsafe(
             `
-                SELECT DISTINCT qb.* FROM "QuestionBank" qb
-                INNER JOIN "_TagToQuestionBank" tqb ON qb.id = tqb."B"
-                WHERE tqb."A" = ($1) AND qb."multipleCorrectType" = ($3)
+                WITH unique_questions AS (
+                    SELECT DISTINCT qb.id
+                    FROM "QuestionBank" qb
+                    INNER JOIN "_CategoryToQuestionBank" tqb ON qb.id = tqb."B"
+                    WHERE tqb."A" = ANY (string_to_array($1, ',')::int[])
+                      AND qb."multipleCorrectType" = ($3)
+                )
+                SELECT qb.*
+                FROM "QuestionBank" qb
+                INNER JOIN unique_questions uq ON qb.id = uq.id
                 ORDER BY random()
                 LIMIT ($2)
-            `, categoryId, limit, !!multiplechoice);
+            `, categoryIdsCsv, limit, !!multiplechoice);
         logger.info("getQuestionsByCategoryId result", { length: (questions as any[]).length });
         return questions;
     }
