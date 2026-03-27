@@ -14,8 +14,8 @@ exports.app.use((0, cors_1.default)({
     origin: [
         "https://99notes.org",
         "http://99notes.org",
-        "http://localhost",
-        "http://localhost:3000",
+        "http://test.99notes.org",
+        "https://test.99notes.org",
         "http://localhost:3001",
         "http://localhost:3002",
         "http://localhost:3003",

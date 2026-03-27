@@ -20,7 +20,7 @@ export class ProgressConstraintsRepository {
 
     if (!progressConstraints) {
       logger.warn(`Progress constraints with ID ${id} not found`);
-      throw new Error(`Progress constraints with ID ${id} not found`);
+      return null;
     }
     await redis.setex(cacheKey, this.cacheTTL, JSON.stringify(progressConstraints));
     logger.info(`Fetched progress constraints for ID: ${id}`);

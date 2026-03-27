@@ -14,44 +14,62 @@ const progressConstraintService_1 = require("../services/progressConstraintServi
 class ProgressConstraintController {
     static getProgressConstraintsById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const progressConstraints = yield progressConstraintService_1.ProgressConstraintsService.getProgressConstraintsById(1);
-            if (!progressConstraints) {
-                throw new Error("Progress constraints not found");
+            try {
+                const progressConstraints = yield progressConstraintService_1.ProgressConstraintsService.getProgressConstraintsById(1);
+                if (!progressConstraints) {
+                    res.status(404).json({ success: false, message: "Progress constraints not found" });
+                    return;
+                }
+                res.status(200).json({ success: true, data: progressConstraints });
             }
-            res.status(200).json({ success: true, data: progressConstraints });
+            catch (error) {
+                res.status(500).json({ success: false, message: "Internal server error" });
+            }
         });
     }
     static createProgressConstraints(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { weakLimit, strongLimit, xp_status } = req.body;
-            if (typeof weakLimit !== 'number' || typeof strongLimit !== 'number' || typeof xp_status !== 'string') {
-                throw new Error("Invalid input data");
+            try {
+                const { weakLimit, strongLimit, xp_status } = req.body;
+                if (typeof weakLimit !== 'number' || typeof strongLimit !== 'number' || typeof xp_status !== 'string') {
+                    res.status(400).json({ success: false, message: "Invalid input data" });
+                    return;
+                }
+                const newProgressConstraints = yield progressConstraintService_1.ProgressConstraintsService.createProgressConstraints({
+                    weakLimit,
+                    strongLimit,
+                    xp_status
+                });
+                res.status(201).json({ success: true, data: newProgressConstraints });
             }
-            const newProgressConstraints = yield progressConstraintService_1.ProgressConstraintsService.createProgressConstraints({
-                weakLimit,
-                strongLimit,
-                xp_status
-            });
-            res.status(201).json({ success: true, data: newProgressConstraints });
+            catch (error) {
+                res.status(500).json({ success: false, message: "Internal server error" });
+            }
         });
     }
     static updateProgressConstraints(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params;
-            const { weakLimit, strongLimit, xp_status } = req.body;
-            if (typeof weakLimit !== 'number' || typeof strongLimit !== 'number' || typeof xp_status !== 'string') {
-                throw new Error("Invalid input data");
+            try {
+                const { id } = req.params;
+                const { weakLimit, strongLimit, xp_status } = req.body;
+                if (typeof weakLimit !== 'number' || typeof strongLimit !== 'number' || typeof xp_status !== 'string') {
+                    res.status(400).json({ success: false, message: "Invalid input data" });
+                    return;
+                }
+                const updatedProgressConstraints = yield progressConstraintService_1.ProgressConstraintsService.updateProgressConstraints(Number(id), {
+                    weakLimit,
+                    strongLimit,
+                    xp_status
+                });
+                if (!updatedProgressConstraints) {
+                    res.status(404).json({ success: false, message: "Progress constraints not found" });
+                    return;
+                }
+                res.status(200).json({ success: true, data: updatedProgressConstraints });
             }
-            const updatedProgressConstraints = yield progressConstraintService_1.ProgressConstraintsService.updateProgressConstraints(Number(id), {
-                weakLimit,
-                strongLimit,
-                xp_status
-            });
-            if (!updatedProgressConstraints) {
-                res.status(404).json({ success: false, error: "Progress constraints not found" });
-                return;
+            catch (error) {
+                res.status(500).json({ success: false, message: "Internal server error" });
             }
-            res.status(200).json({ success: true, data: updatedProgressConstraints });
         });
     }
 }

@@ -31,7 +31,7 @@ class ProgressConstraintsRepository {
             });
             if (!progressConstraints) {
                 logger_1.default.warn(`Progress constraints with ID ${id} not found`);
-                throw new Error(`Progress constraints with ID ${id} not found`);
+                return null;
             }
             yield RedisClient_1.default.setex(cacheKey, this.cacheTTL, JSON.stringify(progressConstraints));
             logger_1.default.info(`Fetched progress constraints for ID: ${id}`);
