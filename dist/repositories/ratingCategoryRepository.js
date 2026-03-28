@@ -43,6 +43,13 @@ class RatingCategoryRepository {
                             id: true,
                             name: true,
                             daughterTag: {
+                                where: {
+                                    CategoryRatings: {
+                                        some: {
+                                            userId: userId,
+                                        },
+                                    },
+                                },
                                 select: {
                                     id: true,
                                     name: true,
