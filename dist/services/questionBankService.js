@@ -22,14 +22,11 @@ class QuestionBankService {
         return __awaiter(this, void 0, void 0, function* () {
             // Refine category ids -- returns an array of numbers
             const categories = yield categoryService_1.default.getCategoriesByIds(categoryIds);
-            // Make the limits per category
-            const limitPerCategory = limit > categories.length ? Math.ceil(limit / categories.length) : 1;
-            // Get questions for each category
-            const questions = yield Promise.all(categories.map((category) => __awaiter(this, void 0, void 0, function* () {
-                const questions = yield questionBankRepository_1.QuestionBankRepository.getQuestionsByCategoryId(category.id, limitPerCategory, multiplechoice);
-                return questions;
-            })));
-            return questions.flat().slice(0, limit);
+            const refinedCategoryIds = categories.map((category) => category.id);
+            // Fetch once across all selected categories to avoid duplicate questions
+            // when a question belongs to multiple selected categories.
+            const questions = yield questionBankRepository_1.QuestionBankRepository.getQuestionsByCategoryId(refinedCategoryIds, limit, multiplechoice);
+            return questions;
         });
     }
     static getAllQuestions(categoryIds) {

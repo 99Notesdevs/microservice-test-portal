@@ -75,7 +75,7 @@ const createSubmitConsumer = () => __awaiter(void 0, void 0, void 0, function* (
                                 result[questionId] = Object.assign(Object.assign({}, question), { isCorrect: false, selectedOption });
                                 score += markingScheme.unattempted;
                             }
-                            else if (question.answer === selectedOption) {
+                            else if ((question.answer === selectedOption) || (selectedOption.toString() === (question.answer.charCodeAt(0) - 65).toString())) {
                                 result[questionId] = Object.assign(Object.assign({}, question), { isCorrect: true, selectedOption });
                                 score += markingScheme.correct;
                             }
@@ -117,6 +117,7 @@ const createSubmitConsumer = () => __awaiter(void 0, void 0, void 0, function* (
                     }
                 }
             }
+            console.log('Final Score:', result, score);
             // Emit socket event to a userId
             const io = (0, socketInstance_1.getSocketInstance)();
             if (!io)

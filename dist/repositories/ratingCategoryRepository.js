@@ -29,10 +29,36 @@ class RatingCategoryRepository {
         return __awaiter(this, void 0, void 0, function* () {
             logger_1.default.info(`Fetching rating categories for user ${userId}`);
             return yield prisma_1.prisma.categoryRating.findMany({
-                where: { userId: userId },
+                where: {
+                    userId: userId,
+                    category: {
+                        parentTagId: null,
+                    },
+                },
                 select: {
                     categoryId: true,
                     rating: true,
+                    category: {
+                        select: {
+                            id: true,
+                            name: true,
+                            daughterTag: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    parentTagId: true,
+                                    CategoryRatings: {
+                                        where: {
+                                            userId: userId,
+                                        },
+                                        select: {
+                                            rating: true,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
                 },
             });
         });

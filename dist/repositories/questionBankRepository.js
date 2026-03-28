@@ -16,16 +16,24 @@ exports.QuestionBankRepository = void 0;
 const prisma_1 = require("../config/prisma");
 const logger_1 = __importDefault(require("../utils/logger"));
 class QuestionBankRepository {
-    static getQuestionsByCategoryId(categoryId, limit, multiplechoice) {
+    static getQuestionsByCategoryId(categoryIds, limit, multiplechoice) {
         return __awaiter(this, void 0, void 0, function* () {
-            logger_1.default.info("getQuestionsByCategoryId called", { categoryId, limit, multiplechoice });
+            logger_1.default.info("getQuestionsByCategoryId called", { categoryIds, limit, multiplechoice });
+            const categoryIdsCsv = categoryIds.join(',');
             const questions = yield prisma_1.prisma.$queryRawUnsafe(`
-                SELECT DISTINCT qb.* FROM "QuestionBank" qb
-                INNER JOIN "_TagToQuestionBank" tqb ON qb.id = tqb."B"
-                WHERE tqb."A" = ($1) AND qb."multipleCorrectType" = ($3)
+                WITH unique_questions AS (
+                    SELECT DISTINCT qb.id
+                    FROM "QuestionBank" qb
+                    INNER JOIN "_CategoryToQuestionBank" tqb ON qb.id = tqb."B"
+                    WHERE tqb."A" = ANY (string_to_array($1, ',')::int[])
+                      AND qb."multipleCorrectType" = ($3)
+                )
+                SELECT qb.*
+                FROM "QuestionBank" qb
+                INNER JOIN unique_questions uq ON qb.id = uq.id
                 ORDER BY random()
                 LIMIT ($2)
-            `, categoryId, limit, !!multiplechoice);
+            `, categoryIdsCsv, limit, !!multiplechoice);
             logger_1.default.info("getQuestionsByCategoryId result", { length: questions.length });
             return questions;
         });

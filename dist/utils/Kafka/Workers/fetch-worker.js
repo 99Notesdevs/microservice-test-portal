@@ -37,7 +37,7 @@ const createFetchConsumer = () => __awaiter(void 0, void 0, void 0, function* ()
             const questionsS = yield questionBankService_1.QuestionBankService.getTestQuestions(parsedCategoryIdsS, Number(limitS), 0);
             const parsedCategoryIdsM = categoryM.toString().split(',').map((id) => Number(id));
             const questionsM = yield questionBankService_1.QuestionBankService.getTestQuestions(parsedCategoryIdsM, Number(limitM), 1);
-            const questions = [...questionsS, ...questionsM];
+            const questions = [...(Array.isArray(questionsS) ? questionsS : []), ...(Array.isArray(questionsM) ? questionsM : [])];
             // Emit socket event to a userId
             // logger.info(`Questinos: ${JSON.stringify(questions)}`);
             const io = (0, socketInstance_1.getSocketInstance)();
