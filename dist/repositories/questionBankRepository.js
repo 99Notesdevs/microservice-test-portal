@@ -50,7 +50,7 @@ class QuestionBankRepository {
                   SELECT 1 FROM "_CategoryToQuestionBank" t2 WHERE t2."B" = qb.id AND t2."A" = ($1)
                 )
                 GROUP BY qb.id
-                ORDER BY qb."createdAt" DESC
+                ORDER BY random()
                 LIMIT ($2)
             `, categoryId, limit);
             logger_1.default.info("getPracticeQuestionsByCategoryId result", { length: questions.length });
