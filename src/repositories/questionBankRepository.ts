@@ -67,7 +67,7 @@ export class QuestionBankRepository {
         return question;
     }
 
-    static async getAllQuestions(categoryIds: number[]) {
+    static async getAllQuestions(categoryIds: number[], limit: number) {
         logger.info("getAllQuestions called", { categoryIds });
         const categoryIdsCsv = categoryIds.join(',');
         const requiredCategoryCount = categoryIds.length;
@@ -87,9 +87,11 @@ export class QuestionBankRepository {
                 )
                 GROUP BY qb.id
                 ORDER BY random()
+                LIMIT ($3)
             `,
             categoryIdsCsv,
-            requiredCategoryCount
+            requiredCategoryCount,
+            limit
         );
         logger.info("getAllQuestions result", { length: (questions as any[]).length });
         return questions;

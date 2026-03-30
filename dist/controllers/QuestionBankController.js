@@ -61,7 +61,7 @@ class QuestionBankController {
     static getAllQuestions(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { categoryIds } = req.query;
+                const { categoryIds, limit = 5 } = req.query;
                 if (!categoryIds) {
                     throw new Error('Category IDs are required');
                 }
@@ -73,7 +73,7 @@ class QuestionBankController {
                 if (uniqueCategoryIds.length === 0) {
                     throw new Error('Invalid Category IDs');
                 }
-                const questions = yield questionBankService_1.QuestionBankService.getAllQuestions(uniqueCategoryIds);
+                const questions = yield questionBankService_1.QuestionBankService.getAllQuestions(uniqueCategoryIds, Number(limit));
                 res.status(200).json({ success: true, data: questions });
             }
             catch (error) {

@@ -44,7 +44,7 @@ export default class QuestionBankController {
 
     static async getAllQuestions(req: Request, res: Response) {
         try {
-            const { categoryIds } = req.query;
+            const { categoryIds, limit = 5 } = req.query;
             if (!categoryIds) {
                 throw new Error('Category IDs are required');
             }
@@ -60,7 +60,7 @@ export default class QuestionBankController {
                 throw new Error('Invalid Category IDs');
             }
 
-            const questions = await QuestionBankService.getAllQuestions(uniqueCategoryIds);
+            const questions = await QuestionBankService.getAllQuestions(uniqueCategoryIds, Number(limit));
             res.status(200).json({ success: true, data: questions });
         } catch (error: unknown) {
             res.status(404).json({ success: false, message: error instanceof Error ? error.message : 'Internal Server Error' });

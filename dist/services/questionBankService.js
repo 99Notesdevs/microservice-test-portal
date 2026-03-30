@@ -29,9 +29,9 @@ class QuestionBankService {
             return questions;
         });
     }
-    static getAllQuestions(categoryIds) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const questions = yield questionBankRepository_1.QuestionBankRepository.getAllQuestions(categoryIds);
+    static getAllQuestions(categoryIds_1) {
+        return __awaiter(this, arguments, void 0, function* (categoryIds, limit = 5) {
+            const questions = yield questionBankRepository_1.QuestionBankRepository.getAllQuestions(categoryIds, limit);
             return questions;
         });
     }

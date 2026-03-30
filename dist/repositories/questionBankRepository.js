@@ -79,7 +79,7 @@ class QuestionBankRepository {
             return question;
         });
     }
-    static getAllQuestions(categoryIds) {
+    static getAllQuestions(categoryIds, limit) {
         return __awaiter(this, void 0, void 0, function* () {
             logger_1.default.info("getAllQuestions called", { categoryIds });
             const categoryIdsCsv = categoryIds.join(',');
@@ -98,7 +98,8 @@ class QuestionBankRepository {
                 )
                 GROUP BY qb.id
                 ORDER BY random()
-            `, categoryIdsCsv, requiredCategoryCount);
+                LIMIT ($3)
+            `, categoryIdsCsv, requiredCategoryCount, limit);
             logger_1.default.info("getAllQuestions result", { length: questions.length });
             return questions;
         });

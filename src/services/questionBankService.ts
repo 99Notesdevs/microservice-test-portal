@@ -20,8 +20,8 @@ export class QuestionBankService {
         return questions;
     }
 
-    static async getAllQuestions(categoryIds: number[]) {
-        const questions = await QuestionBankRepository.getAllQuestions(categoryIds);
+    static async getAllQuestions(categoryIds: number[], limit: number = 5) {
+        const questions = await QuestionBankRepository.getAllQuestions(categoryIds, limit);
         return questions;
     }
 
