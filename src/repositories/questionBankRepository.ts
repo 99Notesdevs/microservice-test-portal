@@ -86,7 +86,7 @@ export class QuestionBankRepository {
                   HAVING COUNT(DISTINCT t2."A") = $2
                 )
                 GROUP BY qb.id
-                ORDER BY qb."createdAt" DESC
+                ORDER BY random()
             `,
             categoryIdsCsv,
             requiredCategoryCount
