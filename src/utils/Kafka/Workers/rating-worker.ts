@@ -50,6 +50,7 @@ export const createRatingConsumer = async () => {
           newGlobalRating = await attemptQuestionService(userId, categoryId, markValue, question.rating);
         }
       }
+      console.log("done")
 
       await updateUserRating(userId, newGlobalRating);
       await UserProgressService.updateUserProgress(userId, newGlobalRating);

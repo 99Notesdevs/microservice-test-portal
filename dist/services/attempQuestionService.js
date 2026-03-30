@@ -81,10 +81,13 @@ function getWeightedRating(userId, categoryId) {
         var _a;
         logger_1.default.info("getWeightedRating called with", { userId, categoryId });
         const daughterCategories = (yield categoriesRepository_1.CategoryRepository.getCategoryByParentId(categoryId)) || [];
-        const ratings = yield Promise.all(daughterCategories.map((c) => __awaiter(this, void 0, void 0, function* () { return (yield ratingCategoryRepository_1.RatingCategoryRepository.getRating(userId, c.id)) || { id: c.id, rating: 250 }; })));
+        console.log(categoryId, "category: ");
+        console.log("daughter: ", daughterCategories);
+        const ratings = yield Promise.all(daughterCategories.map((c) => __awaiter(this, void 0, void 0, function* () { return (yield ratingCategoryRepository_1.RatingCategoryRepository.getRating(userId, c.id)) || { categoryId: c.id, rating: 250 }; })));
+        console.log("rating: ", ratings);
         let total = ((_a = (yield ratingCategoryRepository_1.RatingCategoryRepository.getRating(userId, categoryId))) === null || _a === void 0 ? void 0 : _a.rating) || 250;
         for (const rating of ratings) {
-            const categoryWeight = yield categoriesRepository_1.CategoryRepository.getCategoryById(rating.id);
+            const categoryWeight = yield categoriesRepository_1.CategoryRepository.getCategoryById(rating.categoryId);
             total += Number((categoryWeight === null || categoryWeight === void 0 ? void 0 : categoryWeight.weight) || 0.2) * Number(rating.rating);
         }
         return Math.round(total);

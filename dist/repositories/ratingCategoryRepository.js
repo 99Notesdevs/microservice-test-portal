@@ -21,7 +21,7 @@ class RatingCategoryRepository {
             logger_1.default.info(`Fetching rating for user ${userId} and category ${categoryId}`);
             return yield prisma_1.prisma.categoryRating.findUnique({
                 where: { userId_categoryId: { userId, categoryId } },
-                select: { id: true, rating: true }
+                select: { categoryId: true, rating: true }
             });
         });
     }

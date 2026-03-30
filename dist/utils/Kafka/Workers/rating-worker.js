@@ -47,6 +47,7 @@ const createRatingConsumer = () => __awaiter(void 0, void 0, void 0, function* (
                     newGlobalRating = yield (0, attempQuestionService_1.attemptQuestionService)(userId, categoryId, markValue, question.rating);
                 }
             }
+            console.log("done");
             yield (0, client_1.updateUserRating)(userId, newGlobalRating);
             yield userProgressService_1.UserProgressService.updateUserProgress(userId, newGlobalRating);
             const io = (0, socketInstance_1.getSocketInstance)();

@@ -70,11 +70,14 @@ async function propagateRatingUpwards(categoryId: number, userId: number) {
 async function getWeightedRating(userId: number, categoryId: number) {
     logger.info("getWeightedRating called with", { userId, categoryId });
     const daughterCategories = await CategoryRepository.getCategoryByParentId(categoryId) || [];
+    console.log(categoryId, "category: ");
+    console.log("daughter: ", daughterCategories);
 
-    const ratings = await Promise.all(daughterCategories.map(async (c) => (await RatingCategoryRepository.getRating(userId, c.id)) || {id: c.id, rating: 250}));
+    const ratings = await Promise.all(daughterCategories.map(async (c) => (await RatingCategoryRepository.getRating(userId, c.id)) || {categoryId: c.id, rating: 250}));
+    console.log("rating: ", ratings)
     let total = (await RatingCategoryRepository.getRating(userId, categoryId))?.rating || 250;
     for (const rating of ratings) {
-        const categoryWeight = await CategoryRepository.getCategoryById(rating.id);
+        const categoryWeight = await CategoryRepository.getCategoryById(rating.categoryId);
         total += Number(categoryWeight?.weight || 0.2) * Number(rating.rating);
     }
     return Math.round(total);

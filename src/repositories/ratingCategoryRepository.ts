@@ -6,7 +6,7 @@ export class RatingCategoryRepository {
         logger.info(`Fetching rating for user ${userId} and category ${categoryId}`);
         return await prisma.categoryRating.findUnique({
             where: { userId_categoryId: { userId, categoryId } },
-            select: {id: true, rating: true}
+            select: {categoryId: true, rating: true}
         });
     }
 
