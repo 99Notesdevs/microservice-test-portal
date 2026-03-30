@@ -25,24 +25,32 @@ export class QuestionBankRepository {
     }
 
     static async getPracticeQuestionsByCategoryId(categoryId: number, limit: number) {
-        logger.info("getPracticeQuestionsByCategoryId called", { categoryId, limit });
-        const questions = await prisma.$queryRawUnsafe(
-            `
-                SELECT qb.*, COALESCE(json_agg(json_build_object('id', c.id, 'name', c.name)) FILTER (WHERE c.id IS NOT NULL), '[]') as categories
-                FROM "QuestionBank" qb
-                LEFT JOIN "_CategoryToQuestionBank" tqb ON qb.id = tqb."B"
-                LEFT JOIN "Categories" c ON c.id = tqb."A"
-                WHERE EXISTS (
-                  SELECT 1 FROM "_CategoryToQuestionBank" t2 WHERE t2."B" = qb.id AND t2."A" = ($1)
-                )
-                GROUP BY qb.id
-                ORDER BY random()
-                LIMIT ($2)
-            `, categoryId, limit
-        );
-        logger.info("getPracticeQuestionsByCategoryId result", { length: (questions as any[]).length });
-        return questions;
+    logger.info("getPracticeQuestionsByCategoryId called", { categoryId, limit });
+
+    const allQuestions = await prisma.questionBank.findMany({
+        where: {
+            categories: {
+                some: { id: categoryId },
+            },
+        },
+        include: {
+            categories: {
+                select: { id: true, name: true },
+            },
+        },
+    });
+
+    // Fisher-Yates shuffle
+    for (let i = allQuestions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [allQuestions[i], allQuestions[j]] = [allQuestions[j], allQuestions[i]];
     }
+
+    const questions = allQuestions.slice(0, limit);
+
+    logger.info("getPracticeQuestionsByCategoryId result", { length: questions.length });
+    return questions;
+}
 
     static async getQuestionById(questionId: number) {
         logger.info("getQuestionById called", { questionId });
