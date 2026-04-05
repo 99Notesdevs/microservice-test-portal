@@ -83,7 +83,6 @@ class QuestionBankRepository {
         return __awaiter(this, void 0, void 0, function* () {
             logger_1.default.info("getAllQuestions called", { categoryIds });
             const categoryIdsCsv = categoryIds.join(',');
-            const requiredCategoryCount = categoryIds.length;
             const questions = yield prisma_1.prisma.$queryRawUnsafe(`
                 SELECT qb.*, COALESCE(json_agg(json_build_object('id', c.id, 'name', c.name)) FILTER (WHERE c.id IS NOT NULL), '[]') as categories
                 FROM "QuestionBank" qb
@@ -93,13 +92,11 @@ class QuestionBankRepository {
                   SELECT t2."B"
                   FROM "_CategoryToQuestionBank" t2
                   WHERE t2."A" = ANY (string_to_array($1, ',')::int[])
-                  GROUP BY t2."B"
-                  HAVING COUNT(DISTINCT t2."A") = $2
                 )
                 GROUP BY qb.id
                 ORDER BY random()
-                LIMIT ($3)
-            `, categoryIdsCsv, requiredCategoryCount, limit);
+                LIMIT ($2)
+            `, categoryIdsCsv, limit);
             logger_1.default.info("getAllQuestions result", { length: questions.length });
             return questions;
         });
