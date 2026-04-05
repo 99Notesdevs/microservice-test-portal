@@ -70,7 +70,6 @@ export class QuestionBankRepository {
     static async getAllQuestions(categoryIds: number[], limit: number) {
         logger.info("getAllQuestions called", { categoryIds });
         const categoryIdsCsv = categoryIds.join(',');
-        const requiredCategoryCount = categoryIds.length;
 
         const questions = await prisma.$queryRawUnsafe(
             `
@@ -82,15 +81,12 @@ export class QuestionBankRepository {
                   SELECT t2."B"
                   FROM "_CategoryToQuestionBank" t2
                   WHERE t2."A" = ANY (string_to_array($1, ',')::int[])
-                  GROUP BY t2."B"
-                  HAVING COUNT(DISTINCT t2."A") = $2
                 )
                 GROUP BY qb.id
                 ORDER BY random()
-                LIMIT ($3)
+                LIMIT ($2)
             `,
             categoryIdsCsv,
-            requiredCategoryCount,
             limit
         );
         logger.info("getAllQuestions result", { length: (questions as any[]).length });
