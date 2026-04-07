@@ -58,6 +58,20 @@ class QuestionBankController {
             }
         });
     }
+    static getRandomQuestions(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                logger_1.default.info(`Fetching random questions`);
+                const { limit } = req.query;
+                const questions = yield questionBankService_1.QuestionBankService.getRandomQuestions(Number(limit));
+                logger_1.default.info(`Questions: ${JSON.stringify(questions)}`);
+                res.status(200).json({ success: true, data: questions });
+            }
+            catch (error) {
+                res.status(404).json({ success: false, message: error instanceof Error ? error.message : "Internal Server Error" });
+            }
+        });
+    }
     static getAllQuestions(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

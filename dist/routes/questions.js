@@ -12,6 +12,9 @@ const questionRouter = (0, express_1.Router)();
 questionRouter.get('/test', authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["Admin", "User"]), QuestionBankController_1.default.getTestQuestions);
 // Query: /practice?categoryId=x
 questionRouter.get('/practice', QuestionBankController_1.default.getPracticeQuestions);
+// Get random from all categories
+// Query: /random?limit=x
+questionRouter.get('/random', QuestionBankController_1.default.getRandomQuestions);
 // Query: /?categoryIds=y,z
 questionRouter.get('/', authenticate_1.authenticate, (0, authorizeRoles_1.authorizeRoles)(["Admin", "User"]), QuestionBankController_1.default.getAllQuestions);
 // Query: /ids?ids=x,y,z

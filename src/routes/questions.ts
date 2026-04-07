@@ -11,6 +11,10 @@ questionRouter.get('/test', authenticate, authorizeRoles(["Admin", "User"]), Que
 // Query: /practice?categoryId=x
 questionRouter.get('/practice', QuestionBankController.getPracticeQuestions);
 
+// Get random from all categories
+// Query: /random?limit=x
+questionRouter.get('/random', QuestionBankController.getRandomQuestions);
+
 // Query: /?categoryIds=y,z
 questionRouter.get('/', authenticate, authorizeRoles(["Admin", "User"]), QuestionBankController.getAllQuestions);
 

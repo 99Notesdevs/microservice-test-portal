@@ -25,6 +25,11 @@ export class QuestionBankService {
         return questions;
     }
 
+    static async getRandomQuestions(limit: number) {
+        const questions = await QuestionBankRepository.getRandomQuestions(limit);
+        return questions;
+    }
+
     static async getQuestionByIds(parsedIds: number[]) {
         let result = {}
         for(const id of parsedIds) {

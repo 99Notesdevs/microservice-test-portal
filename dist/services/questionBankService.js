@@ -35,6 +35,12 @@ class QuestionBankService {
             return questions;
         });
     }
+    static getRandomQuestions(limit) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const questions = yield questionBankRepository_1.QuestionBankRepository.getRandomQuestions(limit);
+            return questions;
+        });
+    }
     static getQuestionByIds(parsedIds) {
         return __awaiter(this, void 0, void 0, function* () {
             let result = {};

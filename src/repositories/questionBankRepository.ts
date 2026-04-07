@@ -93,6 +93,13 @@ export class QuestionBankRepository {
         return questions;
     }
 
+    static async getRandomQuestions(limit: number) {
+        logger.info("getAllQuestions ", { limit });
+        const questions = await prisma.$queryRawUnsafe(`SELECT * FROM "QuestionBank" ORDER BY RANDOM() LIMIT ($1)`, limit);
+        logger.info("getAllQuestions result", { length: (questions as any[]).length });
+        return questions;
+    }
+
     static async createQuestion(data: {
         question: string;
         answer: string;

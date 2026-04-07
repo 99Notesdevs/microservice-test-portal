@@ -101,6 +101,14 @@ class QuestionBankRepository {
             return questions;
         });
     }
+    static getRandomQuestions(limit) {
+        return __awaiter(this, void 0, void 0, function* () {
+            logger_1.default.info("getAllQuestions ", { limit });
+            const questions = yield prisma_1.prisma.$queryRawUnsafe(`SELECT * FROM "QuestionBank" ORDER BY RANDOM() LIMIT ($1)`, limit);
+            logger_1.default.info("getAllQuestions result", { length: questions.length });
+            return questions;
+        });
+    }
     static createQuestion(data) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
