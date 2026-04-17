@@ -28,8 +28,8 @@ exports.app.use((0, cors_1.default)({
     allowedHeaders: ["Content-Type", "Authorization", "x-auth-type"],
     optionsSuccessStatus: 200,
 }));
-exports.app.use(express_1.default.json());
-exports.app.use(express_1.default.urlencoded({ extended: true }));
+exports.app.use(express_1.default.json({ limit: '25mb' }));
+exports.app.use(express_1.default.urlencoded({ extended: true, limit: '25mb' }));
 exports.app.use((0, cookie_parser_1.default)());
 exports.app.use(logsMiddleware_1.logRequest);
 exports.app.use("/api/v1", index_1.default);
