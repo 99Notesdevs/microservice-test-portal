@@ -12,6 +12,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CalendarService = void 0;
 const CalendarRepository_1 = require("../repositories/CalendarRepository");
 const PremiumUserRepository_1 = require("../repositories/PremiumUserRepository");
+function mapCurrentAffairVisitToCalendarEvent(visit) {
+    return {
+        id: `ca-visit-${visit.id}`,
+        userId: visit.userId,
+        date: visit.date.getUTCDate(),
+        month: visit.date.getUTCMonth() + 1,
+        year: visit.date.getUTCFullYear(),
+        status: "completed",
+        event: "Current Affairs Visit",
+        type: "currentAffairVisit",
+        readOnly: true,
+        createdAt: visit.createdAt,
+        updatedAt: visit.createdAt,
+    };
+}
+function sortEventsByDateDesc(a, b) {
+    if (a.year !== b.year)
+        return b.year - a.year;
+    if (a.month !== b.month)
+        return b.month - a.month;
+    return b.date - a.date;
+}
 class CalendarService {
     static createEvent(data) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -27,12 +49,22 @@ class CalendarService {
     }
     static getEventsByUser(userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield CalendarRepository_1.CalendarRepository.getEventsByUser(userId);
+            const [events, currentAffairVisits] = yield Promise.all([
+                CalendarRepository_1.CalendarRepository.getEventsByUser(userId),
+                CalendarRepository_1.CalendarRepository.getCurrentAffairVisitsByUser(userId),
+            ]);
+            const visitEvents = currentAffairVisits.map(mapCurrentAffairVisitToCalendarEvent);
+            return [...events, ...visitEvents].sort(sortEventsByDateDesc);
         });
     }
     static getEventsByDate(userId, date, month, year) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield CalendarRepository_1.CalendarRepository.getEventsByDate(userId, date, month, year);
+            const [events, currentAffairVisits] = yield Promise.all([
+                CalendarRepository_1.CalendarRepository.getEventsByDate(userId, date, month, year),
+                CalendarRepository_1.CalendarRepository.getCurrentAffairVisitsByDate(userId, date, month, year),
+            ]);
+            const visitEvents = currentAffairVisits.map(mapCurrentAffairVisitToCalendarEvent);
+            return [...events, ...visitEvents].sort(sortEventsByDateDesc);
         });
     }
     static updateEvent(id, data) {

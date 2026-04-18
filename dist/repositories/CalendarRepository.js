@@ -41,12 +41,38 @@ class CalendarRepository {
             });
         });
     }
+    static getCurrentAffairVisitsByUser(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            logger_1.default.info(`Fetching all current affair visits for user ${userId}`);
+            return yield prisma_1.prisma.$queryRaw `
+      SELECT "id", "userId", "date", "createdAt"
+      FROM "CurrentAffairVisit"
+      WHERE "userId" = ${userId}
+      ORDER BY "date" DESC
+    `;
+        });
+    }
     static getEventsByDate(userId, date, month, year) {
         return __awaiter(this, void 0, void 0, function* () {
             logger_1.default.info(`Fetching events for user ${userId} on ${date}/${month}/${year}`);
             return yield prisma_1.prisma.userCalendar.findMany({
                 where: { userId, date, month, year },
             });
+        });
+    }
+    static getCurrentAffairVisitsByDate(userId, date, month, year) {
+        return __awaiter(this, void 0, void 0, function* () {
+            logger_1.default.info(`Fetching current affair visits for user ${userId} on ${date}/${month}/${year}`);
+            const startOfDayUtc = new Date(Date.UTC(year, month - 1, date));
+            const endOfDayUtc = new Date(Date.UTC(year, month - 1, date + 1));
+            return yield prisma_1.prisma.$queryRaw `
+      SELECT "id", "userId", "date", "createdAt"
+      FROM "CurrentAffairVisit"
+      WHERE "userId" = ${userId}
+        AND "date" >= ${startOfDayUtc}
+        AND "date" < ${endOfDayUtc}
+      ORDER BY "date" DESC
+    `;
         });
     }
     static updateEvent(id, data) {

@@ -113,6 +113,8 @@ export class QuestionBankRepository {
         rating: number | null;
         completed?: boolean;
         examId?: number | null;
+        isCurrentAffair?: boolean;
+        currentAffairArticleId?: number | null;
     }) {
         logger.info("createQuestion called", { ...data, optionsLength: data.options.length, categoryIdsLength: data.categoryIds.length });
         const question = await prisma.questionBank.create({
@@ -129,10 +131,12 @@ export class QuestionBankRepository {
                 pyq: data.pyq,
                 year: data.year,
                 rating: data.rating,
+                isCurrentAffair: data.isCurrentAffair ?? false,
+                currentAffairArticleId: data.currentAffairArticleId ?? undefined,
                 ...(typeof data.completed === 'boolean' ? { completed: data.completed } : {}),
                 examId: data.examId ?? undefined,
             },
-            include: { exam: true },
+            include: { exam: true, currentAffairArticle: true },
         });
         logger.info("createQuestion result", { id: question.id });
         return question;
@@ -170,6 +174,8 @@ export class QuestionBankRepository {
         rating: number | null;
         completed: boolean;
         examId?: number | null;
+        isCurrentAffair?: boolean;
+        currentAffairArticleId?: number | null;
     }>) {
         logger.info("updateQuestion called", { questionId, ...data, optionsLength: data.options?.length, categoryIdsLength: data.categoryIds?.length });
         const question = await prisma.questionBank.update({
@@ -191,10 +197,12 @@ export class QuestionBankRepository {
                 pyq: data.pyq,
                 year: data.year,
                 rating: data.rating,
+                ...(data.hasOwnProperty('isCurrentAffair') ? { isCurrentAffair: (data as any).isCurrentAffair } : {}),
+                ...(data.hasOwnProperty('currentAffairArticleId') ? { currentAffairArticleId: (data as any).currentAffairArticleId } : {}),
                 ...(typeof data.completed === 'boolean' ? { completed: data.completed } : {}),
                 ...(data.hasOwnProperty('examId') ? { examId: (data as any).examId } : {}),
             },
-            include: { exam: true },
+            include: { exam: true, currentAffairArticle: true },
         });
         logger.info("updateQuestion result", { id: question.id });
         return question;

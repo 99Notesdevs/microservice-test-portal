@@ -31,11 +31,36 @@ export class CalendarRepository {
     });
   }
 
+  static async getCurrentAffairVisitsByUser(userId: number) {
+    logger.info(`Fetching all current affair visits for user ${userId}`);
+    return await prisma.$queryRaw<Array<{ id: number; userId: number; date: Date; createdAt: Date }>>`
+      SELECT "id", "userId", "date", "createdAt"
+      FROM "CurrentAffairVisit"
+      WHERE "userId" = ${userId}
+      ORDER BY "date" DESC
+    `;
+  }
+
   static async getEventsByDate(userId: number, date: number, month: number, year: number) {
     logger.info(`Fetching events for user ${userId} on ${date}/${month}/${year}`);
     return await prisma.userCalendar.findMany({
       where: { userId, date, month, year },
     });
+  }
+
+  static async getCurrentAffairVisitsByDate(userId: number, date: number, month: number, year: number) {
+    logger.info(`Fetching current affair visits for user ${userId} on ${date}/${month}/${year}`);
+    const startOfDayUtc = new Date(Date.UTC(year, month - 1, date));
+    const endOfDayUtc = new Date(Date.UTC(year, month - 1, date + 1));
+
+    return await prisma.$queryRaw<Array<{ id: number; userId: number; date: Date; createdAt: Date }>>`
+      SELECT "id", "userId", "date", "createdAt"
+      FROM "CurrentAffairVisit"
+      WHERE "userId" = ${userId}
+        AND "date" >= ${startOfDayUtc}
+        AND "date" < ${endOfDayUtc}
+      ORDER BY "date" DESC
+    `;
   }
 
   static async updateEvent(id: number, data: Partial<{ status: string; event: string }>) {

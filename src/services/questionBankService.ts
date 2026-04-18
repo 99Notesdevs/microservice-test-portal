@@ -64,6 +64,8 @@ export class QuestionBankService {
         completed?: boolean;
         examId?: number | null;
         examName?: string | null;
+        isCurrentAffair?: boolean;
+        currentAffairArticleId?: number | null;
     }) {
         let examId = data.examId ?? null;
         if (!examId && data.examName) {
@@ -88,6 +90,8 @@ export class QuestionBankService {
         completed: boolean;
         examId?: number | null;
         examName?: string | null;
+        isCurrentAffair?: boolean;
+        currentAffairArticleId?: number | null;
     }>) {
         let examId = (data as any).examId ?? null;
         if (!examId && (data as any).examName) {

@@ -111,13 +111,13 @@ class QuestionBankRepository {
     }
     static createQuestion(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
+            var _a, _b, _c;
             logger_1.default.info("createQuestion called", Object.assign(Object.assign({}, data), { optionsLength: data.options.length, categoryIdsLength: data.categoryIds.length }));
             const question = yield prisma_1.prisma.questionBank.create({
                 data: Object.assign(Object.assign({ question: data.question, answer: data.answer, options: data.options, categories: {
                         connect: data.categoryIds.map(id => ({ id: Number(id) })),
-                    }, creatorName: data.creatorName, explaination: data.explaination, multipleCorrectType: data.multipleCorrectType, pyq: data.pyq, year: data.year, rating: data.rating }, (typeof data.completed === 'boolean' ? { completed: data.completed } : {})), { examId: (_a = data.examId) !== null && _a !== void 0 ? _a : undefined }),
-                include: { exam: true },
+                    }, creatorName: data.creatorName, explaination: data.explaination, multipleCorrectType: data.multipleCorrectType, pyq: data.pyq, year: data.year, rating: data.rating, isCurrentAffair: (_a = data.isCurrentAffair) !== null && _a !== void 0 ? _a : false, currentAffairArticleId: (_b = data.currentAffairArticleId) !== null && _b !== void 0 ? _b : undefined }, (typeof data.completed === 'boolean' ? { completed: data.completed } : {})), { examId: (_c = data.examId) !== null && _c !== void 0 ? _c : undefined }),
+                include: { exam: true, currentAffairArticle: true },
             });
             logger_1.default.info("createQuestion result", { id: question.id });
             return question;
@@ -151,12 +151,12 @@ class QuestionBankRepository {
                 where: {
                     id: questionId,
                 },
-                data: Object.assign(Object.assign(Object.assign(Object.assign({ question: data.question, answer: data.answer, options: data.options }, (data.categoryIds && data.categoryIds.length > 0 && {
+                data: Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({ question: data.question, answer: data.answer, options: data.options }, (data.categoryIds && data.categoryIds.length > 0 && {
                     categories: {
                         set: data.categoryIds.map(id => ({ id: Number(id) })),
                     },
-                })), { creatorName: data.creatorName, explaination: data.explaination, multipleCorrectType: data.multipleCorrectType, pyq: data.pyq, year: data.year, rating: data.rating }), (typeof data.completed === 'boolean' ? { completed: data.completed } : {})), (data.hasOwnProperty('examId') ? { examId: data.examId } : {})),
-                include: { exam: true },
+                })), { creatorName: data.creatorName, explaination: data.explaination, multipleCorrectType: data.multipleCorrectType, pyq: data.pyq, year: data.year, rating: data.rating }), (data.hasOwnProperty('isCurrentAffair') ? { isCurrentAffair: data.isCurrentAffair } : {})), (data.hasOwnProperty('currentAffairArticleId') ? { currentAffairArticleId: data.currentAffairArticleId } : {})), (typeof data.completed === 'boolean' ? { completed: data.completed } : {})), (data.hasOwnProperty('examId') ? { examId: data.examId } : {})),
+                include: { exam: true, currentAffairArticle: true },
             });
             logger_1.default.info("updateQuestion result", { id: question.id });
             return question;
