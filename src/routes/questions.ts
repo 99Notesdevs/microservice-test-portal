@@ -16,7 +16,7 @@ questionRouter.get('/practice', QuestionBankController.getPracticeQuestions);
 questionRouter.get('/random', QuestionBankController.getRandomQuestions);
 
 // Query: /?categoryIds=y,z
-questionRouter.get('/', authenticate, authorizeRoles(["Admin", "User"]), QuestionBankController.getAllQuestions);
+questionRouter.get('/', QuestionBankController.getAllQuestions);
 
 // Query: /ids?ids=x,y,z
 questionRouter.get('/ids', authenticate, authorizeRoles(["Admin", "User"]), QuestionBankController.getQuestionsByIds);
